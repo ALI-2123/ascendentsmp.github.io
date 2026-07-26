@@ -237,6 +237,131 @@
       color: var(--text-main);
     }
 
+    /* MINI GAME ARCADE STYLES */
+    .game-section {
+      text-align: center;
+    }
+
+    .game-nav {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .tab-btn {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-color);
+      color: var(--text-sub);
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(255, 170, 0, 0.1);
+      box-shadow: 0 0 10px var(--gold-glow);
+    }
+
+    .game-box {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .game-box.active-game {
+      display: flex;
+    }
+
+    .game-status {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--gold);
+      min-height: 30px;
+    }
+
+    /* TIC TAC TOE */
+    .ttt-board {
+      display: grid;
+      grid-template-columns: repeat(3, 80px);
+      grid-template-rows: repeat(3, 80px);
+      gap: 10px;
+    }
+
+    .ttt-cell {
+      background: rgba(0, 0, 0, 0.5);
+      border: 2px solid var(--border-color);
+      border-radius: 10px;
+      font-size: 2.2rem;
+      font-weight: 900;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+    }
+
+    .ttt-cell:hover {
+      border-color: var(--gold);
+      background: rgba(255, 170, 0, 0.1);
+    }
+
+    .ttt-cell.x-mark { color: var(--gold); }
+    .ttt-cell.o-mark { color: var(--elite-cyan); }
+
+    /* MEMORY MATRIX */
+    .memory-board {
+      display: grid;
+      grid-template-columns: repeat(2, 100px);
+      grid-template-rows: repeat(2, 100px);
+      gap: 12px;
+    }
+
+    .mem-pad {
+      border-radius: 12px;
+      cursor: pointer;
+      opacity: 0.5;
+      transition: all 0.15s ease;
+      border: 2px solid transparent;
+    }
+
+    .mem-pad:active, .mem-pad.lit {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    #pad0 { background: #ff4757; box-shadow: 0 0 15px rgba(255, 71, 87, 0.5); }
+    #pad1 { background: #2ed573; box-shadow: 0 0 15px rgba(46, 213, 115, 0.5); }
+    #pad2 { background: #1e90ff; box-shadow: 0 0 15px rgba(30, 144, 255, 0.5); }
+    #pad3 { background: #ffa502; box-shadow: 0 0 15px rgba(255, 165, 2, 0.5); }
+
+    .game-controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 5px;
+    }
+
+    .game-btn {
+      background: var(--gold);
+      color: #000;
+      border: none;
+      padding: 8px 16px;
+      font-weight: 800;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .game-btn:hover {
+      transform: scale(1.05);
+    }
+
     /* STORE MODAL POPUP */
     .modal-overlay {
       display: none;
@@ -413,65 +538,6 @@
     .premium-btn { background: #ab47bc; color: #fff; }
     .elite-btn { background: var(--elite-cyan); color: #000; }
 
-    /* MINI GAME STYLES */
-    .game-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 15px;
-      margin-top: 15px;
-    }
-
-    .game-status {
-      font-size: 1.2rem;
-      font-weight: 800;
-      color: var(--gold);
-    }
-
-    .ttt-board {
-      display: grid;
-      grid-template-columns: repeat(3, 90px);
-      grid-template-rows: repeat(3, 90px);
-      gap: 10px;
-    }
-
-    .ttt-cell {
-      background: rgba(0, 0, 0, 0.5);
-      border: 2px solid var(--border-color);
-      border-radius: 10px;
-      font-size: 2.5rem;
-      font-weight: 900;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      user-select: none;
-      transition: all 0.2s ease;
-    }
-
-    .ttt-cell:hover {
-      border-color: var(--gold);
-      background: rgba(255, 170, 0, 0.1);
-    }
-
-    .ttt-cell.x-mark { color: var(--gold); }
-    .ttt-cell.o-mark { color: var(--elite-cyan); }
-
-    .game-controls {
-      display: flex;
-      gap: 10px;
-    }
-
-    .game-btn {
-      background: var(--gold);
-      color: #000;
-      border: none;
-      padding: 8px 16px;
-      font-weight: 800;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
     footer {
       text-align: center;
       color: var(--text-sub);
@@ -519,13 +585,13 @@
         </div>
       </div>
 
-      <!-- Mini Game Button -->
-      <div onclick="openGameModal()" class="card" style="cursor: pointer;">
+      <!-- Scroll to Mini Game Section -->
+      <a href="#minigame-section" class="card">
         <div class="card-content">
-          <h3>MINI GAME</h3>
-          <p>Play Tic-Tac-Toe while waiting for release!</p>
+          <h3>MINI GAMES ARCADE</h3>
+          <p>Play Tic-Tac-Toe & Memory Matrix!</p>
         </div>
-      </div>
+      </a>
 
       <!-- Rules Anchor Link (Scrolls Down) -->
       <a href="#rules-section" class="card">
@@ -534,6 +600,53 @@
           <p>Server Features & Guidelines</p>
         </div>
       </a>
+
+    </section>
+
+    <!-- Mini Game Section -->
+    <section id="minigame-section" class="info-section game-section">
+      <h2>⚔️ ASCENDANT ARCADE</h2>
+      <p style="color: var(--text-sub); margin-bottom: 15px;">Test your skill while waiting for the server release!</p>
+      
+      <!-- Game Selector Tabs -->
+      <div class="game-nav">
+        <button class="tab-btn active" onclick="switchGame('ttt')">TIC-TAC-TOE</button>
+        <button class="tab-btn" onclick="switchGame('memory')">MEMORY MATRIX</button>
+      </div>
+
+      <!-- Game 1: Tic Tac Toe -->
+      <div id="tttGame" class="game-box active-game">
+        <div class="game-status" id="gameStatus">Player X's Turn</div>
+        <div class="ttt-board" id="tttBoard">
+          <div class="ttt-cell" onclick="makeMove(0)"></div>
+          <div class="ttt-cell" onclick="makeMove(1)"></div>
+          <div class="ttt-cell" onclick="makeMove(2)"></div>
+          <div class="ttt-cell" onclick="makeMove(3)"></div>
+          <div class="ttt-cell" onclick="makeMove(4)"></div>
+          <div class="ttt-cell" onclick="makeMove(5)"></div>
+          <div class="ttt-cell" onclick="makeMove(6)"></div>
+          <div class="ttt-cell" onclick="makeMove(7)"></div>
+          <div class="ttt-cell" onclick="makeMove(8)"></div>
+        </div>
+        <div class="game-controls">
+          <button class="game-btn" onclick="resetGame()">RESET</button>
+          <button class="game-btn" id="aiBtn" onclick="toggleAI()">MODE: VS IMPOSSIBLE AI</button>
+        </div>
+      </div>
+
+      <!-- Game 2: Memory Matrix -->
+      <div id="memoryGame" class="game-box">
+        <div class="game-status" id="memStatus">Press START to play!</div>
+        <div class="memory-board">
+          <div class="mem-pad" id="pad0" onclick="padClick(0)"></div>
+          <div class="mem-pad" id="pad1" onclick="padClick(1)"></div>
+          <div class="mem-pad" id="pad2" onclick="padClick(2)"></div>
+          <div class="mem-pad" id="pad3" onclick="padClick(3)"></div>
+        </div>
+        <div class="game-controls">
+          <button class="game-btn" onclick="startMemoryGame()">START GAME</button>
+        </div>
+      </div>
 
     </section>
 
@@ -691,34 +804,6 @@
     </div>
   </div>
 
-  <!-- MINI GAME MODAL POPUP -->
-  <div id="gameModal" class="modal-overlay">
-    <div class="modal-content" style="max-width: 450px;">
-      <span class="close-btn" onclick="closeGameModal()">&times;</span>
-      <h2 class="modal-title">ASCENDANT <span>ARENA</span></h2>
-      <p class="modal-sub">⚔️ Tic-Tac-Toe Arcade</p>
-
-      <div class="game-container">
-        <div class="game-status" id="gameStatus">Player X's Turn</div>
-        <div class="ttt-board" id="tttBoard">
-          <div class="ttt-cell" onclick="makeMove(0)"></div>
-          <div class="ttt-cell" onclick="makeMove(1)"></div>
-          <div class="ttt-cell" onclick="makeMove(2)"></div>
-          <div class="ttt-cell" onclick="makeMove(3)"></div>
-          <div class="ttt-cell" onclick="makeMove(4)"></div>
-          <div class="ttt-cell" onclick="makeMove(5)"></div>
-          <div class="ttt-cell" onclick="makeMove(6)"></div>
-          <div class="ttt-cell" onclick="makeMove(7)"></div>
-          <div class="ttt-cell" onclick="makeMove(8)"></div>
-        </div>
-        <div class="game-controls">
-          <button class="game-btn" onclick="resetGame()">RESET</button>
-          <button class="game-btn" id="aiBtn" onclick="toggleAI()">MODE: 2 PLAYERS</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <script>
     function copyIP() {
       const ip = document.getElementById("serverIP").innerText;
@@ -756,26 +841,30 @@
       document.getElementById("storeModal").style.display = "none";
     }
 
-    function openGameModal() {
-      document.getElementById("gameModal").style.display = "flex";
-    }
-
-    function closeGameModal() {
-      document.getElementById("gameModal").style.display = "none";
-    }
-
     window.onclick = function(event) {
       const storeModal = document.getElementById("storeModal");
-      const gameModal = document.getElementById("gameModal");
       if (event.target === storeModal) storeModal.style.display = "none";
-      if (event.target === gameModal) gameModal.style.display = "none";
     }
 
-    /* MINI GAME SCRIPT */
+    /* SWITCH ARCADE GAMES */
+    function switchGame(gameType) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.game-box').forEach(box => box.classList.remove('active-game'));
+
+      if (gameType === 'ttt') {
+        document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        document.getElementById('tttGame').classList.add('active-game');
+      } else {
+        document.querySelectorAll('.tab-btn')[1].classList.add('active');
+        document.getElementById('memoryGame').classList.add('active-game');
+      }
+    }
+
+    /* GAME 1: TIC-TAC-TOE WITH MINIMAX AI */
     let board = ["", "", "", "", "", "", "", "", ""];
     let currentPlayer = "X";
     let gameActive = true;
-    let vsAI = false;
+    let vsAI = true;
 
     const winConditions = [
       [0, 1, 2], [3, 4, 5], [6, 7, 8],
@@ -789,7 +878,7 @@
       board[index] = currentPlayer;
       updateBoard();
 
-      if (checkWin()) {
+      if (checkWinState(board, currentPlayer)) {
         document.getElementById("gameStatus").innerText = `Player ${currentPlayer} Wins! 🏆`;
         gameActive = false;
         return;
@@ -805,20 +894,60 @@
       document.getElementById("gameStatus").innerText = `Player ${currentPlayer}'s Turn`;
 
       if (vsAI && currentPlayer === "O" && gameActive) {
-        setTimeout(aiMove, 400);
+        setTimeout(smartAiMove, 250);
       }
     }
 
-    function aiMove() {
-      let emptyCells = board.map((val, idx) => val === "" ? idx : null).filter(val => val !== null);
-      if (emptyCells.length === 0 || !gameActive) return;
-      let randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-      makeMove(randomCell);
+    function smartAiMove() {
+      let bestScore = -Infinity;
+      let bestMove;
+      for (let i = 0; i < 9; i++) {
+        if (board[i] === "") {
+          board[i] = "O";
+          let score = minimax(board, 0, false);
+          board[i] = "";
+          if (score > bestScore) {
+            bestScore = score;
+            bestMove = i;
+          }
+        }
+      }
+      makeMove(bestMove);
     }
 
-    function checkWin() {
+    function minimax(tempBoard, depth, isMaximizing) {
+      if (checkWinState(tempBoard, "O")) return 10 - depth;
+      if (checkWinState(tempBoard, "X")) return depth - 10;
+      if (!tempBoard.includes("")) return 0;
+
+      if (isMaximizing) {
+        let bestScore = -Infinity;
+        for (let i = 0; i < 9; i++) {
+          if (tempBoard[i] === "") {
+            tempBoard[i] = "O";
+            let score = minimax(tempBoard, depth + 1, false);
+            tempBoard[i] = "";
+            bestScore = Math.max(score, bestScore);
+          }
+        }
+        return bestScore;
+      } else {
+        let bestScore = Infinity;
+        for (let i = 0; i < 9; i++) {
+          if (tempBoard[i] === "") {
+            tempBoard[i] = "X";
+            let score = minimax(tempBoard, depth + 1, true);
+            tempBoard[i] = "";
+            bestScore = Math.min(score, bestScore);
+          }
+        }
+        return bestScore;
+      }
+    }
+
+    function checkWinState(b, player) {
       return winConditions.some(condition => {
-        return condition.every(index => board[index] === currentPlayer);
+        return condition.every(index => b[index] === player);
       });
     }
 
@@ -842,8 +971,69 @@
 
     function toggleAI() {
       vsAI = !vsAI;
-      document.getElementById("aiBtn").innerText = vsAI ? "MODE: VS AI" : "MODE: 2 PLAYERS";
+      document.getElementById("aiBtn").innerText = vsAI ? "MODE: VS IMPOSSIBLE AI" : "MODE: 2 PLAYERS";
       resetGame();
+    }
+
+    /* GAME 2: MEMORY MATRIX */
+    let memSequence = [];
+    let playerSequence = [];
+    let memLevel = 0;
+    let memPlaying = false;
+
+    function startMemoryGame() {
+      memSequence = [];
+      playerSequence = [];
+      memLevel = 0;
+      memPlaying = true;
+      nextRound();
+    }
+
+    function nextRound() {
+      playerSequence = [];
+      memLevel++;
+      document.getElementById("memStatus").innerText = `Level ${memLevel} - Watch Carefully!`;
+      memSequence.push(Math.floor(Math.random() * 4));
+      playSequence();
+    }
+
+    function playSequence() {
+      let i = 0;
+      const interval = setInterval(() => {
+        lightPad(memSequence[i]);
+        i++;
+        if (i >= memSequence.length) {
+          clearInterval(interval);
+          setTimeout(() => {
+            document.getElementById("memStatus").innerText = `Level ${memLevel} - Your Turn!`;
+          }, 400);
+        }
+      }, 600);
+    }
+
+    function lightPad(id) {
+      const pad = document.getElementById(`pad${id}`);
+      pad.classList.add("lit");
+      setTimeout(() => pad.classList.remove("lit"), 350);
+    }
+
+    function padClick(id) {
+      if (!memPlaying || document.getElementById("memStatus").innerText.includes("Watch")) return;
+
+      lightPad(id);
+      playerSequence.push(id);
+
+      let stepIndex = playerSequence.length - 1;
+      if (playerSequence[stepIndex] !== memSequence[stepIndex]) {
+        document.getElementById("memStatus").innerText = `💥 Game Over at Level ${memLevel}! Press Start.`;
+        memPlaying = false;
+        return;
+      }
+
+      if (playerSequence.length === memSequence.length) {
+        document.getElementById("memStatus").innerText = "Correct! Get ready...";
+        setTimeout(nextRound, 1000);
+      }
     }
   </script>
 </body>
