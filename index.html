@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ascendant SMP | Official Network</title>
   
+  <!-- Browser Tab Icon (Favicon) -->
+  <link rel="icon" type="image/png" href="logo.png">
+  
   <style>
     /* CSS STYLES EMBEDDED DIRECTLY TO GUARANTEE LOADING */
     :root {
@@ -51,6 +54,18 @@
     header {
       text-align: center;
       margin-bottom: 10px;
+    }
+
+    .header-logo-img {
+      max-width: 130px;
+      height: auto;
+      margin-bottom: 15px;
+      filter: drop-shadow(0px 0px 12px var(--gold-glow));
+      transition: transform 0.3s ease;
+    }
+
+    .header-logo-img:hover {
+      transform: scale(1.05);
     }
 
     .logo {
@@ -404,6 +419,7 @@
     
     <!-- Header / Branding -->
     <header>
+      <img src="logo.png" alt="Ascendant SMP Logo" class="header-logo-img">
       <h1 class="logo">ASCENDANT <span>SMP</span></h1>
       <p class="tagline">🌌 ⚔️ The Ultimate Vanilla+ Survival Experience ⚔️ 🌌</p>
     </header>
@@ -622,4 +638,3 @@
   </script>
 </body>
 </html>
-<link rel="icon" type="image/png" href="logo.png">
