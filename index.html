@@ -45,6 +45,7 @@
     .logo span { color: var(--gold); }
     .tagline { color: var(--text-sub); font-size: 1.1rem; margin-top: 8px; }
 
+    /* SECTIONS & CARDS */
     .info-section { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 30px; text-align: center; }
     .info-section h2 { color: var(--gold); margin-bottom: 20px; font-size: 1.5rem; letter-spacing: 1px; }
 
@@ -139,18 +140,19 @@
 </head>
 <body>
 
+  <!-- BACKGROUND PARTICLE CANVAS -->
   <canvas id="particleCanvas"></canvas>
 
   <main class="container">
     
-    <!-- HEADER -->
+    <!-- 1. HEADER -->
     <header>
       <img src="logo.png" alt="Ascendant SMP Logo" class="header-logo-img">
       <h1 class="logo">ASCENDANT <span>SMP</span></h1>
       <p class="tagline">🌌 The Ultimate Competitive Minecraft Experience 🌌</p>
     </header>
 
-    <!-- SERVER INFO SECTION -->
+    <!-- 2. SERVER INFORMATION SECTION -->
     <section class="info-section">
       <h2>🌐 SERVER INFORMATION</h2>
       <p style="color: var(--text-sub);">Join our community server today and experience next-level PvP!</p>
@@ -176,7 +178,7 @@
       </div>
     </section>
 
-    <!-- OFFICIAL STORE SECTION -->
+    <!-- 3. OFFICIAL STORE SECTION -->
     <section class="info-section">
       <h2>🛒 OFFICIAL STORE</h2>
       <p style="color: var(--text-sub); margin-bottom: 25px;">Support the server and unlock exclusive perks & cosmetic ranks!</p>
@@ -229,7 +231,7 @@
       </div>
     </section>
 
-    <!-- 1v1 QUIZ ARENA SECTION -->
+    <!-- 4. 1v1 QUIZ ARENA SECTION -->
     <section class="info-section">
       <h2>⚔️ 1v1 QUIZ ARENA</h2>
       
@@ -473,7 +475,6 @@
         btn.style.background = "rgba(255, 255, 255, 0.05)";
       });
 
-      // 10-Second Round Countdown
       roundCountdown = setInterval(() => {
         secondsLeft--;
         updateTimerBar((secondsLeft / 10) * 100);
@@ -490,11 +491,10 @@
         }
       }, 1000);
 
-      // Bot Simulation Logic
-      const botDelay = Math.random() * 3000 + 1500; // 1.5s - 4.5s
+      const botDelay = Math.random() * 3000 + 1500;
       botTimer = setTimeout(() => {
         if (!questionAnswered && matchActive) {
-          const isCorrect = Math.random() < 0.7; // 70% accuracy
+          const isCorrect = Math.random() < 0.7;
           const opponentName = document.getElementById("p2Name").innerText;
 
           questionAnswered = true;
