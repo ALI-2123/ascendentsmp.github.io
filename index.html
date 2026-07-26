@@ -36,7 +36,7 @@
         </div>
       </a>
 
-      <!-- Store Button (Fix: Pure Button Click Opens Modal Directly) -->
+      <!-- Store Button Opens Modal -->
       <div onclick="openStoreModal()" class="card store-card-btn" style="cursor: pointer;">
         <div class="card-content">
           <h3>SERVER STORE</h3>
@@ -123,7 +123,17 @@
     <div class="modal-content">
       <span class="close-btn" onclick="closeStoreModal()">&times;</span>
       <h2 class="modal-title">ASCENDANT <span>STORE</span></h2>
-      <p class="modal-sub">Support the server and unlock exclusive aura perks!</p>
+      <p class="modal-sub">📱 Mobile Wallet & CliQ Payment Transfer Supported!</p>
+
+      <!-- PHONE PAYMENT INFO BOX -->
+      <div class="phone-payment-box">
+        <span class="pay-title">📲 Payment Transfer Number / CliQ:</span>
+        <div class="phone-number-display" onclick="copyPhone()">
+          <span id="phoneNum">00962790451588</span>
+          <button class="copy-phone-btn" id="copyPhoneBtn">COPY NUMBER</button>
+        </div>
+        <p class="pay-instruction">Send payment to the number above, then submit your transfer screenshot in a Discord ticket to claim your rank!</p>
+      </div>
 
       <div class="ranks-grid">
         <!-- VIP RANK CARD -->
@@ -145,7 +155,7 @@
             <li>📦 Extra Player Vault Slot</li>
             <li>💬 Exclusive VIP Discord Role</li>
           </ul>
-          <a href="https://discord.gg/4ePCP9JZuA" target="_blank" class="buy-btn vip-btn">BUY VIP ON DISCORD</a>
+          <a href="https://discord.gg/4ePCP9JZuA" target="_blank" class="buy-btn vip-btn">CLAIM IN DISCORD</a>
         </div>
 
         <!-- PREMIUM RANK CARD -->
@@ -168,10 +178,9 @@
             <li>🛡️ Reserved Discord Channel Access</li>
             <li>🎉 Monthly Supporter Event Entry</li>
           </ul>
-          <a href="https://discord.gg/4ePCP9JZuA" target="_blank" class="buy-btn premium-btn">BUY PREMIUM ON DISCORD</a>
+          <a href="https://discord.gg/4ePCP9JZuA" target="_blank" class="buy-btn premium-btn">CLAIM IN DISCORD</a>
         </div>
       </div>
-      <p class="modal-footer-note">💡 To buy a rank, click above to open a ticket in our Discord server.</p>
     </div>
   </div>
 
@@ -192,6 +201,18 @@
       }, 2000);
     }
 
+    function copyPhone() {
+      const phone = document.getElementById("phoneNum").innerText;
+      navigator.clipboard.writeText(phone);
+      const btn = document.getElementById("copyPhoneBtn");
+      btn.innerText = "COPIED!";
+      btn.style.background = "#4E9F3D";
+      setTimeout(() => { 
+        btn.innerText = "COPY NUMBER"; 
+        btn.style.background = "var(--gold)";
+      }, 2000);
+    }
+
     function openStoreModal() {
       document.getElementById("storeModal").style.display = "flex";
     }
@@ -200,7 +221,6 @@
       document.getElementById("storeModal").style.display = "none";
     }
 
-    // Close modal if clicking outside window
     window.onclick = function(event) {
       const modal = document.getElementById("storeModal");
       if (event.target === modal) {
