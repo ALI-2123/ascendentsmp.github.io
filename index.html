@@ -405,12 +405,13 @@
       border: 1px solid var(--gold);
       border-radius: 12px;
       padding: 20px;
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       font-weight: 800;
       min-height: 100px;
       display: flex;
       justify-content: center;
       align-items: center;
+      text-align: center;
     }
 
     .quiz-answers-grid {
@@ -427,14 +428,19 @@
       padding: 12px;
       border-radius: 8px;
       font-weight: 700;
-      font-size: 1rem;
+      font-size: 0.95rem;
       cursor: pointer;
       transition: 0.2s;
     }
 
-    .ans-btn:hover {
+    .ans-btn:hover:not(:disabled) {
       border-color: var(--gold);
       background: rgba(255, 170, 0, 0.15);
+    }
+
+    .ans-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
 
     .game-controls {
@@ -775,8 +781,8 @@
           <!-- Active Match Screen (Hidden until match starts) -->
           <div id="matchArea" style="display: none; flex-direction: column; gap: 15px;">
             <div class="quiz-scores">
-              <span class="p1-score">PLAYER 1: <span id="p1Score">0</span></span>
-              <span class="p2-score">PLAYER 2: <span id="p2Score">0</span></span>
+              <span class="p1-score">YOU (P1): <span id="p1Score">0</span></span>
+              <span class="p2-score"><span id="p2Name">OPPONENT</span> (P2): <span id="p2Score">0</span></span>
             </div>
             <div class="game-status" id="quizStatus">First to 5 Points Wins!</div>
             <div class="quiz-card" id="quizQuestion">❓ Match Starting...</div>
@@ -785,6 +791,9 @@
               <button class="ans-btn" onclick="answerQuiz(1)">Option B</button>
               <button class="ans-btn" onclick="answerQuiz(2)">Option C</button>
               <button class="ans-btn" onclick="answerQuiz(3)">Option D</button>
+            </div>
+            <div class="game-controls" style="justify-content: center;">
+              <button class="game-btn leave-btn" onclick="leaveQuizMatch()">LEAVE MATCH</button>
             </div>
           </div>
 
@@ -1083,100 +1092,93 @@
     }
 
     /* SWITCH ARCADE GAMES */
-    function switchGame(gameType) {
+    function switchGame(gameKey) {
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.game-box').forEach(box => box.classList.remove('active-game'));
-
-      if (gameType === 'ttt') {
+      
+      if(gameKey === 'ttt') {
         document.querySelectorAll('.tab-btn')[0].classList.add('active');
         document.getElementById('tttGame').classList.add('active-game');
-      } else if (gameType === 'memory') {
+      } else if(gameKey === 'memory') {
         document.querySelectorAll('.tab-btn')[1].classList.add('active');
         document.getElementById('memoryGame').classList.add('active-game');
-      } else {
+      } else if(gameKey === 'quiz') {
         document.querySelectorAll('.tab-btn')[2].classList.add('active');
         document.getElementById('quizGame').classList.add('active-game');
       }
     }
 
-    /* GAME 1: TIC-TAC-TOE WITH MINIMAX AI */
-    let board = ["", "", "", "", "", "", "", "", ""];
+    /* --- GAME 1: TIC TAC TOE LOGIC --- */
+    let tttBoard = ["", "", "", "", "", "", "", "", ""];
     let currentPlayer = "X";
-    let gameActive = true;
+    let tttActive = true;
     let vsAI = true;
 
-    const winConditions = [
-      [0, 1, 2], [3, 4, 5], [6, 7, 8],
-      [0, 3, 6], [1, 4, 7], [2, 5, 8],
-      [0, 4, 8], [2, 4, 6]
-    ];
-
     function makeMove(index) {
-      if (board[index] !== "" || !gameActive) return;
-
-      board[index] = currentPlayer;
-      updateBoard();
-
-      if (checkWinState(board, currentPlayer)) {
-        document.getElementById("gameStatus").innerText = `Player ${currentPlayer} Wins! 🏆`;
-        gameActive = false;
+      if(tttBoard[index] !== "" || !tttActive) return;
+      
+      tttBoard[index] = currentPlayer;
+      renderBoard();
+      
+      if(checkWin(currentPlayer)) {
+        document.getElementById("gameStatus").innerText = `Player ${currentPlayer} Wins! 🎉`;
+        tttActive = false;
         return;
       }
-
-      if (!board.includes("")) {
+      if(tttBoard.every(cell => cell !== "")) {
         document.getElementById("gameStatus").innerText = "It's a Draw! 🤝";
-        gameActive = false;
+        tttActive = false;
         return;
       }
-
+      
       currentPlayer = currentPlayer === "X" ? "O" : "X";
       document.getElementById("gameStatus").innerText = `Player ${currentPlayer}'s Turn`;
 
-      if (vsAI && currentPlayer === "O" && gameActive) {
-        setTimeout(smartAiMove, 250);
+      if(vsAI && currentPlayer === "O" && tttActive) {
+        setTimeout(aiMove, 300);
       }
     }
 
-    function smartAiMove() {
+    function aiMove() {
       let bestScore = -Infinity;
-      let bestMove;
-      for (let i = 0; i < 9; i++) {
-        if (board[i] === "") {
-          board[i] = "O";
-          let score = minimax(board, 0, false);
-          board[i] = "";
-          if (score > bestScore) {
+      let move;
+      for(let i=0; i<9; i++) {
+        if(tttBoard[i] === "") {
+          tttBoard[i] = "O";
+          let score = minimax(tttBoard, 0, false);
+          tttBoard[i] = "";
+          if(score > bestScore) {
             bestScore = score;
-            bestMove = i;
+            move = i;
           }
         }
       }
-      makeMove(bestMove);
+      makeMove(move);
     }
 
-    function minimax(tempBoard, depth, isMaximizing) {
-      if (checkWinState(tempBoard, "O")) return 10 - depth;
-      if (checkWinState(tempBoard, "X")) return depth - 10;
-      if (!tempBoard.includes("")) return 0;
+    function minimax(board, depth, isMaximizing) {
+      if(checkWin("O")) return 10 - depth;
+      if(checkWin("X")) return depth - 10;
+      if(board.every(cell => cell !== "")) return 0;
 
-      if (isMaximizing) {
+      if(isMaximizing) {
         let bestScore = -Infinity;
-        for (let i = 0; i < 9; i++) {
-          if (tempBoard[i] === "") {
-            tempBoard[i] = "O";
-            let score = minimax(tempBoard, depth + 1, false);
-            tempBoard[i] = "";
+        for(let i=0; i<9; i++) {
+          if(board[i] === "") {
+            board[i] = "O";
+            let score = minimax(board, depth + 1, false);
+            board[i] = "";
             bestScore = Math.max(score, bestScore);
           }
         }
         return bestScore;
       } else {
         let bestScore = Infinity;
-        for (let i = 0; i < 9; i++) {
-          if (tempBoard[i] === "") {
-            tempBoard[i] = "X";
-            let score = minimax(tempBoard, depth + 1, true);
-            tempBoard[i] = "";
+        for(let i=0; i<9; i++) {
+          if(board[i] === "") {
+            board[i] = "X";
+            let score = minimax(board, depth + 1, true);
+            board[i] = "";
             bestScore = Math.min(score, bestScore);
           }
         }
@@ -1184,236 +1186,256 @@
       }
     }
 
-    function checkWinState(b, player) {
-      return winConditions.some(condition => {
-        return condition.every(index => b[index] === player);
-      });
+    function checkWin(p) {
+      const wins = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
+      ];
+      return wins.some(w => w.every(i => tttBoard[i] === p));
     }
 
-    function updateBoard() {
+    function renderBoard() {
       const cells = document.querySelectorAll(".ttt-cell");
       cells.forEach((cell, idx) => {
-        cell.innerText = board[idx];
+        cell.innerText = tttBoard[idx];
         cell.className = "ttt-cell";
-        if (board[idx] === "X") cell.classList.add("x-mark");
-        if (board[idx] === "O") cell.classList.add("o-mark");
+        if(tttBoard[idx] === "X") cell.classList.add("x-mark");
+        if(tttBoard[idx] === "O") cell.classList.add("o-mark");
       });
     }
 
     function resetGame() {
-      board = ["", "", "", "", "", "", "", "", ""];
+      tttBoard = ["", "", "", "", "", "", "", "", ""];
       currentPlayer = "X";
-      gameActive = true;
+      tttActive = true;
       document.getElementById("gameStatus").innerText = "Player X's Turn";
-      updateBoard();
+      renderBoard();
     }
 
     function toggleAI() {
       vsAI = !vsAI;
-      document.getElementById("aiBtn").innerText = vsAI ? "MODE: VS IMPOSSIBLE AI" : "MODE: 2 PLAYERS";
+      document.getElementById("aiBtn").innerText = vsAI ? "MODE: VS IMPOSSIBLE AI" : "MODE: 2 PLAYER LOCAL";
       resetGame();
     }
 
-    /* GAME 2: UPGRADED 3x3 SPEED MEMORY MATRIX */
+    /* --- GAME 2: 3x3 SPEED MEMORY MATRIX --- */
     let memSequence = [];
     let playerSequence = [];
-    let memLevel = 0;
+    let memRound = 0;
     let memPlaying = false;
 
     function startMemoryGame() {
       memSequence = [];
       playerSequence = [];
-      memLevel = 0;
+      memRound = 0;
       memPlaying = true;
-      nextRound();
+      nextMemRound();
     }
 
-    function nextRound() {
+    function nextMemRound() {
       playerSequence = [];
-      memLevel++;
-      document.getElementById("memStatus").innerText = `Level ${memLevel} - Watch Grid!`;
+      memRound++;
+      document.getElementById("memStatus").innerText = `Round ${memRound} - Watch closely!`;
       memSequence.push(Math.floor(Math.random() * 9));
-      playSequence();
+      playMemSequence();
     }
 
-    function playSequence() {
+    function playMemSequence() {
       let i = 0;
-      let speed = Math.max(220, 500 - (memLevel * 30));
       const interval = setInterval(() => {
         lightPad(memSequence[i]);
         i++;
-        if (i >= memSequence.length) {
+        if(i >= memSequence.length) {
           clearInterval(interval);
           setTimeout(() => {
-            document.getElementById("memStatus").innerText = `Level ${memLevel} - Repeat Pattern!`;
-          }, 300);
+            document.getElementById("memStatus").innerText = `Your turn! (${memSequence.length} Steps)`;
+          }, 400);
         }
-      }, speed);
+      }, 600);
     }
 
-    function lightPad(id) {
-      const pad = document.getElementById(`pad${id}`);
+    function lightPad(idx) {
+      const pad = document.getElementById(`pad${idx}`);
       pad.classList.add("lit");
-      setTimeout(() => pad.classList.remove("lit"), 180);
+      setTimeout(() => pad.classList.remove("lit"), 300);
     }
 
-    function padClick(id) {
-      if (!memPlaying || document.getElementById("memStatus").innerText.includes("Watch")) return;
+    function padClick(idx) {
+      if(!memPlaying) return;
+      lightPad(idx);
+      playerSequence.push(idx);
 
-      lightPad(id);
-      playerSequence.push(id);
-
-      let stepIndex = playerSequence.length - 1;
-      if (playerSequence[stepIndex] !== memSequence[stepIndex]) {
-        document.getElementById("memStatus").innerText = `💥 Game Over at Level ${memLevel}! Press Start.`;
+      const currentStep = playerSequence.length - 1;
+      if(playerSequence[currentStep] !== memSequence[currentStep]) {
+        document.getElementById("memStatus").innerText = `❌ Game Over at Round ${memRound}! Press START to try again.`;
         memPlaying = false;
         return;
       }
 
-      if (playerSequence.length === memSequence.length) {
-        document.getElementById("memStatus").innerText = "Correct! Speeding up...";
-        setTimeout(nextRound, 800);
+      if(playerSequence.length === memSequence.length) {
+        document.getElementById("memStatus").innerText = "✅ Great! Next round coming up...";
+        setTimeout(nextMemRound, 1000);
       }
     }
 
-    /* GAME 3: REAL-TIME CROSS-TAB 1v1 MATCHMAKING QUEUE QUIZ */
-    const quizData = [
-      { q: "What item is needed to spawn the Wither?", a: ["Wither Skeleton Skull", "End Crystal", "Nether Star", "Dragon Egg"], c: 0 },
-      { q: "What is 12 + 15?", a: ["25", "27", "28", "30"], c: 1 },
-      { q: "Which tool digs dirt fastest?", a: ["Pickaxe", "Axe", "Shovel", "Hoe"], c: 2 },
-      { q: "What ingredient makes Strength potions?", a: ["Blaze Powder", "Ghast Tear", "Magma Cream", "Sugar"], c: 0 },
-      { q: "What is 9 × 8?", a: ["64", "72", "81", "68"], c: 1 },
-      { q: "How many Obsidian blocks are needed for a minimum Nether Portal?", a: ["8", "10", "12", "14"], c: 1 },
-      { q: "Which mob drops String upon death?", a: ["Zombie", "Skeleton", "Spider", "Creeper"], c: 2 },
-      { q: "What is 150 - 65?", a: ["75", "85", "95", "80"], c: 1 }
+    /* --- GAME 3: FIXED 1v1 MATCHMAKING QUEUE QUIZ --- */
+    const quizDatabase = [
+      { q: "Which tool speed multiplier does Efficiency V grant?", a: ["+150%", "+250%", "+300%", "+500%"], correct: 3 },
+      { q: "What is the primary ingredient used to craft End Crystals?", a: ["Eye of Ender", "Ghast Tear", "End Stone", "Nether Star"], correct: 1 },
+      { q: "Which potion effect counters Poison completely?", a: ["Regeneration", "Milk", "Strength", "Instant Health"], correct: 1 },
+      { q: "How much maximum extra damage can a Mace execute with heavy fall height?", a: ["10 Hearts", "20 Hearts", "Uncapped", "50 Hearts"], correct: 2 },
+      { q: "What item is required to charge an Anchor for Explosive PvP?", a: ["Glowstone", "Blaze Powder", "Ender Pearl", "Redstone"], correct: 0 },
+      { q: "What enchantment boosts attack speed on weapons?", a: ["Haste", "Quick Draw", "Sweeping Edge", "None (No Ench)"], correct: 3 },
+      { q: "Which food item gives the fastest saturation in Minecraft?", a: ["Golden Carrot", "Enchanted Apple", "Steak", "Porkchop"], correct: 0 }
     ];
 
-    let userInQueue = false;
+    let inQueue = false;
+    let matchActive = false;
+    let queueTimer = null;
+    let botTimer = null;
+    let currentQuizIndex = 0;
     let p1Score = 0;
     let p2Score = 0;
-    let currentQuizIndex = 0;
-    let quizActive = false;
-    let countdownActive = false;
-
-    // Synchronize queue across open browser tabs/windows
-    const queueChannel = new BroadcastChannel('ascendant_1v1_queue');
-
-    function updateQueueDisplay(count) {
-      document.getElementById("lobbyCount").innerText = `${count} / 2`;
-    }
+    let questionAnswered = false;
+    const botNames = ["AuraPvP_99", "CrystalGod", "MaceKing", "VoidWalker", "Shadow_X"];
 
     function toggleQueue() {
-      const btn = document.getElementById("joinQueueBtn");
-      
-      if (!userInQueue) {
-        userInQueue = true;
-        btn.innerText = "LEAVE QUEUE";
-        btn.classList.add("leave-btn");
-        document.getElementById("queueStatus").innerText = "⏳ Waiting for Opponent to Join...";
-
-        // Tell other tabs/players a player joined
-        queueChannel.postMessage({ type: 'PLAYER_JOINED' });
+      if(inQueue) {
+        leaveQueue();
       } else {
-        userInQueue = false;
-        btn.innerText = "JOIN QUEUE";
-        btn.classList.remove("leave-btn");
-        document.getElementById("queueStatus").innerText = "Click JOIN QUEUE to enter matchmaking!";
-
-        // Tell other tabs/players a player left
-        queueChannel.postMessage({ type: 'PLAYER_LEFT' });
+        joinQueue();
       }
     }
 
-    // Handle cross-tab queue events
-    let currentLobbySize = 0;
-    queueChannel.onmessage = (event) => {
-      if (event.data.type === 'PLAYER_JOINED') {
-        currentLobbySize++;
-        if (currentLobbySize > 2) currentLobbySize = 2;
-        updateQueueDisplay(currentLobbySize);
+    function joinQueue() {
+      inQueue = true;
+      document.getElementById("joinQueueBtn").innerText = "LEAVE QUEUE";
+      document.getElementById("joinQueueBtn").classList.add("leave-btn");
+      document.getElementById("lobbyCount").innerText = "1 / 2";
+      document.getElementById("queueStatus").innerText = "Searching for opponent...";
 
-        if (currentLobbySize === 2 && userInQueue && !countdownActive) {
-          startMatchCountdown();
-        }
-      } else if (event.data.type === 'PLAYER_LEFT') {
-        currentLobbySize--;
-        if (currentLobbySize < 0) currentLobbySize = 0;
-        updateQueueDisplay(currentLobbySize);
-      }
-    };
-
-    function startMatchCountdown() {
-      countdownActive = true;
-      document.getElementById("queueStatus").innerText = "⚔️ OPPONENT FOUND! Starting in 3...";
-      let count = 3;
-      const cd = setInterval(() => {
-        count--;
-        if (count > 0) {
-          document.getElementById("queueStatus").innerText = `⚔️ OPPONENT FOUND! Starting in ${count}...`;
-        } else {
-          clearInterval(cd);
-          countdownActive = false;
-          launchQuizMatch();
+      let seconds = 0;
+      queueTimer = setInterval(() => {
+        seconds++;
+        document.getElementById("queueStatus").innerText = `Searching for opponent... (${seconds}s)`;
+        if(seconds >= 3) {
+          clearInterval(queueTimer);
+          document.getElementById("lobbyCount").innerText = "2 / 2";
+          document.getElementById("queueStatus").innerText = "Match Found! Starting Quiz...";
+          setTimeout(startQuizMatch, 1200);
         }
       }, 1000);
     }
 
-    function launchQuizMatch() {
-      document.getElementById("queueBox").style.display = "none";
-      document.getElementById("matchArea").style.display = "flex";
+    function leaveQueue() {
+      inQueue = false;
+      clearInterval(queueTimer);
+      document.getElementById("joinQueueBtn").innerText = "JOIN QUEUE";
+      document.getElementById("joinQueueBtn").classList.remove("leave-btn");
+      document.getElementById("lobbyCount").innerText = "0 / 2";
+      document.getElementById("queueStatus").innerText = "Click JOIN QUEUE to enter matchmaking!";
+    }
+
+    function startQuizMatch() {
+      inQueue = false;
+      matchActive = true;
       p1Score = 0;
       p2Score = 0;
-      document.getElementById("p1Score").innerText = p1Score;
-      document.getElementById("p2Score").innerText = p2Score;
-      quizActive = true;
+      
+      const randomBot = botNames[Math.floor(Math.random() * botNames.length)];
+      document.getElementById("p2Name").innerText = randomBot;
+      document.getElementById("p1Score").innerText = "0";
+      document.getElementById("p2Score").innerText = "0";
+
+      document.getElementById("queueBox").style.display = "none";
+      document.getElementById("matchArea").style.display = "flex";
+
       loadNextQuizQuestion();
     }
 
     function loadNextQuizQuestion() {
-      if (p1Score >= 5 || p2Score >= 5) {
-        let winner = p1Score >= 5 ? "PLAYER 1" : "PLAYER 2";
-        document.getElementById("quizStatus").innerText = `🏆 ${winner} WINS THE MATCH!`;
-        document.getElementById("quizQuestion").innerText = "Game Over!";
-        quizActive = false;
-        
-        setTimeout(() => {
-          document.getElementById("queueBox").style.display = "flex";
-          document.getElementById("matchArea").style.display = "none";
-          userInQueue = false;
-          currentLobbySize = 0;
-          updateQueueDisplay(0);
-          const btn = document.getElementById("joinQueueBtn");
-          btn.innerText = "JOIN QUEUE";
-          btn.classList.remove("leave-btn");
-          document.getElementById("queueStatus").innerText = "Click JOIN QUEUE to enter matchmaking!";
-        }, 3500);
-        return;
-      }
+      if(!matchActive) return;
 
-      currentQuizIndex = Math.floor(Math.random() * quizData.length);
-      const q = quizData[currentQuizIndex];
-      document.getElementById("quizQuestion").innerText = q.q;
-      document.getElementById("quizStatus").innerText = "First to click the right answer gets +1!";
+      questionAnswered = false;
+      currentQuizIndex = Math.floor(Math.random() * quizDatabase.length);
+      const qData = quizDatabase[currentQuizIndex];
 
-      const grid = document.getElementById("quizAnswers");
-      grid.innerHTML = "";
-      q.a.forEach((opt, idx) => {
-        grid.innerHTML += `<button class="ans-btn" onclick="answerQuiz(${idx})">${opt}</button>`;
+      document.getElementById("quizStatus").innerText = "First to 5 Points Wins!";
+      document.getElementById("quizQuestion").innerText = `❓ ${qData.q}`;
+
+      const buttons = document.querySelectorAll("#quizAnswers .ans-btn");
+      buttons.forEach((btn, idx) => {
+        btn.innerText = `${String.fromCharCode(65 + idx)}: ${qData.a[idx]}`;
+        btn.disabled = false;
+        btn.style.background = "rgba(255, 255, 255, 0.05)";
       });
+
+      // Simulate Opponent AI Response
+      clearTimeout(botTimer);
+      const botDelay = Math.random() * 2500 + 1500;
+      botTimer = setTimeout(() => {
+        if(!questionAnswered && matchActive) {
+          const isCorrect = Math.random() < 0.7; // 70% accuracy
+          if(isCorrect) {
+            p2Score++;
+            document.getElementById("p2Score").innerText = p2Score;
+            document.getElementById("quizStatus").innerText = `⚡ ${document.getElementById("p2Name").innerText} answered correctly first! (+1 Point)`;
+            questionAnswered = true;
+            disableQuizButtons();
+            checkQuizWinner();
+          }
+        }
+      }, botDelay);
     }
 
-    function answerQuiz(optionIdx) {
-      if (!quizActive) return;
+    function answerQuiz(optionIndex) {
+      if(questionAnswered || !matchActive) return;
+      questionAnswered = true;
+      clearTimeout(botTimer);
+      disableQuizButtons();
 
-      const q = quizData[currentQuizIndex];
-      if (optionIdx === q.c) {
+      const qData = quizDatabase[currentQuizIndex];
+      const buttons = document.querySelectorAll("#quizAnswers .ans-btn");
+
+      if(optionIndex === qData.correct) {
         p1Score++;
         document.getElementById("p1Score").innerText = p1Score;
-        document.getElementById("quizStatus").innerText = "✨ Point scored!";
+        buttons[optionIndex].style.background = "rgba(46, 213, 115, 0.4)";
+        document.getElementById("quizStatus").innerText = "🎯 Correct! Point to YOU!";
       } else {
-        document.getElementById("quizStatus").innerText = "❌ Wrong answer!";
+        buttons[optionIndex].style.background = "rgba(255, 71, 87, 0.4)";
+        buttons[qData.correct].style.background = "rgba(46, 213, 115, 0.4)";
+        document.getElementById("quizStatus").innerText = "❌ Wrong Answer!";
       }
-      loadNextQuizQuestion();
+
+      checkQuizWinner();
+    }
+
+    function disableQuizButtons() {
+      document.querySelectorAll("#quizAnswers .ans-btn").forEach(btn => btn.disabled = true);
+    }
+
+    function checkQuizWinner() {
+      if(p1Score >= 5) {
+        document.getElementById("quizStatus").innerText = "🏆 VICTORY! You won the 1v1 Quiz Arena!";
+        matchActive = false;
+      } else if(p2Score >= 5) {
+        document.getElementById("quizStatus").innerText = `💀 DEFEAT! ${document.getElementById("p2Name").innerText} won the match.`;
+        matchActive = false;
+      } else {
+        setTimeout(loadNextQuizQuestion, 2000);
+      }
+    }
+
+    function leaveQuizMatch() {
+      matchActive = false;
+      clearTimeout(botTimer);
+      clearInterval(queueTimer);
+      
+      document.getElementById("matchArea").style.display = "none";
+      document.getElementById("queueBox").style.display = "flex";
+      leaveQueue();
     }
   </script>
 </body>
