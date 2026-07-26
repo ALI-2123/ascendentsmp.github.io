@@ -1279,7 +1279,7 @@
       }
     }
 
-    /* --- GAME 3: FIXED 1v1 MATCHMAKING QUEUE QUIZ --- */
+    /* --- GAME 3: EXPANDED NO-REPEAT 1v1 MATCHMAKING QUEUE QUIZ --- */
     const quizDatabase = [
       { q: "Which tool speed multiplier does Efficiency V grant?", a: ["+150%", "+250%", "+300%", "+500%"], correct: 3 },
       { q: "What is the primary ingredient used to craft End Crystals?", a: ["Eye of Ender", "Ghast Tear", "End Stone", "Nether Star"], correct: 1 },
@@ -1287,18 +1287,44 @@
       { q: "How much maximum extra damage can a Mace execute with heavy fall height?", a: ["10 Hearts", "20 Hearts", "Uncapped", "50 Hearts"], correct: 2 },
       { q: "What item is required to charge an Anchor for Explosive PvP?", a: ["Glowstone", "Blaze Powder", "Ender Pearl", "Redstone"], correct: 0 },
       { q: "What enchantment boosts attack speed on weapons?", a: ["Haste", "Quick Draw", "Sweeping Edge", "None (No Ench)"], correct: 3 },
-      { q: "Which food item gives the fastest saturation in Minecraft?", a: ["Golden Carrot", "Enchanted Apple", "Steak", "Porkchop"], correct: 0 }
+      { q: "Which food item gives the fastest saturation in Minecraft?", a: ["Golden Carrot", "Enchanted Apple", "Steak", "Porkchop"], correct: 0 },
+      { q: "Which enchantment reduces blast damage from End Crystals?", a: ["Protection IV", "Blast Protection IV", "Projectile Protection", "Feather Falling"], correct: 1 },
+      { q: "How many Obsidian blocks are required to craft a Respawn Anchor?", a: ["4 Crying Obsidian", "6 Crying Obsidian", "8 Obsidian", "10 Crying Obsidian"], correct: 1 },
+      { q: "What is the cooldown time for Ender Pearls in vanilla Minecraft combat?", a: ["0.5 Seconds", "1.0 Second", "1.5 Seconds", "2.0 Seconds"], correct: 1 },
+      { q: "Which enchantment allows you to deal extra knockback with a Mace?", a: ["Knockback", "Punch", "Breach", "Wind Burst"], correct: 3 },
+      { q: "What item clears all active potion effects instantly when consumed?", a: ["Honey Bottle", "Golden Apple", "Milk Bucket", "Chorus Fruit"], correct: 2 },
+      { q: "Which armor enchantment reduces armor penetration from Breach?", a: ["Unbreaking", "Protection", "Density", "None"], correct: 1 },
+      { q: "What is the maximum power charge multiplier for a Bow?", a: ["2.0x", "3.0x", "4.0x", "5.0x"], correct: 1 },
+      { q: "Which block resets fall damage completely when landed on?", a: ["Slime Block", "Water Bucket", "Cobweb", "All of the Above"], correct: 3 },
+      { q: "How much health does an Enchanted Golden Apple restore directly?", a: ["2 Hearts", "4 Hearts", "8 Hearts", "10 Hearts"], correct: 0 },
+      { q: "Which status effect increases melee attack damage by 3 damage per level?", a: ["Haste", "Strength", "Resistance", "Speed"], correct: 1 },
+      { q: "What item is dropped by Shulkers to craft Shulker Boxes?", a: ["Shulker Shell", "Shulker Core", "End Pearl", "Purpur Crystal"], correct: 0 },
+      { q: "Which enchantment increases your swim speed in water?", a: ["Depth Strider", "Frost Walker", "Aqua Affinity", "Riptide"], correct: 0 },
+      { q: "What level of Resistance makes a player completely immune to all damage?", a: ["Resistance III", "Resistance IV", "Resistance V", "Resistance X"], correct: 2 },
+      { q: "Which potion combination gives the highest burst heal?", a: ["Health II + Regen II", "Health II + Gapple", "Golden Apple + Milk", "Regen II + Totem"], correct: 0 },
+      { q: "What component is needed to craft a Minecart with TNT?", a: ["TNT + Iron Ingot", "Minecart + TNT", "Redstone + Minecart", "Gunpowder + Iron"], correct: 1 },
+      { q: "Which mob drop is required to brew Speed Potions?", a: ["Sugar", "Nether Wart", "Glistering Melon", "Blaze Powder"], correct: 0 }
     ];
 
     let inQueue = false;
     let matchActive = false;
     let queueTimer = null;
     let botTimer = null;
-    let currentQuizIndex = 0;
+    let availableQuestions = [];
+    let currentQuizIndex = -1;
     let p1Score = 0;
     let p2Score = 0;
     let questionAnswered = false;
     const botNames = ["AuraPvP_99", "CrystalGod", "MaceKing", "VoidWalker", "Shadow_X"];
+
+    // Initialize/Shuffle questions pool to prevent looping
+    function resetQuestionPool() {
+      availableQuestions = Array.from(Array(quizDatabase.length).keys());
+      for (let i = availableQuestions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [availableQuestions[i], availableQuestions[j]] = [availableQuestions[j], availableQuestions[i]];
+      }
+    }
 
     function toggleQueue() {
       if(inQueue) {
@@ -1343,6 +1369,8 @@
       p1Score = 0;
       p2Score = 0;
       
+      resetQuestionPool();
+
       const randomBot = botNames[Math.floor(Math.random() * botNames.length)];
       document.getElementById("p2Name").innerText = randomBot;
       document.getElementById("p1Score").innerText = "0";
@@ -1357,8 +1385,12 @@
     function loadNextQuizQuestion() {
       if(!matchActive) return;
 
+      if (availableQuestions.length === 0) {
+        resetQuestionPool();
+      }
+
       questionAnswered = false;
-      currentQuizIndex = Math.floor(Math.random() * quizDatabase.length);
+      currentQuizIndex = availableQuestions.pop();
       const qData = quizDatabase[currentQuizIndex];
 
       document.getElementById("quizStatus").innerText = "First to 5 Points Wins!";
@@ -1376,7 +1408,7 @@
       const botDelay = Math.random() * 2500 + 1500;
       botTimer = setTimeout(() => {
         if(!questionAnswered && matchActive) {
-          const isCorrect = Math.random() < 0.7; // 70% accuracy
+          const isCorrect = Math.random() < 0.65; // 65% accuracy
           if(isCorrect) {
             p2Score++;
             document.getElementById("p2Score").innerText = p2Score;
