@@ -25,27 +25,27 @@
       <button class="copy-btn" id="copyBtn">COPY</button>
     </div>
 
-    <!-- Quick Links -->
+    <!-- Navigation Buttons -->
     <section class="card-grid">
       
-      <!-- Discord Invite Link -->
+      <!-- Working Discord Invite -->
       <a href="https://discord.gg/4ePCP9JZuA" target="_blank" class="card">
         <div class="card-content">
           <h3>DISCORD</h3>
-          <p>Join the Community & Launch Updates</p>
+          <p>Join for launch updates & community chat</p>
         </div>
       </a>
 
-      <!-- Free Store / Perks Info -->
-      <a href="https://discord.gg/4ePCP9JZuA" target="_blank" class="card">
+      <!-- Store Button (Temporary Discord Redirect) -->
+      <a href="javascript:void(0)" onclick="openStoreNotice()" class="card">
         <div class="card-content">
           <h3>STORE & PERKS</h3>
           <p>100% No Pay-To-Win & Free Perks</p>
         </div>
       </a>
 
-      <!-- Rules Anchor -->
-      <a href="#rules" class="card">
+      <!-- Rules Anchor Link (Scrolls Down) -->
+      <a href="#rules-section" class="card">
         <div class="card-content">
           <h3>INFO & RULES</h3>
           <p>Server Features & Guidelines</p>
@@ -86,7 +86,7 @@
     </section>
 
     <!-- Server Rules Section -->
-    <section id="rules" class="info-section">
+    <section id="rules-section" class="info-section">
       <h2>📜 SERVER RULES</h2>
       <div class="rules-box">
         <div class="rule-item">
@@ -133,6 +133,12 @@
         btn.innerText = "COPY"; 
         btn.style.background = "var(--gold)";
       }, 2000);
+    }
+
+    function openStoreNotice() {
+      if (confirm("The webstore is opening soon! Would you like to join our Discord to check available perks in the meantime?")) {
+        window.open("https://discord.gg/4ePCP9JZuA", "_blank");
+      }
     }
   </script>
 </body>
