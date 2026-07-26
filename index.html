@@ -45,6 +45,19 @@
       display: flex;
       justify-content: center;
       padding: 40px 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* BACKGROUND PARTICLES CANVAS */
+    #particleCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
     }
 
     .container {
@@ -53,6 +66,8 @@
       display: flex;
       flex-direction: column;
       gap: 30px;
+      position: relative;
+      z-index: 1;
     }
 
     header {
@@ -635,6 +650,9 @@
 </head>
 <body>
 
+  <!-- BACKGROUND PARTICLES CANVAS -->
+  <canvas id="particleCanvas"></canvas>
+
   <main class="container">
     
     <!-- Header / Branding -->
@@ -930,6 +948,99 @@
   </div>
 
   <script>
+    /* FLOATING PARTICLES CANVAS ANIMATION ENGINE */
+    const canvas = document.getElementById("particleCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", () => {
+      resizeCanvas();
+      initParticles();
+    });
+    resizeCanvas();
+
+    const particleColors = ["#ffaa00", "#00f2fe", "#ab47bc", "#ffffff"];
+
+    class Particle {
+      constructor() {
+        this.reset(true);
+      }
+      reset(initial = false) {
+        this.x = Math.random() * canvas.width;
+        this.y = initial ? Math.random() * canvas.height : canvas.height + 10;
+        this.size = Math.random() * 2.2 + 0.8;
+        this.speedX = (Math.random() - 0.5) * 0.45;
+        this.speedY = -(Math.random() * 0.5 + 0.2); // upward drift
+        this.color = particleColors[Math.floor(Math.random() * particleColors.length)];
+        this.alpha = Math.random() * 0.6 + 0.25;
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        if (this.y < -10 || this.x < -10 || this.x > canvas.width + 10) {
+          this.reset(false);
+        }
+      }
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.fillStyle = this.color;
+        ctx.shadowBlur = this.size * 3.5;
+        ctx.shadowColor = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    function initParticles() {
+      particles = [];
+      const particleCount = Math.min(Math.floor(window.innerWidth / 22), 60);
+      for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle());
+      }
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].draw();
+
+        // Connect close particles with subtle aura lines
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < 90) {
+            ctx.save();
+            ctx.globalAlpha = (1 - dist / 90) * 0.12;
+            ctx.strokeStyle = particles[i].color;
+            ctx.lineWidth = 0.5;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+            ctx.restore();
+          }
+        }
+      }
+      requestAnimationFrame(animateParticles);
+    }
+
+    initParticles();
+    animateParticles();
+
+    /* ORIGINAL SITE FUNCTIONS */
     function copyIP() {
       const ip = document.getElementById("serverIP").innerText;
       if (ip === "Coming Soon...") {
