@@ -148,12 +148,16 @@
   </main>
 
   <script>
-    /* PARTICLES ENGINE */
+    /* PARTICLES ENGINE WITH CONNECTING LINES */
     const canvas = document.getElementById("particleCanvas");
     const ctx = canvas.getContext("2d");
     let particles = [];
+    const particleColors = ["#ffaa00", "#00f2fe", "#ab47bc", "#ffffff"];
 
-    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    function resizeCanvas() { 
+      canvas.width = window.innerWidth; 
+      canvas.height = window.innerHeight; 
+    }
     window.addEventListener("resize", () => { resizeCanvas(); initParticles(); });
     resizeCanvas();
 
@@ -162,19 +166,23 @@
       reset(initial = false) {
         this.x = Math.random() * canvas.width;
         this.y = initial ? Math.random() * canvas.height : canvas.height + 10;
-        this.size = Math.random() * 2 + 0.8;
+        this.size = Math.random() * 2.2 + 0.8;
+        this.speedX = (Math.random() - 0.5) * 0.4;
         this.speedY = -(Math.random() * 0.5 + 0.2);
-        this.color = ["#ffaa00", "#00f2fe", "#ab47bc"][Math.floor(Math.random() * 3)];
-        this.alpha = Math.random() * 0.6 + 0.2;
+        this.color = particleColors[Math.floor(Math.random() * particleColors.length)];
+        this.alpha = Math.random() * 0.6 + 0.3;
       }
       update() {
+        this.x += this.speedX;
         this.y += this.speedY;
-        if (this.y < -10) this.reset(false);
+        if (this.y < -10 || this.x < -10 || this.x > canvas.width + 10) this.reset(false);
       }
       draw() {
         ctx.save();
         ctx.globalAlpha = this.alpha;
         ctx.fillStyle = this.color;
+        ctx.shadowBlur = this.size * 3;
+        ctx.shadowColor = this.color;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
@@ -184,10 +192,40 @@
 
     function initParticles() {
       particles = [];
-      for (let i = 0; i < 40; i++) particles.push(new Particle());
+      const particleCount = Math.max(Math.floor(window.innerWidth / 18), 50);
+      for (let i = 0; i < particleCount; i++) particles.push(new Particle());
     }
+
+    function drawConnections() {
+      const maxDistance = 150;
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const p1 = particles[i];
+          const p2 = particles[j];
+
+          const dx = p1.x - p2.x;
+          const dy = p1.y - p2.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < maxDistance) {
+            ctx.save();
+            const opacity = (1 - dist / maxDistance) * 0.25;
+            ctx.globalAlpha = opacity;
+            ctx.strokeStyle = p1.color;
+            ctx.lineWidth = 0.8;
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+            ctx.restore();
+          }
+        }
+      }
+    }
+
     function animateParticles() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawConnections();
       particles.forEach(p => { p.update(); p.draw(); });
       requestAnimationFrame(animateParticles);
     }
