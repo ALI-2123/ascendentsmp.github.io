@@ -33,3 +33,6 @@
 .info-list strong {
   color: var(--gold);
 }
+html {
+  scroll-behavior: smooth;
+}
