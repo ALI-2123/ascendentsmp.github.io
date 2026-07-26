@@ -135,7 +135,7 @@
 
     .card-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 20px;
     }
 
@@ -413,6 +413,65 @@
     .premium-btn { background: #ab47bc; color: #fff; }
     .elite-btn { background: var(--elite-cyan); color: #000; }
 
+    /* MINI GAME STYLES */
+    .game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .game-status {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--gold);
+    }
+
+    .ttt-board {
+      display: grid;
+      grid-template-columns: repeat(3, 90px);
+      grid-template-rows: repeat(3, 90px);
+      gap: 10px;
+    }
+
+    .ttt-cell {
+      background: rgba(0, 0, 0, 0.5);
+      border: 2px solid var(--border-color);
+      border-radius: 10px;
+      font-size: 2.5rem;
+      font-weight: 900;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+    }
+
+    .ttt-cell:hover {
+      border-color: var(--gold);
+      background: rgba(255, 170, 0, 0.1);
+    }
+
+    .ttt-cell.x-mark { color: var(--gold); }
+    .ttt-cell.o-mark { color: var(--elite-cyan); }
+
+    .game-controls {
+      display: flex;
+      gap: 10px;
+    }
+
+    .game-btn {
+      background: var(--gold);
+      color: #000;
+      border: none;
+      padding: 8px 16px;
+      font-weight: 800;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
     footer {
       text-align: center;
       color: var(--text-sub);
@@ -457,6 +516,14 @@
         <div class="card-content">
           <h3>SERVER STORE</h3>
           <p>VIP, Premium & Elite Ranks &bull; Monthly Perks</p>
+        </div>
+      </div>
+
+      <!-- Mini Game Button -->
+      <div onclick="openGameModal()" class="card" style="cursor: pointer;">
+        <div class="card-content">
+          <h3>MINI GAME</h3>
+          <p>Play Tic-Tac-Toe while waiting for release!</p>
         </div>
       </div>
 
@@ -624,6 +691,34 @@
     </div>
   </div>
 
+  <!-- MINI GAME MODAL POPUP -->
+  <div id="gameModal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 450px;">
+      <span class="close-btn" onclick="closeGameModal()">&times;</span>
+      <h2 class="modal-title">ASCENDANT <span>ARENA</span></h2>
+      <p class="modal-sub">⚔️ Tic-Tac-Toe Arcade</p>
+
+      <div class="game-container">
+        <div class="game-status" id="gameStatus">Player X's Turn</div>
+        <div class="ttt-board" id="tttBoard">
+          <div class="ttt-cell" onclick="makeMove(0)"></div>
+          <div class="ttt-cell" onclick="makeMove(1)"></div>
+          <div class="ttt-cell" onclick="makeMove(2)"></div>
+          <div class="ttt-cell" onclick="makeMove(3)"></div>
+          <div class="ttt-cell" onclick="makeMove(4)"></div>
+          <div class="ttt-cell" onclick="makeMove(5)"></div>
+          <div class="ttt-cell" onclick="makeMove(6)"></div>
+          <div class="ttt-cell" onclick="makeMove(7)"></div>
+          <div class="ttt-cell" onclick="makeMove(8)"></div>
+        </div>
+        <div class="game-controls">
+          <button class="game-btn" onclick="resetGame()">RESET</button>
+          <button class="game-btn" id="aiBtn" onclick="toggleAI()">MODE: 2 PLAYERS</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     function copyIP() {
       const ip = document.getElementById("serverIP").innerText;
@@ -661,11 +756,94 @@
       document.getElementById("storeModal").style.display = "none";
     }
 
+    function openGameModal() {
+      document.getElementById("gameModal").style.display = "flex";
+    }
+
+    function closeGameModal() {
+      document.getElementById("gameModal").style.display = "none";
+    }
+
     window.onclick = function(event) {
-      const modal = document.getElementById("storeModal");
-      if (event.target === modal) {
-        modal.style.display = "none";
+      const storeModal = document.getElementById("storeModal");
+      const gameModal = document.getElementById("gameModal");
+      if (event.target === storeModal) storeModal.style.display = "none";
+      if (event.target === gameModal) gameModal.style.display = "none";
+    }
+
+    /* MINI GAME SCRIPT */
+    let board = ["", "", "", "", "", "", "", "", ""];
+    let currentPlayer = "X";
+    let gameActive = true;
+    let vsAI = false;
+
+    const winConditions = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8],
+      [0, 3, 6], [1, 4, 7], [2, 5, 8],
+      [0, 4, 8], [2, 4, 6]
+    ];
+
+    function makeMove(index) {
+      if (board[index] !== "" || !gameActive) return;
+
+      board[index] = currentPlayer;
+      updateBoard();
+
+      if (checkWin()) {
+        document.getElementById("gameStatus").innerText = `Player ${currentPlayer} Wins! 🏆`;
+        gameActive = false;
+        return;
       }
+
+      if (!board.includes("")) {
+        document.getElementById("gameStatus").innerText = "It's a Draw! 🤝";
+        gameActive = false;
+        return;
+      }
+
+      currentPlayer = currentPlayer === "X" ? "O" : "X";
+      document.getElementById("gameStatus").innerText = `Player ${currentPlayer}'s Turn`;
+
+      if (vsAI && currentPlayer === "O" && gameActive) {
+        setTimeout(aiMove, 400);
+      }
+    }
+
+    function aiMove() {
+      let emptyCells = board.map((val, idx) => val === "" ? idx : null).filter(val => val !== null);
+      if (emptyCells.length === 0 || !gameActive) return;
+      let randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+      makeMove(randomCell);
+    }
+
+    function checkWin() {
+      return winConditions.some(condition => {
+        return condition.every(index => board[index] === currentPlayer);
+      });
+    }
+
+    function updateBoard() {
+      const cells = document.querySelectorAll(".ttt-cell");
+      cells.forEach((cell, idx) => {
+        cell.innerText = board[idx];
+        cell.className = "ttt-cell";
+        if (board[idx] === "X") cell.classList.add("x-mark");
+        if (board[idx] === "O") cell.classList.add("o-mark");
+      });
+    }
+
+    function resetGame() {
+      board = ["", "", "", "", "", "", "", "", ""];
+      currentPlayer = "X";
+      gameActive = true;
+      document.getElementById("gameStatus").innerText = "Player X's Turn";
+      updateBoard();
+    }
+
+    function toggleAI() {
+      vsAI = !vsAI;
+      document.getElementById("aiBtn").innerText = vsAI ? "MODE: VS AI" : "MODE: 2 PLAYERS";
+      resetGame();
     }
   </script>
 </body>
