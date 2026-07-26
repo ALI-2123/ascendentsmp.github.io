@@ -148,7 +148,7 @@
   </main>
 
   <script>
-    /* CLEAN & SUBTLE CONNECTING PARTICLES */
+    /* HIGH-VISIBILITY CONNECTING PARTICLES ENGINE */
     const canvas = document.getElementById("particleCanvas");
     const ctx = canvas.getContext("2d");
     let particles = [];
@@ -165,23 +165,23 @@
       constructor() { this.reset(true); }
       reset(initial = false) {
         this.x = Math.random() * canvas.width;
-        this.y = initial ? Math.random() * canvas.height : canvas.height + 10;
-        this.size = Math.random() * 2 + 0.8;
-        this.speedX = (Math.random() - 0.5) * 0.4;
-        this.speedY = -(Math.random() * 0.4 + 0.2);
+        this.y = initial ? Math.random() * canvas.height : canvas.height + 15;
+        this.size = Math.random() * 2.5 + 1.2;
+        this.speedX = (Math.random() - 0.5) * 0.6;
+        this.speedY = -(Math.random() * 0.6 + 0.3);
         this.color = particleColors[Math.floor(Math.random() * particleColors.length)];
-        this.alpha = Math.random() * 0.5 + 0.3;
+        this.alpha = Math.random() * 0.5 + 0.5;
       }
       update() {
         this.x += this.speedX;
         this.y += this.speedY;
-        if (this.y < -10 || this.x < -10 || this.x > canvas.width + 10) this.reset(false);
+        if (this.y < -15 || this.x < -15 || this.x > canvas.width + 15) this.reset(false);
       }
       draw() {
         ctx.save();
         ctx.globalAlpha = this.alpha;
         ctx.fillStyle = this.color;
-        ctx.shadowBlur = this.size * 3;
+        ctx.shadowBlur = this.size * 4;
         ctx.shadowColor = this.color;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
@@ -192,12 +192,13 @@
 
     function initParticles() {
       particles = [];
-      // Lower particle count (38 particles max) so the screen stays clean
-      for (let i = 0; i < 38; i++) particles.push(new Particle());
+      // Higher particle count to guarantee plenty of connections
+      const particleCount = Math.max(Math.floor(window.innerWidth / 12), 85);
+      for (let i = 0; i < particleCount; i++) particles.push(new Particle());
     }
 
     function drawConnections() {
-      const maxDistance = 105; // Shorter distance so only close particles link up subtly
+      const maxDistance = 180; // Distance radius to draw lines
 
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
@@ -210,11 +211,14 @@
 
           if (dist < maxDistance) {
             ctx.save();
-            // Faint opacity so it stays clean in the background
-            const opacity = (1 - dist / maxDistance) * 0.22;
+            // Higher line opacity (up to 0.55) so lines are clearly visible
+            const opacity = (1 - dist / maxDistance) * 0.55;
             ctx.globalAlpha = opacity;
             ctx.strokeStyle = p1.color;
-            ctx.lineWidth = 0.8;
+            ctx.lineWidth = 1.4; // Thicker lines
+            ctx.shadowBlur = 6;
+            ctx.shadowColor = p1.color; // Glowing line effect
+            
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(p2.x, p2.y);
