@@ -20,6 +20,8 @@
       --border-color: rgba(255, 255, 255, 0.1);
       --elite-cyan: #00f2fe;
       --elite-glow: rgba(0, 242, 254, 0.4);
+      --red: #ff4757;
+      --green: #2ed573;
     }
 
     html {
@@ -247,6 +249,7 @@
       justify-content: center;
       gap: 10px;
       margin-bottom: 20px;
+      flex-wrap: wrap;
     }
 
     .tab-btn {
@@ -315,31 +318,87 @@
     .ttt-cell.x-mark { color: var(--gold); }
     .ttt-cell.o-mark { color: var(--elite-cyan); }
 
-    /* MEMORY MATRIX */
+    /* MEMORY MATRIX 3x3 UPGRADED */
     .memory-board {
       display: grid;
-      grid-template-columns: repeat(2, 100px);
-      grid-template-rows: repeat(2, 100px);
-      gap: 12px;
+      grid-template-columns: repeat(3, 80px);
+      grid-template-rows: repeat(3, 80px);
+      gap: 10px;
     }
 
     .mem-pad {
-      border-radius: 12px;
+      border-radius: 10px;
       cursor: pointer;
-      opacity: 0.5;
-      transition: all 0.15s ease;
-      border: 2px solid transparent;
+      opacity: 0.35;
+      transition: all 0.12s ease;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      background: #1e2538;
     }
 
     .mem-pad:active, .mem-pad.lit {
       opacity: 1;
-      transform: scale(1.05);
+      transform: scale(1.06);
+      border-color: #fff;
+      box-shadow: 0 0 20px var(--gold);
+      background: var(--gold);
     }
 
-    #pad0 { background: #ff4757; box-shadow: 0 0 15px rgba(255, 71, 87, 0.5); }
-    #pad1 { background: #2ed573; box-shadow: 0 0 15px rgba(46, 213, 115, 0.5); }
-    #pad2 { background: #1e90ff; box-shadow: 0 0 15px rgba(30, 144, 255, 0.5); }
-    #pad3 { background: #ffa502; box-shadow: 0 0 15px rgba(255, 165, 2, 0.5); }
+    /* 1v1 QUIZ ARENA */
+    .quiz-container {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .quiz-scores {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      font-size: 1.2rem;
+      font-weight: 900;
+    }
+
+    .p1-score { color: var(--gold); }
+    .p2-score { color: var(--elite-cyan); }
+
+    .quiz-card {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--gold);
+      border-radius: 12px;
+      padding: 20px;
+      font-size: 1.4rem;
+      font-weight: 800;
+      min-height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .quiz-answers-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      width: 100%;
+    }
+
+    .ans-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: #fff;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .ans-btn:hover {
+      border-color: var(--gold);
+      background: rgba(255, 170, 0, 0.15);
+    }
 
     .game-controls {
       display: flex;
@@ -589,7 +648,7 @@
       <a href="#minigame-section" class="card">
         <div class="card-content">
           <h3>MINI GAMES ARCADE</h3>
-          <p>Play Tic-Tac-Toe & Memory Matrix!</p>
+          <p>3 Arcade Games: AI TTT, 3x3 Memory & 1v1 Quiz!</p>
         </div>
       </a>
 
@@ -611,7 +670,8 @@
       <!-- Game Selector Tabs -->
       <div class="game-nav">
         <button class="tab-btn active" onclick="switchGame('ttt')">TIC-TAC-TOE</button>
-        <button class="tab-btn" onclick="switchGame('memory')">MEMORY MATRIX</button>
+        <button class="tab-btn" onclick="switchGame('memory')">3x3 SPEED MEMORY</button>
+        <button class="tab-btn" onclick="switchGame('quiz')">1v1 QUIZ BATTLE</button>
       </div>
 
       <!-- Game 1: Tic Tac Toe -->
@@ -634,17 +694,43 @@
         </div>
       </div>
 
-      <!-- Game 2: Memory Matrix -->
+      <!-- Game 2: 3x3 Speed Memory Matrix -->
       <div id="memoryGame" class="game-box">
-        <div class="game-status" id="memStatus">Press START to play!</div>
+        <div class="game-status" id="memStatus">Press START to play 3x3 Memory!</div>
         <div class="memory-board">
           <div class="mem-pad" id="pad0" onclick="padClick(0)"></div>
           <div class="mem-pad" id="pad1" onclick="padClick(1)"></div>
           <div class="mem-pad" id="pad2" onclick="padClick(2)"></div>
           <div class="mem-pad" id="pad3" onclick="padClick(3)"></div>
+          <div class="mem-pad" id="pad4" onclick="padClick(4)"></div>
+          <div class="mem-pad" id="pad5" onclick="padClick(5)"></div>
+          <div class="mem-pad" id="pad6" onclick="padClick(6)"></div>
+          <div class="mem-pad" id="pad7" onclick="padClick(7)"></div>
+          <div class="mem-pad" id="pad8" onclick="padClick(8)"></div>
         </div>
         <div class="game-controls">
           <button class="game-btn" onclick="startMemoryGame()">START GAME</button>
+        </div>
+      </div>
+
+      <!-- Game 3: 1v1 Fast Quiz Battle -->
+      <div id="quizGame" class="game-box">
+        <div class="quiz-container">
+          <div class="quiz-scores">
+            <span class="p1-score">PLAYER 1: <span id="p1Score">0</span></span>
+            <span class="p2-score">PLAYER 2: <span id="p2Score">0</span></span>
+          </div>
+          <div class="game-status" id="quizStatus">First to 5 Points Wins! Press Start.</div>
+          <div class="quiz-card" id="quizQuestion">❓ Waiting to Start...</div>
+          <div class="quiz-answers-grid" id="quizAnswers">
+            <button class="ans-btn" onclick="answerQuiz(0)">Option A</button>
+            <button class="ans-btn" onclick="answerQuiz(1)">Option B</button>
+            <button class="ans-btn" onclick="answerQuiz(2)">Option C</button>
+            <button class="ans-btn" onclick="answerQuiz(3)">Option D</button>
+          </div>
+        </div>
+        <div class="game-controls">
+          <button class="game-btn" onclick="startQuizGame()">START 1v1 MATCH</button>
         </div>
       </div>
 
@@ -854,9 +940,12 @@
       if (gameType === 'ttt') {
         document.querySelectorAll('.tab-btn')[0].classList.add('active');
         document.getElementById('tttGame').classList.add('active-game');
-      } else {
+      } else if (gameType === 'memory') {
         document.querySelectorAll('.tab-btn')[1].classList.add('active');
         document.getElementById('memoryGame').classList.add('active-game');
+      } else {
+        document.querySelectorAll('.tab-btn')[2].classList.add('active');
+        document.getElementById('quizGame').classList.add('active-game');
       }
     }
 
@@ -975,7 +1064,7 @@
       resetGame();
     }
 
-    /* GAME 2: MEMORY MATRIX */
+    /* GAME 2: UPGRADED 3x3 SPEED MEMORY MATRIX */
     let memSequence = [];
     let playerSequence = [];
     let memLevel = 0;
@@ -992,29 +1081,31 @@
     function nextRound() {
       playerSequence = [];
       memLevel++;
-      document.getElementById("memStatus").innerText = `Level ${memLevel} - Watch Carefully!`;
-      memSequence.push(Math.floor(Math.random() * 4));
+      document.getElementById("memStatus").innerText = `Level ${memLevel} - Watch Grid!`;
+      memSequence.push(Math.floor(Math.random() * 9));
       playSequence();
     }
 
     function playSequence() {
       let i = 0;
+      // Flash speed gets faster every level!
+      let speed = Math.max(220, 500 - (memLevel * 30));
       const interval = setInterval(() => {
         lightPad(memSequence[i]);
         i++;
         if (i >= memSequence.length) {
           clearInterval(interval);
           setTimeout(() => {
-            document.getElementById("memStatus").innerText = `Level ${memLevel} - Your Turn!`;
-          }, 400);
+            document.getElementById("memStatus").innerText = `Level ${memLevel} - Repeat Pattern!`;
+          }, 300);
         }
-      }, 600);
+      }, speed);
     }
 
     function lightPad(id) {
       const pad = document.getElementById(`pad${id}`);
       pad.classList.add("lit");
-      setTimeout(() => pad.classList.remove("lit"), 350);
+      setTimeout(() => pad.classList.remove("lit"), 180);
     }
 
     function padClick(id) {
@@ -1031,9 +1122,70 @@
       }
 
       if (playerSequence.length === memSequence.length) {
-        document.getElementById("memStatus").innerText = "Correct! Get ready...";
-        setTimeout(nextRound, 1000);
+        document.getElementById("memStatus").innerText = "Correct! Speeding up...";
+        setTimeout(nextRound, 800);
       }
+    }
+
+    /* GAME 3: 1v1 RANDOM QUIZ BATTLE */
+    const quizData = [
+      { q: "What item is needed to spawn the Wither?", a: ["Wither Skeleton Skull", "End Crystal", "Nether Star", "Dragon Egg"], c: 0 },
+      { q: "What is 12 + 15?", a: ["25", "27", "28", "30"], c: 1 },
+      { q: "Which tool digs dirt fastest?", a: ["Pickaxe", "Axe", "Shovel", "Hoe"], c: 2 },
+      { q: "What ingredient makes Strength potions?", a: ["Blaze Powder", "Ghast Tear", "Magma Cream", "Sugar"], c: 0 },
+      { q: "What is 9 × 8?", a: ["64", "72", "81", "68"], c: 1 },
+      { q: "How many Obsidian blocks are needed for a minimum Nether Portal?", a: ["8", "10", "12", "14"], c: 1 },
+      { q: "Which mob drops String upon death?", a: ["Zombie", "Skeleton", "Spider", "Creeper"], c: 2 },
+      { q: "What is 150 - 65?", a: ["75", "85", "95", "80"], c: 1 }
+    ];
+
+    let p1Score = 0;
+    let p2Score = 0;
+    let currentQuizIndex = 0;
+    let quizActive = false;
+
+    function startQuizGame() {
+      p1Score = 0;
+      p2Score = 0;
+      document.getElementById("p1Score").innerText = p1Score;
+      document.getElementById("p2Score").innerText = p2Score;
+      quizActive = true;
+      loadNextQuizQuestion();
+    }
+
+    function loadNextQuizQuestion() {
+      if (p1Score >= 5 || p2Score >= 5) {
+        let winner = p1Score >= 5 ? "PLAYER 1" : "PLAYER 2";
+        document.getElementById("quizStatus").innerText = `🏆 ${winner} WINS THE MATCH!`;
+        document.getElementById("quizQuestion").innerText = "Game Over!";
+        quizActive = false;
+        return;
+      }
+
+      currentQuizIndex = Math.floor(Math.random() * quizData.length);
+      const q = quizData[currentQuizIndex];
+      document.getElementById("quizQuestion").innerText = q.q;
+      document.getElementById("quizStatus").innerText = "First to click the right answer gets +1!";
+
+      const grid = document.getElementById("quizAnswers");
+      grid.innerHTML = "";
+      q.a.forEach((opt, idx) => {
+        grid.innerHTML += `<button class="ans-btn" onclick="answerQuiz(${idx})">${opt}</button>`;
+      });
+    }
+
+    function answerQuiz(optionIdx) {
+      if (!quizActive) return;
+
+      const q = quizData[currentQuizIndex];
+      if (optionIdx === q.c) {
+        p1Score++;
+        document.getElementById("p1Score").innerText = p1Score;
+        document.getElementById("quizStatus").innerText = "✨ Point scored!";
+      } else {
+        document.getElementById("quizStatus").innerText = "❌ Wrong answer!";
+      }
+      loadNextQuizQuestion();
     }
   </script>
 </body>
