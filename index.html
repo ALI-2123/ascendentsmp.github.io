@@ -36,11 +36,11 @@
         </div>
       </a>
 
-      <!-- Store Button (Temporary Discord Redirect) -->
-      <a href="javascript:void(0)" onclick="openStoreNotice()" class="card">
+      <!-- Store Button Opens Modal -->
+      <a href="javascript:void(0)" onclick="openStoreModal()" class="card store-card-btn">
         <div class="card-content">
-          <h3>STORE & PERKS</h3>
-          <p>100% No Pay-To-Win & Free Perks</p>
+          <h3>SERVER STORE</h3>
+          <p>VIP & Premium Ranks &bull; Monthly Perks</p>
         </div>
       </a>
 
@@ -118,6 +118,63 @@
 
   </main>
 
+  <!-- STORE MODAL POPUP -->
+  <div id="storeModal" class="modal-overlay">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeStoreModal()">&times;</span>
+      <h2 class="modal-title">ASCENDANT <span>STORE</span></h2>
+      <p class="modal-sub">Support the server and unlock exclusive aura perks!</p>
+
+      <div class="ranks-grid">
+        <!-- VIP RANK CARD -->
+        <div class="rank-card vip-theme">
+          <div class="rank-badge">POPULAR</div>
+          <h3>VIP RANK</h3>
+          <div class="price-box">
+            <span class="currency">$</span>2<span class="period">/mo</span>
+          </div>
+          <div class="billing-options">
+            <span class="plan-chip">1 Mo: $2</span>
+            <span class="plan-chip">3 Mos: $5.50</span>
+            <span class="plan-chip highlight">1 Yr: $20</span>
+          </div>
+          <ul class="rank-features">
+            <li>✨ <strong>[VIP]</strong> Gold Chat Badge</li>
+            <li>🎨 Colored Chat & Nickname</li>
+            <li>⚡ Priority Queue Access</li>
+            <li>📦 Extra Player Vault Slot</li>
+            <li>💬 Exclusive VIP Discord Role</li>
+          </ul>
+          <a href="https://discord.gg/4ePCP9JZuA" target="_blank" class="buy-btn vip-btn">GET VIP RANK</a>
+        </div>
+
+        <!-- PREMIUM RANK CARD -->
+        <div class="rank-card premium-theme">
+          <div class="rank-badge gold-badge">ULTIMATE</div>
+          <h3>PREMIUM RANK</h3>
+          <div class="price-box">
+            <span class="currency">$</span>5<span class="period">/mo</span>
+          </div>
+          <div class="billing-options">
+            <span class="plan-chip">1 Mo: $5</span>
+            <span class="plan-chip">3 Mos: $13.50</span>
+            <span class="plan-chip highlight">1 Yr: $48</span>
+          </div>
+          <ul class="rank-features">
+            <li>👑 <strong>[PREMIUM]</strong> Glowing Purple Badge</li>
+            <li>🌈 Full RGB Nickname Formatting</li>
+            <li>⚡ Instant Server Join Support</li>
+            <li>📦 3x Player Vault Slots</li>
+            <li>🛡️ Reserved Discord Channel Access</li>
+            <li>🎉 Monthly Supporter Event Entry</li>
+          </ul>
+          <a href="https://discord.gg/4ePCP9JZuA" target="_blank" class="buy-btn premium-btn">GET PREMIUM RANK</a>
+        </div>
+      </div>
+      <p class="modal-footer-note">💡 Purchases are processed manually in Discord via support ticket or Tebex integration.</p>
+    </div>
+  </div>
+
   <script>
     function copyIP() {
       const ip = document.getElementById("serverIP").innerText;
@@ -135,9 +192,19 @@
       }, 2000);
     }
 
-    function openStoreNotice() {
-      if (confirm("The webstore is opening soon! Would you like to join our Discord to check available perks in the meantime?")) {
-        window.open("https://discord.gg/4ePCP9JZuA", "_blank");
+    function openStoreModal() {
+      document.getElementById("storeModal").style.display = "flex";
+    }
+
+    function closeStoreModal() {
+      document.getElementById("storeModal").style.display = "none";
+    }
+
+    // Close modal if clicking outside window
+    window.onclick = function(event) {
+      const modal = document.getElementById("storeModal");
+      if (event.target === modal) {
+        modal.style.display = "none";
       }
     }
   </script>
