@@ -16,7 +16,6 @@
       --text-sub: #a0a8c0;
       --border-color: rgba(255, 255, 255, 0.1);
       --elite-cyan: #00f2fe;
-      --elite-glow: rgba(0, 242, 254, 0.4);
       --red: #ff4757;
       --green: #2ed573;
     }
@@ -37,79 +36,166 @@
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0;
     }
 
-    .container { max-width: 900px; width: 100%; display: flex; flex-direction: column; gap: 30px; z-index: 1; }
+    .container { max-width: 850px; width: 100%; display: flex; flex-direction: column; gap: 20px; z-index: 1; }
 
-    header { text-align: center; }
-    .header-logo-img { max-width: 130px; margin-bottom: 15px; filter: drop-shadow(0px 0px 12px var(--gold-glow)); }
-    .logo { font-size: 3rem; font-weight: 900; letter-spacing: 3px; }
+    /* HEADER */
+    header { text-align: center; margin-bottom: 5px; }
+    .header-logo-img { max-width: 110px; margin-bottom: 10px; filter: drop-shadow(0px 0px 12px var(--gold-glow)); }
+    .logo { font-size: 2.5rem; font-weight: 900; letter-spacing: 3px; }
     .logo span { color: var(--gold); }
-    .tagline { color: var(--text-sub); font-size: 1.1rem; margin-top: 8px; }
+    .tagline { color: var(--text-sub); font-size: 0.95rem; margin-top: 5px; }
 
-    .info-section { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 30px; text-align: center; }
-    .info-section h2 { color: var(--gold); margin-bottom: 20px; font-size: 1.5rem; }
+    /* IP COMING SOON BAR */
+    .ip-banner {
+      background: rgba(0, 0, 0, 0.5); border: 1px solid var(--gold); border-radius: 8px;
+      padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;
+      box-shadow: 0 0 10px rgba(255, 170, 0, 0.15);
+    }
+    .ip-banner-text { display: flex; flex-direction: column; }
+    .ip-banner-label { font-size: 0.75rem; color: var(--gold); text-transform: uppercase; font-weight: bold; }
+    .ip-banner-status { font-family: monospace; font-size: 1.1rem; font-weight: bold; color: #fff; }
+    .copy-btn {
+      background: var(--gold); color: #000; border: none; padding: 8px 16px; font-weight: bold;
+      border-radius: 6px; cursor: pointer; transition: 0.2s; font-size: 0.85rem;
+    }
+    .copy-btn:hover { transform: scale(1.05); }
 
-    /* GAME UI */
-    .quiz-container { width: 100%; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
+    /* 4 NAV CARDS */
+    .nav-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .nav-card {
+      background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px;
+      padding: 15px 10px; text-align: center; text-decoration: none; color: inherit;
+      transition: transform 0.2s, border-color 0.2s; display: flex; flex-direction: column; justify-content: center;
+    }
+    .nav-card:hover { transform: translateY(-3px); border-color: var(--gold); }
+    .nav-card h3 { color: var(--gold); font-size: 0.9rem; font-weight: 800; margin-bottom: 4px; text-transform: uppercase; }
+    .nav-card p { color: var(--text-sub); font-size: 0.75rem; line-height: 1.2; }
 
-    .queue-box {
-      background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border-color); border-radius: 10px; padding: 25px;
-      display: flex; flex-direction: column; align-items: center; gap: 12px;
+    /* GENERAL SECTIONS */
+    .section-card {
+      background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 22px;
+    }
+    .section-title {
+      color: var(--gold); font-size: 1.1rem; font-weight: 800; margin-bottom: 15px;
+      display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.5px;
     }
 
-    .queue-count { font-size: 1.1rem; color: var(--text-sub); font-weight: 700; }
-    .queue-count span { color: var(--gold); font-size: 1.3rem; }
-
-    .game-status { font-size: 1.1rem; font-weight: 800; color: var(--gold); min-height: 28px; }
-
-    .quiz-scores { display: flex; justify-content: space-between; width: 100%; font-size: 1.2rem; font-weight: 900; }
+    /* ARCADE / 1v1 QUIZ GAME */
+    .quiz-container { width: 100%; max-width: 550px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+    .queue-box {
+      background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px;
+      display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center;
+    }
+    .queue-count { font-size: 1rem; color: var(--text-sub); font-weight: 700; }
+    .queue-count span { color: var(--gold); font-size: 1.2rem; }
+    .game-status { font-size: 1rem; font-weight: 800; color: var(--gold); min-height: 24px; }
+    
+    .quiz-scores { display: flex; justify-content: space-between; width: 100%; font-size: 1.05rem; font-weight: 900; }
     .p1-score { color: var(--gold); }
     .p2-score { color: var(--elite-cyan); }
 
-    .quiz-timer-bar {
-      width: 100%; height: 6px; background: rgba(255, 255, 255, 0.1); border-radius: 4px; overflow: hidden;
-    }
-    .quiz-timer-fill {
-      height: 100%; width: 100%; background: var(--gold); transition: width 1s linear;
-    }
+    .quiz-timer-bar { width: 100%; height: 5px; background: rgba(255, 255, 255, 0.1); border-radius: 4px; overflow: hidden; }
+    .quiz-timer-fill { height: 100%; width: 100%; background: var(--gold); transition: width 1s linear; }
 
     .quiz-card {
-      background: rgba(0, 0, 0, 0.5); border: 1px solid var(--gold); border-radius: 12px; padding: 20px;
-      font-size: 1.15rem; font-weight: 800; min-height: 90px; display: flex; justify-content: center; align-items: center; text-align: center;
+      background: rgba(0, 0, 0, 0.5); border: 1px solid var(--gold); border-radius: 8px; padding: 16px;
+      font-size: 1.05rem; font-weight: 800; min-height: 75px; display: flex; justify-content: center; align-items: center; text-align: center;
     }
-
-    .quiz-answers-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; }
-
+    .quiz-answers-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; width: 100%; }
     .ans-btn {
       background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: #fff;
-      padding: 14px; border-radius: 8px; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: 0.2s;
+      padding: 12px; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.2s;
     }
     .ans-btn:hover:not(:disabled) { border-color: var(--gold); background: rgba(255, 170, 0, 0.15); }
     .ans-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
     .game-btn {
-      background: var(--gold); color: #000; border: none; padding: 10px 22px; font-weight: 800;
-      border-radius: 6px; cursor: pointer; transition: 0.2s; font-size: 0.95rem;
+      background: var(--gold); color: #000; border: none; padding: 9px 20px; font-weight: 800;
+      border-radius: 6px; cursor: pointer; transition: 0.2s; font-size: 0.85rem;
     }
-    .game-btn:hover { transform: scale(1.05); }
+    .game-btn:hover { transform: scale(1.04); }
     .game-btn.leave-btn { background: var(--red); color: #fff; }
+
+    /* SERVER FEATURES GRID */
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .feature-card {
+      background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-color); border-radius: 6px;
+      padding: 10px 12px; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700;
+    }
+    .feature-card span { color: var(--gold); font-size: 1rem; }
+
+    /* SERVER INFO LIST */
+    .info-list { display: flex; flex-direction: column; gap: 8px; font-size: 0.85rem; color: var(--text-sub); }
+    .info-list-item { display: flex; align-items: center; gap: 8px; }
+    .info-list-item span { color: var(--green); font-weight: bold; }
+
+    /* RULES LIST */
+    .rules-list { display: flex; flex-direction: column; gap: 10px; }
+    .rule-item {
+      background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px 12px;
+      font-size: 0.82rem; color: var(--text-sub); line-height: 1.3;
+    }
+    .rule-item strong { color: var(--text-main); }
+
+    footer { text-align: center; color: var(--text-sub); font-size: 0.75rem; margin-top: 10px; }
+
+    @media (max-width: 650px) {
+      .nav-grid { grid-template-columns: repeat(2, 1fr); }
+      .features-grid { grid-template-columns: repeat(1, 1fr); }
+    }
   </style>
 </head>
 <body>
 
+  <!-- BACKGROUND PARTICLE CANVAS -->
   <canvas id="particleCanvas"></canvas>
 
   <main class="container">
+    
+    <!-- HEADER -->
     <header>
       <img src="logo.png" alt="Ascendant SMP Logo" class="header-logo-img">
       <h1 class="logo">ASCENDANT <span>SMP</span></h1>
-      <p class="tagline">🌌 ⚔️ 1v1 Queue Quiz Matchmaker ⚔️ 🌌</p>
+      <p class="tagline">⚔️ The Ultimate Vanilla Survival Experience ⚔️</p>
     </header>
 
-    <section class="info-section">
-      <h2>⚔️ 1v1 QUIZ ARENA</h2>
-      
+    <!-- IP COMING SOON BANNER -->
+    <div class="ip-banner">
+      <div class="ip-banner-text">
+        <span class="ip-banner-label">Server IP</span>
+        <span class="ip-banner-status" id="serverIp">Coming Soon...</span>
+      </div>
+      <button class="copy-btn" onclick="copyIp()">COPY</button>
+    </div>
+
+    <!-- 4 TOP CARDS -->
+    <div class="nav-grid">
+      <a href="#" class="nav-card">
+        <h3>DISCORD</h3>
+        <p>Join our Discord server for updates and community discussions</p>
+      </a>
+      <a href="#" class="nav-card">
+        <h3>SERVER STORE</h3>
+        <p>Visit our store to purchase ranks, perks, and support the server</p>
+      </a>
+      <a href="#arcade" class="nav-card">
+        <h3>MINIGAMES ARCADE</h3>
+        <p>Play mini-games like Tic Tac Toe or Trivia and earn rewards!</p>
+      </a>
+      <a href="#rules" class="nav-card">
+        <h3>INFO & RULES</h3>
+        <p>General server information and guidelines</p>
+      </a>
+    </div>
+
+    <!-- ASCENDANT ARCADE (1v1 QUIZ ARENA) -->
+    <section class="section-card" id="arcade">
+      <div class="section-title">⚔️ ASCENDANT ARCADE</div>
+      <p style="color: var(--text-sub); font-size: 0.85rem; text-align: center; margin-bottom: 15px;">
+        Test your skills in our matchmaking arena!
+      </p>
+
       <div class="quiz-container">
-        
         <!-- Queue Lobby Box -->
         <div class="queue-box" id="queueBox">
           <div class="queue-count">Players in Lobby: <span id="lobbyCount">0 / 2</span></div>
@@ -117,8 +203,8 @@
           <button class="game-btn" id="joinQueueBtn" onclick="toggleQueue()">JOIN QUEUE</button>
         </div>
 
-        <!-- Active Match Arena (Hidden by Default) -->
-        <div id="matchArea" style="display: none; flex-direction: column; gap: 15px;">
+        <!-- Active Match Arena -->
+        <div id="matchArea" style="display: none; flex-direction: column; gap: 12px;">
           <div class="quiz-scores">
             <span class="p1-score">YOU (P1): <span id="p1Score">0</span></span>
             <span class="p2-score"><span id="p2Name">OPPONENT</span> (P2): <span id="p2Score">0</span></span>
@@ -133,27 +219,96 @@
           
           <div class="quiz-answers-grid" id="quizAnswers">
             <button class="ans-btn" onclick="answerQuiz(0)">Option A</button>
-            <button class="ans-btn" onclick="answerQuiz(1)">Option A</button>
-            <button class="ans-btn" onclick="answerQuiz(2)">Option A</button>
-            <button class="ans-btn" onclick="answerQuiz(3)">Option A</button>
+            <button class="ans-btn" onclick="answerQuiz(1)">Option B</button>
+            <button class="ans-btn" onclick="answerQuiz(2)">Option C</button>
+            <button class="ans-btn" onclick="answerQuiz(3)">Option D</button>
           </div>
 
           <div style="display: flex; justify-content: center; margin-top: 5px;">
             <button class="game-btn leave-btn" onclick="leaveQuizMatch()">LEAVE MATCH</button>
           </div>
         </div>
-
       </div>
     </section>
+
+    <!-- SERVER FEATURES GRID -->
+    <section class="section-card">
+      <div class="section-title">📊 SERVER FEATURES</div>
+      <div class="features-grid">
+        <div class="feature-card"><span>✔</span> Dual Handed</div>
+        <div class="feature-card"><span>✔</span> Custom Armor Supported</div>
+        <div class="feature-card"><span>✔</span> Custom Villager Trading</div>
+        <div class="feature-card"><span>✔</span> Custom Spawn / Net...</div>
+        <div class="feature-card"><span>✔</span> Friendly Community</div>
+        <div class="feature-card"><span>✔</span> Advanced Economy & Auctions</div>
+        <div class="feature-card"><span>✔</span> Pure Vanilla</div>
+        <div class="feature-card"><span>✔</span> Safe Weaponry</div>
+        <div class="feature-card"><span>✔</span> Non-PvP Arena World</div>
+        <div class="feature-card"><span>✔</span> Lag-Free Performance</div>
+        <div class="feature-card"><span>✔</span> Active 24/7</div>
+        <div class="feature-card"><span>✔</span> Frequent Events</div>
+      </div>
+    </section>
+
+    <!-- SERVER INFORMATION -->
+    <section class="section-card">
+      <div class="section-title">📊 SERVER INFORMATION</div>
+      <div class="info-list">
+        <div class="info-list-item"><span>✔</span> Crossplay Java & Bedrock Support</div>
+        <div class="info-list-item"><span>✔</span> Edition: 1.20+</div>
+        <div class="info-list-item"><span>✔</span> Hardcore: Disabled</div>
+        <div class="info-list-item"><span>✔</span> Host Location: Europe</div>
+        <div class="info-list-item"><span>✔</span> Minimum Server Ram: Unlimited</div>
+      </div>
+    </section>
+
+    <!-- SERVER RULES -->
+    <section class="section-card" id="rules">
+      <div class="section-title">📜 SERVER RULES</div>
+      <div class="rules-list">
+        <div class="rule-item">
+          <strong>Respect Everyone:</strong> Treat all players with respect. Harassment, racism, sexism, or hate speech will lead to an instant ban.
+        </div>
+        <div class="rule-item">
+          <strong>No Cheating:</strong> Hacks, x-ray, auto-clickers, or unfair advantage clients are strictly prohibited.
+        </div>
+        <div class="rule-item">
+          <strong>No Griefing / Stealing:</strong> Unclaimed builds, bases, and chests are protected. Griefing will lead to immediate rollback & punishment.
+        </div>
+        <div class="rule-item">
+          <strong>No Exploiting:</strong> Duping items, abusing server bugs, or glitching through blocks is strictly prohibited.
+        </div>
+        <div class="rule-item">
+          <strong>No Spam or Advertising:</strong> Do not spam the chat, advertise other servers, or send unsafe external links.
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      © 2026 Ascendant SMP. All Rights Reserved.
+    </footer>
+
   </main>
 
   <script>
-    /* PARTICLES ENGINE */
+    /* IP COPY FUNCTION */
+    function copyIp() {
+      navigator.clipboard.writeText("Coming Soon...");
+      const btn = document.querySelector(".copy-btn");
+      btn.innerText = "COPIED!";
+      setTimeout(() => btn.innerText = "COPY", 2000);
+    }
+
+    /* CONNECTING PARTICLES BACKGROUND */
     const canvas = document.getElementById("particleCanvas");
     const ctx = canvas.getContext("2d");
     let particles = [];
+    const particleColors = ["#ffaa00", "#00f2fe", "#ab47bc", "#ffffff"];
 
-    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    function resizeCanvas() { 
+      canvas.width = window.innerWidth; 
+      canvas.height = window.innerHeight; 
+    }
     window.addEventListener("resize", () => { resizeCanvas(); initParticles(); });
     resizeCanvas();
 
@@ -163,18 +318,22 @@
         this.x = Math.random() * canvas.width;
         this.y = initial ? Math.random() * canvas.height : canvas.height + 10;
         this.size = Math.random() * 2 + 0.8;
-        this.speedY = -(Math.random() * 0.5 + 0.2);
-        this.color = ["#ffaa00", "#00f2fe", "#ab47bc"][Math.floor(Math.random() * 3)];
-        this.alpha = Math.random() * 0.6 + 0.2;
+        this.speedX = (Math.random() - 0.5) * 0.4;
+        this.speedY = -(Math.random() * 0.4 + 0.2);
+        this.color = particleColors[Math.floor(Math.random() * particleColors.length)];
+        this.alpha = Math.random() * 0.5 + 0.3;
       }
       update() {
+        this.x += this.speedX;
         this.y += this.speedY;
-        if (this.y < -10) this.reset(false);
+        if (this.y < -10 || this.x < -10 || this.x > canvas.width + 10) this.reset(false);
       }
       draw() {
         ctx.save();
         ctx.globalAlpha = this.alpha;
         ctx.fillStyle = this.color;
+        ctx.shadowBlur = this.size * 3;
+        ctx.shadowColor = this.color;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
@@ -184,18 +343,44 @@
 
     function initParticles() {
       particles = [];
-      for (let i = 0; i < 40; i++) particles.push(new Particle());
+      for (let i = 0; i < 35; i++) particles.push(new Particle());
     }
+
+    function drawConnections() {
+      const maxDistance = 105;
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const p1 = particles[i];
+          const p2 = particles[j];
+          const dx = p1.x - p2.x;
+          const dy = p1.y - p2.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < maxDistance) {
+            ctx.save();
+            const opacity = (1 - dist / maxDistance) * 0.22;
+            ctx.globalAlpha = opacity;
+            ctx.strokeStyle = p1.color;
+            ctx.lineWidth = 0.8;
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+            ctx.restore();
+          }
+        }
+      }
+    }
+
     function animateParticles() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawConnections();
       particles.forEach(p => { p.update(); p.draw(); });
       requestAnimationFrame(animateParticles);
     }
     initParticles(); animateParticles();
 
-    /* =========================================================
-       1v1 QUIZ MATCHMAKING & ENGINE
-       ========================================================= */
+    /* 1v1 QUIZ MATCHMAKING & GAME SCRIPT */
     const quizDatabase = [
       { q: "Which tool speed multiplier does Efficiency V grant?", a: ["+150%", "+250%", "+300%", "+500%"], correct: 3 },
       { q: "What is the primary ingredient used to craft End Crystals?", a: ["Eye of Ender", "Ghast Tear", "End Stone", "Nether Star"], correct: 1 },
@@ -221,17 +406,13 @@
     const botNames = ["AuraPvP_99", "CrystalGod", "MaceKing", "VoidWalker", "Shadow_X"];
 
     function toggleQueue() {
-      if (inQueue) {
-        leaveQueue();
-      } else {
-        joinQueue();
-      }
+      if (inQueue) leaveQueue();
+      else joinQueue();
     }
 
     function joinQueue() {
       clearAllTimers();
       inQueue = true;
-      
       const btn = document.getElementById("joinQueueBtn");
       btn.innerText = "CANCEL QUEUE";
       btn.classList.add("leave-btn");
@@ -243,7 +424,6 @@
       queueTimer = setInterval(() => {
         seconds++;
         document.getElementById("queueStatus").innerText = `Searching for opponent... (${seconds}s)`;
-        
         if (seconds >= 3) {
           clearInterval(queueTimer);
           document.getElementById("lobbyCount").innerText = "2 / 2";
@@ -256,11 +436,9 @@
     function leaveQueue() {
       inQueue = false;
       clearAllTimers();
-      
       const btn = document.getElementById("joinQueueBtn");
       btn.innerText = "JOIN QUEUE";
       btn.classList.remove("leave-btn");
-      
       document.getElementById("lobbyCount").innerText = "0 / 2";
       document.getElementById("queueStatus").innerText = "Click JOIN QUEUE to enter matchmaking!";
     }
@@ -303,7 +481,6 @@
         btn.style.background = "rgba(255, 255, 255, 0.05)";
       });
 
-      // 10-Second Round Countdown
       roundCountdown = setInterval(() => {
         secondsLeft--;
         updateTimerBar((secondsLeft / 10) * 100);
@@ -320,11 +497,10 @@
         }
       }, 1000);
 
-      // Bot Simulation Logic
-      const botDelay = Math.random() * 3000 + 1500; // 1.5s - 4.5s
+      const botDelay = Math.random() * 3000 + 1500;
       botTimer = setTimeout(() => {
         if (!questionAnswered && matchActive) {
-          const isCorrect = Math.random() < 0.7; // 70% accuracy
+          const isCorrect = Math.random() < 0.7;
           const opponentName = document.getElementById("p2Name").innerText;
 
           questionAnswered = true;
@@ -337,7 +513,6 @@
             buttons[qData.correct].style.background = "rgba(46, 213, 115, 0.4)";
             document.getElementById("quizStatus").innerText = `⚡ ${opponentName} answered correctly! (+1 Point)`;
           } else {
-            // Pick a random wrong answer to highlight
             let wrongIdx = Math.floor(Math.random() * 4);
             if (wrongIdx === qData.correct) wrongIdx = (qData.correct + 1) % 4;
             
@@ -398,7 +573,6 @@
     function leaveQuizMatch() {
       matchActive = false;
       clearAllTimers();
-      
       document.getElementById("matchArea").style.display = "none";
       document.getElementById("queueBox").style.display = "flex";
       leaveQueue();
