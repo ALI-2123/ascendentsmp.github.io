@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ascendent SMP | Official Network</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- FontAwesome Icons -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <div class="overlay"></div>
+
+  <!-- Main Hero Container -->
+  <main class="container">
+    
+    <!-- Header / Branding -->
+    <header>
+      <h1 class="logo">ASCENDENT <span>SMP</span></h1>
+      <p class="tagline">Dominate the Realm &bull; Pure Survival Experience</p>
+    </header>
+
+    <!-- Click to Copy IP Box -->
+    <div class="ip-card" onclick="copyIP()">
+      <div class="ip-info">
+        <span class="label">SERVER IP</span>
+        <span class="ip-address" id="serverIP">play.ascendentsmp.com</span>
+      </div>
+      <button class="copy-btn" id="copyBtn">COPY</button>
+    </div>
+
+    <!-- Quick Navigation Cards -->
+    <section class="card-grid">
+      
+      <!-- Store Link -->
+      <a href="https://store.ascendentsmp.com" target="_blank" class="card store-card">
+        <div class="card-content">
+          <h3>STORE</h3>
+          <p>Ranks, Keys & Custom Cosmetics</p>
+        </div>
+      </a>
+
+      <!-- Discord Link -->
+      <a href="https://discord.gg/YOUR_INVITE" target="_blank" class="card discord-card">
+        <div class="card-content">
+          <h3>DISCORD</h3>
+          <p>Join the Community & Get Updates</p>
+        </div>
+      </a>
+
+      <!-- Information / Rules Link -->
+      <a href="#rules" class="card info-card">
+        <div class="card-content">
+          <h3>INFO & RULES</h3>
+          <p>Server Features & PvP Guidelines</p>
+        </div>
+      </a>
+
+    </section>
+
+    <footer>
+      <p>&copy; 2026 Ascendent SMP. Not affiliated with Mojang Studios.</p>
+    </footer>
+
+  </main>
+
+  <script>
+    function copyIP() {
+      const ip = document.getElementById("serverIP").innerText;
+      navigator.clipboard.writeText(ip);
+      const btn = document.getElementById("copyBtn");
+      btn.innerText = "COPIED!";
+      btn.style.background = "#4E9F3D";
+      setTimeout(() => { 
+        btn.innerText = "COPY"; 
+        btn.style.background = "var(--gold)";
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
