@@ -343,13 +343,35 @@
       background: var(--gold);
     }
 
-    /* 1v1 QUIZ ARENA */
+    /* 1v1 QUIZ ARENA & QUEUE SYSTEM */
     .quiz-container {
       width: 100%;
       max-width: 600px;
       display: flex;
       flex-direction: column;
       gap: 15px;
+    }
+
+    .queue-box {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .queue-count {
+      font-size: 0.95rem;
+      color: var(--text-sub);
+      font-weight: 700;
+    }
+
+    .queue-count span {
+      color: var(--gold);
+      font-size: 1.1rem;
     }
 
     .quiz-scores {
@@ -419,6 +441,11 @@
 
     .game-btn:hover {
       transform: scale(1.05);
+    }
+
+    .game-btn.leave-btn {
+      background: var(--red);
+      color: #fff;
     }
 
     /* STORE MODAL POPUP */
@@ -648,7 +675,7 @@
       <a href="#minigame-section" class="card">
         <div class="card-content">
           <h3>MINI GAMES ARCADE</h3>
-          <p>3 Arcade Games: AI TTT, 3x3 Memory & 1v1 Quiz!</p>
+          <p>3 Arcade Games: AI TTT, 3x3 Memory & 1v1 Queue Quiz!</p>
         </div>
       </a>
 
@@ -671,7 +698,7 @@
       <div class="game-nav">
         <button class="tab-btn active" onclick="switchGame('ttt')">TIC-TAC-TOE</button>
         <button class="tab-btn" onclick="switchGame('memory')">3x3 SPEED MEMORY</button>
-        <button class="tab-btn" onclick="switchGame('quiz')">1v1 QUIZ BATTLE</button>
+        <button class="tab-btn" onclick="switchGame('quiz')">1v1 QUEUE QUIZ</button>
       </div>
 
       <!-- Game 1: Tic Tac Toe -->
@@ -713,24 +740,35 @@
         </div>
       </div>
 
-      <!-- Game 3: 1v1 Fast Quiz Battle -->
+      <!-- Game 3: 1v1 MATCHMAKING QUEUE QUIZ -->
       <div id="quizGame" class="game-box">
         <div class="quiz-container">
-          <div class="quiz-scores">
-            <span class="p1-score">PLAYER 1: <span id="p1Score">0</span></span>
-            <span class="p2-score">PLAYER 2: <span id="p2Score">0</span></span>
+          
+          <!-- Queue Waiting Screen -->
+          <div class="queue-box" id="queueBox">
+            <div class="queue-count">Players in Lobby: <span id="lobbyCount">0 / 2</span></div>
+            <div class="game-status" id="queueStatus">Click JOIN QUEUE to matchmake!</div>
+            <div class="game-controls">
+              <button class="game-btn" id="joinQueueBtn" onclick="toggleQueue()">JOIN QUEUE</button>
+            </div>
           </div>
-          <div class="game-status" id="quizStatus">First to 5 Points Wins! Press Start.</div>
-          <div class="quiz-card" id="quizQuestion">❓ Waiting to Start...</div>
-          <div class="quiz-answers-grid" id="quizAnswers">
-            <button class="ans-btn" onclick="answerQuiz(0)">Option A</button>
-            <button class="ans-btn" onclick="answerQuiz(1)">Option B</button>
-            <button class="ans-btn" onclick="answerQuiz(2)">Option C</button>
-            <button class="ans-btn" onclick="answerQuiz(3)">Option D</button>
+
+          <!-- Active Match Screen (Hidden until match starts) -->
+          <div id="matchArea" style="display: none; flex-direction: column; gap: 15px;">
+            <div class="quiz-scores">
+              <span class="p1-score">PLAYER 1: <span id="p1Score">0</span></span>
+              <span class="p2-score">PLAYER 2: <span id="p2Score">0</span></span>
+            </div>
+            <div class="game-status" id="quizStatus">First to 5 Points Wins!</div>
+            <div class="quiz-card" id="quizQuestion">❓ Match Starting...</div>
+            <div class="quiz-answers-grid" id="quizAnswers">
+              <button class="ans-btn" onclick="answerQuiz(0)">Option A</button>
+              <button class="ans-btn" onclick="answerQuiz(1)">Option B</button>
+              <button class="ans-btn" onclick="answerQuiz(2)">Option C</button>
+              <button class="ans-btn" onclick="answerQuiz(3)">Option D</button>
+            </div>
           </div>
-        </div>
-        <div class="game-controls">
-          <button class="game-btn" onclick="startQuizGame()">START 1v1 MATCH</button>
+
         </div>
       </div>
 
@@ -1088,7 +1126,6 @@
 
     function playSequence() {
       let i = 0;
-      // Flash speed gets faster every level!
       let speed = Math.max(220, 500 - (memLevel * 30));
       const interval = setInterval(() => {
         lightPad(memSequence[i]);
@@ -1127,7 +1164,7 @@
       }
     }
 
-    /* GAME 3: 1v1 RANDOM QUIZ BATTLE */
+    /* GAME 3: 1v1 MATCHMAKING QUEUE QUIZ SYSTEM */
     const quizData = [
       { q: "What item is needed to spawn the Wither?", a: ["Wither Skeleton Skull", "End Crystal", "Nether Star", "Dragon Egg"], c: 0 },
       { q: "What is 12 + 15?", a: ["25", "27", "28", "30"], c: 1 },
@@ -1139,12 +1176,54 @@
       { q: "What is 150 - 65?", a: ["75", "85", "95", "80"], c: 1 }
     ];
 
+    let queueCount = 0;
+    let inQueue = false;
     let p1Score = 0;
     let p2Score = 0;
     let currentQuizIndex = 0;
     let quizActive = false;
 
-    function startQuizGame() {
+    function toggleQueue() {
+      const btn = document.getElementById("joinQueueBtn");
+      
+      if (!inQueue) {
+        inQueue = true;
+        queueCount++;
+        document.getElementById("lobbyCount").innerText = `${queueCount} / 2`;
+        btn.innerText = "LEAVE QUEUE";
+        btn.classList.add("leave-btn");
+        document.getElementById("queueStatus").innerText = "⏳ Waiting for Opponent to Join...";
+
+        if (queueCount >= 2) {
+          startMatchCountdown();
+        }
+      } else {
+        inQueue = false;
+        queueCount--;
+        document.getElementById("lobbyCount").innerText = `${queueCount} / 2`;
+        btn.innerText = "JOIN QUEUE";
+        btn.classList.remove("leave-btn");
+        document.getElementById("queueStatus").innerText = "Click JOIN QUEUE to matchmake!";
+      }
+    }
+
+    function startMatchCountdown() {
+      document.getElementById("queueStatus").innerText = "⚔️ MATCH FOUND! Starting in 3...";
+      let count = 3;
+      const cd = setInterval(() => {
+        count--;
+        if (count > 0) {
+          document.getElementById("queueStatus").innerText = `⚔️ MATCH FOUND! Starting in ${count}...`;
+        } else {
+          clearInterval(cd);
+          launchQuizMatch();
+        }
+      }, 1000);
+    }
+
+    function launchQuizMatch() {
+      document.getElementById("queueBox").style.display = "none";
+      document.getElementById("matchArea").style.display = "flex";
       p1Score = 0;
       p2Score = 0;
       document.getElementById("p1Score").innerText = p1Score;
@@ -1159,6 +1238,18 @@
         document.getElementById("quizStatus").innerText = `🏆 ${winner} WINS THE MATCH!`;
         document.getElementById("quizQuestion").innerText = "Game Over!";
         quizActive = false;
+        
+        setTimeout(() => {
+          document.getElementById("queueBox").style.display = "flex";
+          document.getElementById("matchArea").style.display = "none";
+          inQueue = false;
+          queueCount = 0;
+          document.getElementById("lobbyCount").innerText = "0 / 2";
+          const btn = document.getElementById("joinQueueBtn");
+          btn.innerText = "JOIN QUEUE";
+          btn.classList.remove("leave-btn");
+          document.getElementById("queueStatus").innerText = "Click JOIN QUEUE to matchmake!";
+        }, 3500);
         return;
       }
 
