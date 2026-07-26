@@ -4,7 +4,399 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ascendant SMP | Official Network</title>
-  <link rel="stylesheet" href="style.css" />
+  
+  <style>
+    /* CSS STYLES EMBEDDED DIRECTLY TO GUARANTEE LOADING */
+    :root {
+      --bg-dark: #090a0f;
+      --card-bg: rgba(18, 22, 32, 0.85);
+      --gold: #ffaa00;
+      --gold-glow: rgba(255, 170, 0, 0.4);
+      --text-main: #ffffff;
+      --text-sub: #a0a8c0;
+      --border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(255, 170, 0, 0.15) 0%, transparent 60%),
+        radial-gradient(circle at 80% 80%, rgba(171, 71, 188, 0.1) 0%, transparent 50%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .logo {
+      font-size: 3rem;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-shadow: 0 0 20px var(--gold-glow);
+    }
+
+    .logo span {
+      color: var(--gold);
+    }
+
+    .tagline {
+      color: var(--text-sub);
+      font-size: 1.1rem;
+      margin-top: 8px;
+    }
+
+    .ip-card {
+      background: var(--card-bg);
+      border: 1px solid var(--gold);
+      box-shadow: 0 0 25px var(--gold-glow);
+      border-radius: 12px;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .ip-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .ip-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .ip-info .label {
+      font-size: 0.75rem;
+      color: var(--text-sub);
+      letter-spacing: 1.5px;
+      font-weight: 700;
+    }
+
+    .ip-address {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--gold);
+    }
+
+    .copy-btn {
+      background: var(--gold);
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      font-weight: 900;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 25px;
+      text-decoration: none;
+      color: var(--text-main);
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+    }
+
+    .card:hover {
+      border-color: var(--gold);
+      box-shadow: 0 0 20px var(--gold-glow);
+      transform: translateY(-4px);
+    }
+
+    .card h3 {
+      font-size: 1.3rem;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+
+    .card p {
+      color: var(--text-sub);
+      font-size: 0.9rem;
+    }
+
+    .info-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 30px;
+    }
+
+    .info-section h2 {
+      font-size: 1.5rem;
+      color: var(--gold);
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .feature-tag {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-color);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .info-list p {
+      margin-bottom: 12px;
+      font-size: 1rem;
+      color: var(--text-sub);
+    }
+
+    .info-list strong {
+      color: var(--text-main);
+    }
+
+    .rules-box {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .rule-item {
+      display: flex;
+      gap: 15px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 3px solid var(--gold);
+    }
+
+    .rule-num {
+      font-size: 1.2rem;
+    }
+
+    .rule-item p {
+      font-size: 0.95rem;
+      color: var(--text-sub);
+      line-height: 1.5;
+    }
+
+    .rule-item strong {
+      color: var(--text-main);
+    }
+
+    /* STORE MODAL POPUP */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(5, 6, 9, 0.88);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      border: 1px solid var(--gold);
+      box-shadow: 0 0 35px var(--gold-glow);
+      border-radius: 16px;
+      max-width: 800px;
+      width: 100%;
+      padding: 30px;
+      position: relative;
+      text-align: center;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 15px; right: 20px;
+      font-size: 2rem;
+      color: var(--text-sub);
+      cursor: pointer;
+    }
+
+    .close-btn:hover { color: var(--gold); }
+
+    .modal-title { font-size: 2.2rem; font-weight: 900; letter-spacing: 2px; }
+    .modal-title span { color: var(--gold); }
+    .modal-sub { color: var(--text-sub); margin-bottom: 20px; font-size: 0.95rem; }
+
+    /* PHONE PAYMENT BANNER */
+    .phone-payment-box {
+      background: rgba(255, 170, 0, 0.08);
+      border: 1px dashed var(--gold);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    .pay-title {
+      font-size: 0.9rem;
+      color: var(--text-sub);
+      font-weight: 700;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .phone-number-display {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--border-color);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--gold);
+      cursor: pointer;
+      margin-bottom: 8px;
+    }
+
+    .copy-phone-btn {
+      background: var(--gold);
+      color: #000;
+      border: none;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      font-weight: 900;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .pay-instruction {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+    }
+
+    .ranks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .rank-card {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 25px 20px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .vip-theme { border-color: rgba(255, 170, 0, 0.4); }
+    .premium-theme { border-color: rgba(171, 71, 188, 0.5); box-shadow: 0 0 20px rgba(171, 71, 188, 0.2); }
+
+    .rank-badge {
+      position: absolute;
+      top: -12px; right: 20px;
+      background: var(--gold);
+      color: #000;
+      font-size: 0.7rem;
+      font-weight: 900;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+    .gold-badge { background: #ab47bc; color: #fff; }
+
+    .rank-card h3 { font-size: 1.6rem; margin-top: 5px; }
+    .vip-theme h3 { color: var(--gold); }
+    .premium-theme h3 { color: #d1c4e9; }
+
+    .price-box { font-size: 2.5rem; font-weight: 900; margin: 10px 0; }
+    .currency { font-size: 1.2rem; vertical-align: super; }
+    .period { font-size: 0.9rem; color: var(--text-sub); font-weight: normal; }
+
+    .billing-options {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin-bottom: 15px;
+    }
+
+    .plan-chip {
+      font-size: 0.75rem;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 4px 8px;
+      border-radius: 6px;
+      color: var(--text-sub);
+    }
+    .plan-chip.highlight { border: 1px solid var(--gold); color: var(--gold); }
+
+    .rank-features {
+      list-style: none;
+      text-align: left;
+      margin: 15px 0 20px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 0.88rem;
+      color: var(--text-sub);
+    }
+
+    .buy-btn {
+      display: block;
+      text-decoration: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .vip-btn { background: var(--gold); color: #000; }
+    .premium-btn { background: #ab47bc; color: #fff; }
+
+    footer {
+      text-align: center;
+      color: var(--text-sub);
+      font-size: 0.85rem;
+      padding: 20px 0;
+    }
+  </style>
 </head>
 <body>
 
