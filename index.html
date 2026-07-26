@@ -356,22 +356,22 @@
       background: rgba(0, 0, 0, 0.4);
       border: 1px solid var(--border-color);
       border-radius: 10px;
-      padding: 15px;
+      padding: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
 
     .queue-count {
-      font-size: 0.95rem;
+      font-size: 1.1rem;
       color: var(--text-sub);
       font-weight: 700;
     }
 
     .queue-count span {
       color: var(--gold);
-      font-size: 1.1rem;
+      font-size: 1.3rem;
     }
 
     .quiz-scores {
@@ -432,11 +432,12 @@
       background: var(--gold);
       color: #000;
       border: none;
-      padding: 8px 16px;
+      padding: 10px 20px;
       font-weight: 800;
       border-radius: 6px;
       cursor: pointer;
       transition: 0.2s;
+      font-size: 0.95rem;
     }
 
     .game-btn:hover {
@@ -747,7 +748,7 @@
           <!-- Queue Waiting Screen -->
           <div class="queue-box" id="queueBox">
             <div class="queue-count">Players in Lobby: <span id="lobbyCount">0 / 2</span></div>
-            <div class="game-status" id="queueStatus">Click JOIN QUEUE to matchmake!</div>
+            <div class="game-status" id="queueStatus">Click JOIN QUEUE to enter matchmaking!</div>
             <div class="game-controls">
               <button class="game-btn" id="joinQueueBtn" onclick="toggleQueue()">JOIN QUEUE</button>
             </div>
@@ -1164,7 +1165,7 @@
       }
     }
 
-    /* GAME 3: 1v1 MATCHMAKING QUEUE QUIZ SYSTEM */
+    /* GAME 3: REAL-TIME CROSS-TAB 1v1 MATCHMAKING QUEUE QUIZ */
     const quizData = [
       { q: "What item is needed to spawn the Wither?", a: ["Wither Skeleton Skull", "End Crystal", "Nether Star", "Dragon Egg"], c: 0 },
       { q: "What is 12 + 15?", a: ["25", "27", "28", "30"], c: 1 },
@@ -1176,46 +1177,71 @@
       { q: "What is 150 - 65?", a: ["75", "85", "95", "80"], c: 1 }
     ];
 
-    let queueCount = 0;
-    let inQueue = false;
+    let userInQueue = false;
     let p1Score = 0;
     let p2Score = 0;
     let currentQuizIndex = 0;
     let quizActive = false;
+    let countdownActive = false;
+
+    // Synchronize queue across open browser tabs/windows
+    const queueChannel = new BroadcastChannel('ascendant_1v1_queue');
+
+    function updateQueueDisplay(count) {
+      document.getElementById("lobbyCount").innerText = `${count} / 2`;
+    }
 
     function toggleQueue() {
       const btn = document.getElementById("joinQueueBtn");
       
-      if (!inQueue) {
-        inQueue = true;
-        queueCount++;
-        document.getElementById("lobbyCount").innerText = `${queueCount} / 2`;
+      if (!userInQueue) {
+        userInQueue = true;
         btn.innerText = "LEAVE QUEUE";
         btn.classList.add("leave-btn");
         document.getElementById("queueStatus").innerText = "⏳ Waiting for Opponent to Join...";
 
-        if (queueCount >= 2) {
-          startMatchCountdown();
-        }
+        // Tell other tabs/players a player joined
+        queueChannel.postMessage({ type: 'PLAYER_JOINED' });
       } else {
-        inQueue = false;
-        queueCount--;
-        document.getElementById("lobbyCount").innerText = `${queueCount} / 2`;
+        userInQueue = false;
         btn.innerText = "JOIN QUEUE";
         btn.classList.remove("leave-btn");
-        document.getElementById("queueStatus").innerText = "Click JOIN QUEUE to matchmake!";
+        document.getElementById("queueStatus").innerText = "Click JOIN QUEUE to enter matchmaking!";
+
+        // Tell other tabs/players a player left
+        queueChannel.postMessage({ type: 'PLAYER_LEFT' });
       }
     }
 
+    // Handle cross-tab queue events
+    let currentLobbySize = 0;
+    queueChannel.onmessage = (event) => {
+      if (event.data.type === 'PLAYER_JOINED') {
+        currentLobbySize++;
+        if (currentLobbySize > 2) currentLobbySize = 2;
+        updateQueueDisplay(currentLobbySize);
+
+        if (currentLobbySize === 2 && userInQueue && !countdownActive) {
+          startMatchCountdown();
+        }
+      } else if (event.data.type === 'PLAYER_LEFT') {
+        currentLobbySize--;
+        if (currentLobbySize < 0) currentLobbySize = 0;
+        updateQueueDisplay(currentLobbySize);
+      }
+    };
+
     function startMatchCountdown() {
-      document.getElementById("queueStatus").innerText = "⚔️ MATCH FOUND! Starting in 3...";
+      countdownActive = true;
+      document.getElementById("queueStatus").innerText = "⚔️ OPPONENT FOUND! Starting in 3...";
       let count = 3;
       const cd = setInterval(() => {
         count--;
         if (count > 0) {
-          document.getElementById("queueStatus").innerText = `⚔️ MATCH FOUND! Starting in ${count}...`;
+          document.getElementById("queueStatus").innerText = `⚔️ OPPONENT FOUND! Starting in ${count}...`;
         } else {
           clearInterval(cd);
+          countdownActive = false;
           launchQuizMatch();
         }
       }, 1000);
@@ -1242,13 +1268,13 @@
         setTimeout(() => {
           document.getElementById("queueBox").style.display = "flex";
           document.getElementById("matchArea").style.display = "none";
-          inQueue = false;
-          queueCount = 0;
-          document.getElementById("lobbyCount").innerText = "0 / 2";
+          userInQueue = false;
+          currentLobbySize = 0;
+          updateQueueDisplay(0);
           const btn = document.getElementById("joinQueueBtn");
           btn.innerText = "JOIN QUEUE";
           btn.classList.remove("leave-btn");
-          document.getElementById("queueStatus").innerText = "Click JOIN QUEUE to matchmake!";
+          document.getElementById("queueStatus").innerText = "Click JOIN QUEUE to enter matchmaking!";
         }, 3500);
         return;
       }
