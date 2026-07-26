@@ -18,6 +18,8 @@
       --text-main: #ffffff;
       --text-sub: #a0a8c0;
       --border-color: rgba(255, 255, 255, 0.1);
+      --elite-cyan: #00f2fe;
+      --elite-glow: rgba(0, 242, 254, 0.4);
     }
 
     html {
@@ -254,7 +256,7 @@
       border: 1px solid var(--gold);
       box-shadow: 0 0 35px var(--gold-glow);
       border-radius: 16px;
-      max-width: 800px;
+      max-width: 1000px;
       width: 100%;
       padding: 30px;
       position: relative;
@@ -328,7 +330,7 @@
 
     .ranks-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 20px;
     }
 
@@ -344,7 +346,8 @@
     }
 
     .vip-theme { border-color: rgba(255, 170, 0, 0.4); }
-    .premium-theme { border-color: rgba(171, 71, 188, 0.5); box-shadow: 0 0 20px rgba(171, 71, 188, 0.2); }
+    .premium-theme { border-color: rgba(171, 71, 188, 0.5); box-shadow: 0 0 20px rgba(171, 71, 188, 0.15); }
+    .elite-theme { border-color: var(--elite-cyan); box-shadow: 0 0 25px var(--elite-glow); }
 
     .rank-badge {
       position: absolute;
@@ -357,30 +360,34 @@
       border-radius: 20px;
     }
     .gold-badge { background: #ab47bc; color: #fff; }
+    .cyan-badge { background: var(--elite-cyan); color: #000; }
 
     .rank-card h3 { font-size: 1.6rem; margin-top: 5px; }
     .vip-theme h3 { color: var(--gold); }
     .premium-theme h3 { color: #d1c4e9; }
+    .elite-theme h3 { color: var(--elite-cyan); }
 
-    .price-box { font-size: 2.5rem; font-weight: 900; margin: 10px 0; }
-    .currency { font-size: 1.2rem; vertical-align: super; }
-    .period { font-size: 0.9rem; color: var(--text-sub); font-weight: normal; }
+    .price-box { font-size: 2.2rem; font-weight: 900; margin: 10px 0; }
+    .currency { font-size: 1.1rem; vertical-align: super; }
+    .period { font-size: 0.85rem; color: var(--text-sub); font-weight: normal; }
 
     .billing-options {
       display: flex;
       gap: 6px;
       justify-content: center;
       margin-bottom: 15px;
+      flex-wrap: wrap;
     }
 
     .plan-chip {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       background: rgba(255, 255, 255, 0.05);
       padding: 4px 8px;
       border-radius: 6px;
       color: var(--text-sub);
     }
     .plan-chip.highlight { border: 1px solid var(--gold); color: var(--gold); }
+    .plan-chip.elite-highlight { border: 1px solid var(--elite-cyan); color: var(--elite-cyan); }
 
     .rank-features {
       list-style: none;
@@ -404,6 +411,7 @@
 
     .vip-btn { background: var(--gold); color: #000; }
     .premium-btn { background: #ab47bc; color: #fff; }
+    .elite-btn { background: var(--elite-cyan); color: #000; }
 
     footer {
       text-align: center;
@@ -448,7 +456,7 @@
       <div onclick="openStoreModal()" class="card store-card-btn" style="cursor: pointer;">
         <div class="card-content">
           <h3>SERVER STORE</h3>
-          <p>VIP & Premium Ranks &bull; Monthly Perks</p>
+          <p>VIP, Premium & Elite Ranks &bull; Monthly Perks</p>
         </div>
       </div>
 
@@ -549,12 +557,12 @@
           <div class="rank-badge">POPULAR</div>
           <h3>VIP RANK</h3>
           <div class="price-box">
-            <span class="currency">$</span>2<span class="period">/mo</span>
+            2 <span class="currency">JOD</span><span class="period">/mo</span>
           </div>
           <div class="billing-options">
-            <span class="plan-chip">1 Mo: $2</span>
-            <span class="plan-chip">3 Mos: $5.50</span>
-            <span class="plan-chip highlight">1 Yr: $20</span>
+            <span class="plan-chip">1 Mo: 2 JOD</span>
+            <span class="plan-chip">3 Mos: 5.5 JOD</span>
+            <span class="plan-chip highlight">1 Yr: 20 JOD</span>
           </div>
           <ul class="rank-features">
             <li>✨ <strong>[VIP]</strong> Gold Chat Badge</li>
@@ -568,15 +576,15 @@
 
         <!-- PREMIUM RANK CARD -->
         <div class="rank-card premium-theme">
-          <div class="rank-badge gold-badge">ULTIMATE</div>
+          <div class="rank-badge gold-badge">RECOMMENDED</div>
           <h3>PREMIUM RANK</h3>
           <div class="price-box">
-            <span class="currency">$</span>5<span class="period">/mo</span>
+            5 <span class="currency">JOD</span><span class="period">/mo</span>
           </div>
           <div class="billing-options">
-            <span class="plan-chip">1 Mo: $5</span>
-            <span class="plan-chip">3 Mos: $13.50</span>
-            <span class="plan-chip highlight">1 Yr: $48</span>
+            <span class="plan-chip">1 Mo: 5 JOD</span>
+            <span class="plan-chip">3 Mos: 13.5 JOD</span>
+            <span class="plan-chip highlight">1 Yr: 48 JOD</span>
           </div>
           <ul class="rank-features">
             <li>👑 <strong>[PREMIUM]</strong> Glowing Purple Badge</li>
@@ -588,6 +596,30 @@
           </ul>
           <a href="https://discord.gg/4ePCP9JZuA" target="_blank" class="buy-btn premium-btn">CLAIM IN DISCORD</a>
         </div>
+
+        <!-- ELITE RANK CARD -->
+        <div class="rank-card elite-theme">
+          <div class="rank-badge cyan-badge">TOP TIER</div>
+          <h3>ELITE RANK</h3>
+          <div class="price-box">
+            10 <span class="currency">JOD</span><span class="period">/mo</span>
+          </div>
+          <div class="billing-options">
+            <span class="plan-chip">1 Mo: 10 JOD</span>
+            <span class="plan-chip">3 Mos: 27 JOD</span>
+            <span class="plan-chip elite-highlight">1 Yr: 95 JOD</span>
+          </div>
+          <ul class="rank-features">
+            <li>💎 <strong>[ELITE]</strong> Glowing Cyan Badge</li>
+            <li>✨ Custom Animated RGB Prefix & Name</li>
+            <li>⚡ Max Priority Queue + Reserved Slot</li>
+            <li>📦 5x Player Vault Slots</li>
+            <li>💫 Special Cosmetics & Particle Trails</li>
+            <li>👑 Elite Discord Role & Private Lounge</li>
+          </ul>
+          <a href="https://discord.gg/4ePCP9JZuA" target="_blank" class="buy-btn elite-btn">CLAIM IN DISCORD</a>
+        </div>
+
       </div>
     </div>
   </div>
@@ -638,4 +670,3 @@
   </script>
 </body>
 </html>
-       
