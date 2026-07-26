@@ -3,64 +3,117 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ascendent SMP | Official Network</title>
+  <title>Ascendant SMP | Official Network</title>
   <link rel="stylesheet" href="style.css" />
-  <!-- FontAwesome Icons -->
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
-  <div class="overlay"></div>
-
-  <!-- Main Hero Container -->
   <main class="container">
     
     <!-- Header / Branding -->
     <header>
-      <h1 class="logo">ASCENDENT <span>SMP</span></h1>
-      <p class="tagline">Dominate the Realm &bull; Pure Survival Experience</p>
+      <h1 class="logo">ASCENDANT <span>SMP</span></h1>
+      <p class="tagline">🌌 ⚔️ The Ultimate Vanilla+ Survival Experience ⚔️ 🌌</p>
     </header>
 
     <!-- Click to Copy IP Box -->
     <div class="ip-card" onclick="copyIP()">
       <div class="ip-info">
         <span class="label">SERVER IP</span>
-        <span class="ip-address" id="serverIP">play.ascendentsmp.com</span>
+        <span class="ip-address" id="serverIP">Coming Soon...</span>
       </div>
       <button class="copy-btn" id="copyBtn">COPY</button>
     </div>
 
-    <!-- Quick Navigation Cards -->
+    <!-- Quick Links -->
     <section class="card-grid">
       
-      <!-- Store Link -->
-      <a href="https://store.ascendentsmp.com" target="_blank" class="card store-card">
-        <div class="card-content">
-          <h3>STORE</h3>
-          <p>Ranks, Keys & Custom Cosmetics</p>
-        </div>
-      </a>
-
-      <!-- Discord Link -->
-      <a href="https://discord.gg/YOUR_INVITE" target="_blank" class="card discord-card">
+      <!-- Discord Invite Link -->
+      <a href="https://discord.gg/4ePCP9JZuA" target="_blank" class="card">
         <div class="card-content">
           <h3>DISCORD</h3>
-          <p>Join the Community & Get Updates</p>
+          <p>Join the Community & Launch Updates</p>
         </div>
       </a>
 
-      <!-- Information / Rules Link -->
-      <a href="#rules" class="card info-card">
+      <!-- Free Store / Perks Info -->
+      <a href="https://discord.gg/4ePCP9JZuA" target="_blank" class="card">
+        <div class="card-content">
+          <h3>STORE & PERKS</h3>
+          <p>100% No Pay-To-Win & Free Perks</p>
+        </div>
+      </a>
+
+      <!-- Rules Anchor -->
+      <a href="#rules" class="card">
         <div class="card-content">
           <h3>INFO & RULES</h3>
-          <p>Server Features & PvP Guidelines</p>
+          <p>Server Features & Guidelines</p>
         </div>
       </a>
 
     </section>
 
+    <!-- Server Features Grid -->
+    <section class="info-section">
+      <h2>🌍 SERVER FEATURES</h2>
+      <div class="features-grid">
+        <div class="feature-tag">⚔️ 100% Survival</div>
+        <div class="feature-tag">🔓 Cracked Java Supported</div>
+        <div class="feature-tag">💎 Infinite Villager Trading</div>
+        <div class="feature-tag">🧵 String Dupers Enabled</div>
+        <div class="feature-tag">🚫 No /TPA or /Home</div>
+        <div class="feature-tag">🛒 No Pay-to-Win</div>
+        <div class="feature-tag">🚫 No OP Kits</div>
+        <div class="feature-tag">👥 Click Villagers</div>
+        <div class="feature-tag">🏰 Player-Driven World</div>
+        <div class="feature-tag">⚡ Lag-Free Performance</div>
+        <div class="feature-tag">🛡️ Active Staff</div>
+        <div class="feature-tag">🎉 Frequent Events</div>
+      </div>
+    </section>
+
+    <!-- Server Info Box -->
+    <section class="info-section">
+      <h2>📜 SERVER INFORMATION</h2>
+      <div class="info-list">
+        <p><strong>🌐 Version:</strong> Latest Java (1.21.x)</p>
+        <p><strong>💻 Edition:</strong> Java</p>
+        <p><strong>🔓 Cracked:</strong> ✅ Supported</p>
+        <p><strong>🎮 Play Style:</strong> Vanilla+</p>
+        <p><strong>📅 Release Date:</strong> Coming Soon!</p>
+      </div>
+    </section>
+
+    <!-- Server Rules Section -->
+    <section id="rules" class="info-section">
+      <h2>📜 SERVER RULES</h2>
+      <div class="rules-box">
+        <div class="rule-item">
+          <span class="rule-num">1️⃣</span>
+          <p><strong>Respect Everyone:</strong> Treat all players with respect. No toxic behavior, harassment, bullying, or personal attacks. Friendly trash talk is okay, but know your limits.</p>
+        </div>
+        <div class="rule-item">
+          <span class="rule-num">2️⃣</span>
+          <p><strong>No Spamming:</strong> No message, emoji, or command spam. Don't flood chat with repeated messages and keep conversations in correct channels.</p>
+        </div>
+        <div class="rule-item">
+          <span class="rule-num">3️⃣</span>
+          <p><strong>No Cheating or Exploiting:</strong> Absolutely no hacks, cheats, x-ray, autoclickers, macros, or unfair modded clients. Report bugs instead of abusing them.</p>
+        </div>
+        <div class="rule-item">
+          <span class="rule-num">4️⃣</span>
+          <p><strong>No Spawn Killing:</strong> Camping or trapping spawn to repeatedly kill new players is prohibited. Give players a fair chance to leave spawn.</p>
+        </div>
+        <div class="rule-item">
+          <span class="rule-num">5️⃣</span>
+          <p><strong>No Racism or Hate Speech:</strong> Racism, discrimination, sexism, homophobia, slurs, or hate speech of any kind is strictly banned across chat, usernames, skins, and nicknames.</p>
+        </div>
+      </div>
+    </section>
+
     <footer>
-      <p>&copy; 2026 Ascendent SMP. Not affiliated with Mojang Studios.</p>
+      <p>&copy; 2026 Ascendant SMP. Not affiliated with Mojang Studios.</p>
     </footer>
 
   </main>
@@ -68,6 +121,10 @@
   <script>
     function copyIP() {
       const ip = document.getElementById("serverIP").innerText;
+      if (ip === "Coming Soon...") {
+        alert("Server IP is coming soon! Join the Discord to get notified on release.");
+        return;
+      }
       navigator.clipboard.writeText(ip);
       const btn = document.getElementById("copyBtn");
       btn.innerText = "COPIED!";
