@@ -200,135 +200,13 @@
       padding-bottom: 10px;
     }
 
-    /* TOURNAMENT STYLES */
-    .tournament-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-      gap: 20px;
-    }
-
-    .tournament-card {
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    .tournament-card.premium-tourney {
-      border-color: rgba(171, 71, 188, 0.5);
-      box-shadow: 0 0 15px rgba(171, 71, 188, 0.15);
-    }
-
-    .tournament-card.cracked-tourney {
-      border-color: var(--elite-cyan);
-      box-shadow: 0 0 15px var(--elite-glow);
-    }
-
-    .tourney-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px dashed var(--border-color);
-      padding-bottom: 10px;
-    }
-
-    .tourney-header h3 {
-      font-size: 1.3rem;
-    }
-
-    .tourney-badge {
-      font-size: 0.75rem;
-      font-weight: 900;
-      padding: 4px 10px;
-      border-radius: 20px;
-    }
-
-    .prem-badge { background: #ab47bc; color: #fff; }
-    .crack-badge { background: var(--elite-cyan); color: #000; }
-
-    .tourney-details p {
-      font-size: 0.9rem;
-      color: var(--text-sub);
-      margin-bottom: 6px;
-    }
-
-    .tourney-details strong {
-      color: var(--text-main);
-    }
-
-    .bracket-box {
-      background: rgba(0, 0, 0, 0.5);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 12px;
-    }
-
-    .bracket-title {
-      font-size: 0.85rem;
-      font-weight: 800;
-      color: var(--gold);
-      margin-bottom: 8px;
-      text-transform: uppercase;
-    }
-
-    .slots-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
-    }
-
-    .slot-item {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border-color);
-      padding: 6px 10px;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      display: flex;
-      justify-content: space-between;
-      color: var(--text-sub);
-    }
-
-    .slot-item.filled {
-      border-color: var(--gold);
-      color: var(--gold);
-      font-weight: 700;
-    }
-
-    .status-badge {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 0.8rem;
-      font-weight: 800;
-    }
-
-    .status-waiting { background: rgba(255, 170, 0, 0.2); color: var(--gold); }
-    .status-live { background: rgba(46, 213, 115, 0.2); color: var(--green); }
-
-    .tourney-rules-box {
-      margin-top: 20px;
-      background: rgba(255, 71, 87, 0.08);
-      border: 1px dashed var(--red);
+    /* TOURNAMENT EMBEDDED IFRAME STYLES */
+    .tournament-frame {
+      width: 100%;
+      height: 900px;
+      border: none;
       border-radius: 10px;
-      padding: 15px;
-    }
-
-    .tourney-rules-box h4 {
-      color: var(--red);
-      margin-bottom: 8px;
-      font-size: 1rem;
-    }
-
-    .tourney-rules-box ul {
-      list-style-type: none;
-      font-size: 0.88rem;
-      color: var(--text-sub);
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
+      background: rgba(0, 0, 0, 0.3);
     }
 
     .features-grid {
@@ -819,6 +697,14 @@
         </div>
       </a>
 
+      <!-- Tournament Page Link -->
+      <a href="#tournament-section" class="card">
+        <div class="card-content">
+          <h3>TOURNAMENTS</h3>
+          <p>Cracked & Premium Bracket Registration</p>
+        </div>
+      </a>
+
       <!-- Store Button Opens Modal -->
       <div onclick="openStoreModal()" class="card store-card-btn" style="cursor: pointer;">
         <div class="card-content">
@@ -826,14 +712,6 @@
           <p>VIP, Premium & Elite Ranks &bull; Monthly Perks</p>
         </div>
       </div>
-
-      <!-- Scroll to Tournaments Section -->
-      <a href="#tournaments-section" class="card">
-        <div class="card-content">
-          <h3>TOURNAMENTS</h3>
-          <p>8-Player Brackets &bull; Win Elite Rank!</p>
-        </div>
-      </a>
 
       <!-- Scroll to Mini Game Section -->
       <a href="#minigame-section" class="card">
@@ -853,79 +731,10 @@
 
     </section>
 
-    <!-- Tournaments Section -->
-    <section id="tournaments-section" class="info-section">
-      <h2>🏆 TOURNAMENTS ARENA</h2>
-      <p style="color: var(--text-sub); margin-bottom: 20px;">
-        Compete in exclusive 8-player PvP tournaments! Champions of both categories win the prestigious <strong style="color: var(--elite-cyan);">ELITE RANK</strong> on the server!
-      </p>
-
-      <div class="tournament-grid">
-        
-        <!-- PREMIUM TOURNAMENT -->
-        <div class="tournament-card premium-tourney">
-          <div class="tourney-header">
-            <h3>👑 Premium Tournament</h3>
-            <span class="tourney-badge prem-badge">8 PLAYERS</span>
-          </div>
-          <div class="tourney-details">
-            <p><strong>🌐 Server:</strong> <code style="color: var(--gold);">eu.catpvp.xyz</code></p>
-            <p><strong>🏆 Grand Prize:</strong> ELITE Rank</p>
-            <p><strong>⚡ Start Status:</strong> <span class="status-badge status-waiting" id="premTourneyStatus">Awaiting Owner Start</span></p>
-          </div>
-          <div class="bracket-box">
-            <div class="bracket-title">Registered Players (0/8)</div>
-            <div class="slots-grid">
-              <div class="slot-item"><span>1. TBD</span></div>
-              <div class="slot-item"><span>2. TBD</span></div>
-              <div class="slot-item"><span>3. TBD</span></div>
-              <div class="slot-item"><span>4. TBD</span></div>
-              <div class="slot-item"><span>5. TBD</span></div>
-              <div class="slot-item"><span>6. TBD</span></div>
-              <div class="slot-item"><span>7. TBD</span></div>
-              <div class="slot-item"><span>8. TBD</span></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- CRACKED TOURNAMENT -->
-        <div class="tournament-card cracked-tourney">
-          <div class="tourney-header">
-            <h3>🔓 Cracked Tournament</h3>
-            <span class="tourney-badge crack-badge">8 PLAYERS</span>
-          </div>
-          <div class="tourney-details">
-            <p><strong>🌐 Server:</strong> <code style="color: var(--elite-cyan);">unviersalmc.fun</code></p>
-            <p><strong>🏆 Grand Prize:</strong> ELITE Rank</p>
-            <p><strong>⚡ Start Status:</strong> <span class="status-badge status-waiting" id="crackTourneyStatus">Awaiting Owner Start</span></p>
-          </div>
-          <div class="bracket-box">
-            <div class="bracket-title">Registered Players (0/8)</div>
-            <div class="slots-grid">
-              <div class="slot-item"><span>1. TBD</span></div>
-              <div class="slot-item"><span>2. TBD</span></div>
-              <div class="slot-item"><span>3. TBD</span></div>
-              <div class="slot-item"><span>4. TBD</span></div>
-              <div class="slot-item"><span>5. TBD</span></div>
-              <div class="slot-item"><span>6. TBD</span></div>
-              <div class="slot-item"><span>7. TBD</span></div>
-              <div class="slot-item"><span>8. TBD</span></div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- TOURNAMENT RULES & EXPLOIT POLICY -->
-      <div class="tourney-rules-box">
-        <h4>🚫 Official Tournament Rules & Fair Play Policy</h4>
-        <ul>
-          <li>❌ <strong>Banned Client Mods:</strong> ClickCrystals and any automated modification clients are strictly prohibited.</li>
-          <li>⛔ <strong>Zero Tolerance Cheating:</strong> Any cheat, illegal mod, macro, or exploit will result in an immediate disqualification and network ban.</li>
-          <li>⚙️ <strong>Game Modes & Settings:</strong> Gamemodes, kit setups, and exploit restrictions are solely chosen and managed by the Server Owner.</li>
-          <li>📅 <strong>Match Timing:</strong> Matches will start strictly when triggered by the Owner. Make sure to be in the Discord call on time!</li>
-        </ul>
-      </div>
+    <!-- Tournament Section Embed -->
+    <section id="tournament-section" class="info-section">
+      <h2>🏆 TOURNAMENT ARENA</h2>
+      <iframe src="tournaments.html" class="tournament-frame" title="Ascendant SMP Tournaments"></iframe>
     </section>
 
     <!-- Mini Game Section -->
