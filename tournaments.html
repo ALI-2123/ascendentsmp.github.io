@@ -297,39 +297,40 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
 
-    // REPLACE WITH YOUR ACTUAL FIREBASE CONFIG
+    // Your exact web app's Firebase configuration
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "SENDER_ID",
-      appId: "APP_ID"
+      apiKey: "AIzaSyARv3N0CAeRYiT9Hb1iyGKZqTL5yTXNByM",
+      authDomain: "ascendantsmp-b2c62.firebaseapp.com",
+      databaseURL: "https://ascendantsmp-b2c62-default-rtdb.firebaseio.com",
+      projectId: "ascendantsmp-b2c62",
+      storageBucket: "ascendantsmp-b2c62.firebasestorage.app",
+      messagingSenderId: "1037839661560",
+      appId: "1:1037839661560:web:9bebecab9c60fae810fe0d",
+      measurementId: "G-NLM1YTHPT5"
     };
 
     window.firebaseConfig = firebaseConfig;
 
     try {
-      if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        const playersRef = ref(db, 'tournament_players');
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      const db = getDatabase(app);
+      const playersRef = ref(db, 'tournament_players');
 
-        window.db = db;
-        window.playersRef = playersRef;
-        window.push = push;
+      window.db = db;
+      window.playersRef = playersRef;
+      window.push = push;
 
-        // Real-Time Listener
-        onValue(playersRef, (snapshot) => {
-          const data = snapshot.val();
-          window.registeredPlayers = data ? Object.values(data) : [];
-          if (typeof window.updateBracketUI === 'function') {
-            window.updateBracketUI();
-          }
-        });
-      }
+      // Real-Time Syncing Listener
+      onValue(playersRef, (snapshot) => {
+        const data = snapshot.val();
+        window.registeredPlayers = data ? Object.values(data) : [];
+        if (typeof window.updateBracketUI === 'function') {
+          window.updateBracketUI();
+        }
+      });
     } catch (err) {
       console.warn("Firebase initialization issue:", err);
     }
@@ -520,7 +521,7 @@
   <script>
     const gamemodes = ["Mace", "Spear Mace", "Sword (Beast)", "UHC", "Diamond SMP"];
     
-    // Load local storage fallback initially
+    // Local storage initial load
     const savedPlayers = localStorage.getItem('ascendant_tournament_players');
     window.registeredPlayers = savedPlayers ? JSON.parse(savedPlayers) : [];
 
@@ -697,11 +698,11 @@
 
       const playerObj = { username, discord, type, mode, timestamp: Date.now() };
 
-      // Push to Firebase Realtime Database if configured
-      if (window.playersRef && window.push && typeof window.firebaseConfig !== 'undefined' && window.firebaseConfig.apiKey !== "YOUR_API_KEY") {
+      // Push to Firebase Realtime Database
+      if (window.playersRef && window.push && typeof window.firebaseConfig !== 'undefined') {
         window.push(window.playersRef, playerObj);
       } else {
-        // Fallback local persistence
+        // Local persistence fallback
         window.registeredPlayers.push(playerObj);
         localStorage.setItem('ascendant_tournament_players', JSON.stringify(window.registeredPlayers));
         window.updateBracketUI();
