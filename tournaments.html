@@ -114,6 +114,25 @@
     .event-detail { font-size: 0.85rem; color: var(--text-sub); }
     .event-detail strong { color: var(--gold); }
 
+    .votes-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 5px;
+    }
+
+    .vote-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 6px 12px;
+      border-radius: 6px;
+      border-left: 3px solid var(--gold);
+    }
+
+    .vote-item strong { color: var(--elite-cyan); }
+
     .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
     .form-group label { font-size: 0.85rem; font-weight: 700; color: var(--text-sub); }
 
@@ -170,7 +189,7 @@
 
     <header>
       <h1 class="title">TOURNAMENT <span>ARENA</span></h1>
-      <p class="subtitle">Official 8-Player Bracket Registration</p>
+      <p class="subtitle">Official 8-Player Bracket Registration & Vote</p>
     </header>
 
     <section class="section-card">
@@ -178,16 +197,26 @@
       <div class="event-grid">
         <div class="event-box">
           <div class="event-title">⚔️ Tournament Specs</div>
-          <div class="event-detail"><strong>Gamemodes:</strong> Mace Spear, Mace Sword (Beast), SMP, UHC</div>
           <div class="event-detail"><strong>Format:</strong> 8-Player Single Elimination</div>
           <div class="event-detail"><strong>Access:</strong> Java (Premium & Cracked)</div>
           <div class="event-detail"><strong>Prize:</strong> Elite Rank & Special Items (When Server Starts)</div>
+        </div>
+
+        <div class="event-box">
+          <div class="event-title">📊 Live Gamemode Votes</div>
+          <div class="votes-container" id="voteTally">
+            <div class="vote-item">1. Mace <strong id="vote-Mace">0 Votes</strong></div>
+            <div class="vote-item">2. Spear Mace <strong id="vote-Spear Mace">0 Votes</strong></div>
+            <div class="vote-item">3. Sword (Beast) <strong id="vote-Sword (Beast)">0 Votes</strong></div>
+            <div class="vote-item">4. UHC <strong id="vote-UHC">0 Votes</strong></div>
+            <div class="vote-item">5. Diamond SMP <strong id="vote-Diamond SMP">0 Votes</strong></div>
+          </div>
         </div>
       </div>
     </section>
 
     <section class="section-card">
-      <h2>SIGN UP FOR THE BRACKET</h2>
+      <h2>SIGN UP & VOTE FOR GAMEMODE</h2>
       <form id="tournamentForm" onsubmit="handleRegistration(event)">
         <div class="form-group">
           <label for="mcUsername">MINECRAFT USERNAME</label>
@@ -200,12 +229,13 @@
         </div>
 
         <div class="form-group">
-          <label for="gamemodeSelect">SELECT GAMEMODE</label>
+          <label for="gamemodeSelect">VOTE FOR GAMEMODE</label>
           <select id="gamemodeSelect" class="form-select" required>
-            <option value="Mace Spear">Mace Spear</option>
-            <option value="Mace Sword (Beast)">Mace Sword (Beast)</option>
-            <option value="SMP">SMP</option>
-            <option value="UHC">UHC</option>
+            <option value="Mace">1. Mace</option>
+            <option value="Spear Mace">2. Spear Mace</option>
+            <option value="Sword (Beast)">3. Sword (Beast)</option>
+            <option value="UHC">4. UHC</option>
+            <option value="Diamond SMP">5. Diamond SMP</option>
           </select>
         </div>
 
@@ -217,7 +247,7 @@
           </select>
         </div>
 
-        <button type="submit" id="submitBtn" class="submit-btn">SUBMIT & JOIN BRACKET</button>
+        <button type="submit" id="submitBtn" class="submit-btn">SUBMIT VOTE & JOIN BRACKET</button>
         <div id="statusMsg" class="status-msg"></div>
       </form>
     </section>
@@ -293,14 +323,35 @@
         document.getElementById("submitBtn").innerText = "TOURNAMENT FULL (8/8)";
       }
 
+      // Track Votes
+      const voteCounts = {
+        "Mace": 0,
+        "Spear Mace": 0,
+        "Sword (Beast)": 0,
+        "UHC": 0,
+        "Diamond SMP": 0
+      };
+
       for (let i = 0; i < 8; i++) {
         const slotEl = document.getElementById(`slot${i}`);
         if (registeredPlayers[i]) {
-          slotEl.innerText = `${i + 1}. ${registeredPlayers[i].username} [${registeredPlayers[i].mode}]`;
+          slotEl.innerText = `${i + 1}. ${registeredPlayers[i].username} [Vote: ${registeredPlayers[i].mode}]`;
           slotEl.classList.add("joined");
+
+          if (voteCounts[registeredPlayers[i].mode] !== undefined) {
+            voteCounts[registeredPlayers[i].mode]++;
+          }
         } else {
           slotEl.innerText = `${i + 1}. Waiting...`;
           slotEl.classList.remove("joined");
+        }
+      }
+
+      // Update Live Vote Display
+      for (const mode in voteCounts) {
+        const voteEl = document.getElementById(`vote-${mode}`);
+        if (voteEl) {
+          voteEl.innerText = `${voteCounts[mode]} Vote${voteCounts[mode] === 1 ? '' : 's'}`;
         }
       }
     }
@@ -329,7 +380,7 @@
       updateBracketUI();
 
       statusMsg.style.color = "var(--green)";
-      statusMsg.innerText = `✅ Success! ${username} (${mode}) has been added to Slot #${registeredPlayers.length}!`;
+      statusMsg.innerText = `✅ Success! ${username} voted for "${mode}" and joined Slot #${registeredPlayers.length}!`;
       document.getElementById('tournamentForm').reset();
     }
 
