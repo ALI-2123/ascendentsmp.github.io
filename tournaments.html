@@ -19,6 +19,7 @@
       --purple-glow: rgba(168, 85, 247, 0.35);
       --green: #2ed573;
       --red: #ff4757;
+      --red-glow: rgba(255, 71, 87, 0.35);
       --text-main: #ffffff;
       --text-sub: #94a3b8;
     }
@@ -233,8 +234,23 @@
       transition: all 0.2s;
     }
 
-    .submit-btn:disabled { background: #333; color: #777; cursor: not-allowed; }
-    .submit-btn:not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 5px 15px var(--gold-glow); }
+    .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px var(--gold-glow); }
+
+    .leave-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--red) 0%, #d63031 100%);
+      color: #fff;
+      border: none;
+      padding: 12px;
+      font-weight: 800;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+      transition: all 0.2s;
+    }
+
+    .leave-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px var(--red-glow); }
 
     .status-msg { margin-top: 12px; text-align: center; font-size: 0.9rem; font-weight: 700; }
 
@@ -296,10 +312,9 @@
   <!-- Firebase Web SDK Integration -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
 
-    // Your exact web app's Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyARv3N0CAeRYiT9Hb1iyGKZqTL5yTXNByM",
       authDomain: "ascendantsmp-b2c62.firebaseapp.com",
@@ -322,10 +337,13 @@
       window.db = db;
       window.playersRef = playersRef;
       window.push = push;
+      window.remove = remove;
+      window.ref = ref;
 
       // Real-Time Syncing Listener
       onValue(playersRef, (snapshot) => {
         const data = snapshot.val();
+        window.rawFirebaseData = data || {};
         window.registeredPlayers = data ? Object.values(data) : [];
         if (typeof window.updateBracketUI === 'function') {
           window.updateBracketUI();
@@ -450,6 +468,19 @@
       </form>
     </section>
 
+    <!-- LEAVE TOURNAMENT SECTION -->
+    <section class="section-card" style="border-color: rgba(255, 71, 87, 0.3);">
+      <h2 style="color: var(--red);">LEAVE TOURNAMENT</h2>
+      <form id="leaveForm" onsubmit="handleLeave(event)">
+        <div class="form-group">
+          <label for="leaveUsername">ENTER YOUR MINECRAFT USERNAME TO UNREGISTER</label>
+          <input type="text" id="leaveUsername" class="form-input" placeholder="e.g. Steve_123" required>
+        </div>
+        <button type="submit" class="leave-btn">LEAVE TOURNAMENT & FREE SLOT</button>
+        <div id="leaveStatusMsg" class="status-msg"></div>
+      </form>
+    </section>
+
     <!-- 👾 CRACKED BRACKET DISPLAY -->
     <section class="section-card">
       <div class="bracket-header cracked">
@@ -521,9 +552,10 @@
   <script>
     const gamemodes = ["Mace", "Spear Mace", "Sword (Beast)", "UHC", "Diamond SMP"];
     
-    // Local storage initial load
+    // Local storage fallback setup
     const savedPlayers = localStorage.getItem('ascendant_tournament_players');
     window.registeredPlayers = savedPlayers ? JSON.parse(savedPlayers) : [];
+    window.rawFirebaseData = {};
 
     function copyIP(ip) {
       navigator.clipboard.writeText(ip);
@@ -711,6 +743,50 @@
       statusMsg.style.color = "var(--green)";
       statusMsg.innerText = `✅ Registered ${username} into ${type} Bracket! Voted for ${mode}.`;
       document.getElementById('tournamentForm').reset();
+    }
+
+    function handleLeave(e) {
+      e.preventDefault();
+      const usernameInput = document.getElementById('leaveUsername').value.trim();
+      const leaveStatusMsg = document.getElementById('leaveStatusMsg');
+
+      if (!usernameInput) return;
+
+      let foundKey = null;
+      for (const [key, val] of Object.entries(window.rawFirebaseData)) {
+        if (val.username && val.username.toLowerCase() === usernameInput.toLowerCase()) {
+          foundKey = key;
+          break;
+        }
+      }
+
+      if (foundKey && window.db && window.remove && window.ref) {
+        const itemRef = window.ref(window.db, `tournament_players/${foundKey}`);
+        window.remove(itemRef)
+          .then(() => {
+            leaveStatusMsg.style.color = "var(--green)";
+            leaveStatusMsg.innerText = `✅ Removed ${usernameInput} from the tournament!`;
+            document.getElementById('leaveForm').reset();
+          })
+          .catch((err) => {
+            leaveStatusMsg.style.color = "var(--red)";
+            leaveStatusMsg.innerText = `❌ Failed to remove player: ${err.message}`;
+          });
+      } else {
+        // Fallback for local storage
+        const idx = window.registeredPlayers.findIndex(p => p.username.toLowerCase() === usernameInput.toLowerCase());
+        if (idx !== -1) {
+          window.registeredPlayers.splice(idx, 1);
+          localStorage.setItem('ascendant_tournament_players', JSON.stringify(window.registeredPlayers));
+          window.updateBracketUI();
+          leaveStatusMsg.style.color = "var(--green)";
+          leaveStatusMsg.innerText = `✅ Removed ${usernameInput} from local bracket!`;
+          document.getElementById('leaveForm').reset();
+        } else {
+          leaveStatusMsg.style.color = "var(--red)";
+          leaveStatusMsg.innerText = `❌ Player "${usernameInput}" not found!`;
+        }
+      }
     }
 
     // Initialize Timer & Draw UI
