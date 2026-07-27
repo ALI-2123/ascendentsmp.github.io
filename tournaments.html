@@ -114,6 +114,14 @@
     .event-detail { font-size: 0.85rem; color: var(--text-sub); }
     .event-detail strong { color: var(--gold); }
 
+    .time-highlight {
+      background: rgba(255, 170, 0, 0.1);
+      border: 1px solid var(--gold);
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin-top: 5px;
+    }
+
     .votes-container {
       display: flex;
       flex-direction: column;
@@ -124,14 +132,31 @@
     .vote-item {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       font-size: 0.85rem;
       background: rgba(255, 255, 255, 0.05);
-      padding: 6px 12px;
+      padding: 8px 12px;
       border-radius: 6px;
       border-left: 3px solid var(--gold);
+      transition: all 0.3s;
+    }
+
+    .vote-item.winner {
+      border-left-color: var(--green);
+      background: rgba(46, 213, 115, 0.15);
     }
 
     .vote-item strong { color: var(--elite-cyan); }
+
+    .winner-tag {
+      font-size: 0.65rem;
+      background: var(--green);
+      color: #000;
+      padding: 2px 6px;
+      border-radius: 10px;
+      font-weight: 800;
+      margin-left: 6px;
+    }
 
     .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
     .form-group label { font-size: 0.85rem; font-weight: 700; color: var(--text-sub); }
@@ -198,18 +223,39 @@
         <div class="event-box">
           <div class="event-title">⚔️ Tournament Specs</div>
           <div class="event-detail"><strong>Format:</strong> 8-Player Single Elimination</div>
+          <div class="event-detail"><strong>Gamemode:</strong> Most Voted Mode Wins!</div>
           <div class="event-detail"><strong>Access:</strong> Java (Premium & Cracked)</div>
           <div class="event-detail"><strong>Prize:</strong> Elite Rank & Special Items (When Server Starts)</div>
+          
+          <div class="time-highlight">
+            <div class="event-detail"><strong>🕒 Start Time (Jordan):</strong> Tomorrow @ 5:00 PM (EEST)</div>
+            <div class="event-detail" style="margin-top: 4px;"><strong>🌍 Your Local Time:</strong> <span id="localTimeDisplay" style="color: var(--elite-cyan); font-weight: bold;">Calculating...</span></div>
+          </div>
         </div>
 
         <div class="event-box">
-          <div class="event-title">📊 Live Gamemode Votes</div>
+          <div class="event-title">📊 Live Vote Leaderboard</div>
           <div class="votes-container" id="voteTally">
-            <div class="vote-item">1. Mace <strong id="vote-Mace">0 Votes</strong></div>
-            <div class="vote-item">2. Spear Mace <strong id="vote-Spear Mace">0 Votes</strong></div>
-            <div class="vote-item">3. Sword (Beast) <strong id="vote-Sword (Beast)">0 Votes</strong></div>
-            <div class="vote-item">4. UHC <strong id="vote-UHC">0 Votes</strong></div>
-            <div class="vote-item">5. Diamond SMP <strong id="vote-Diamond SMP">0 Votes</strong></div>
+            <div class="vote-item" id="item-Mace">
+              <span>1. Mace <span id="tag-Mace"></span></span>
+              <strong id="vote-Mace">0 Votes</strong>
+            </div>
+            <div class="vote-item" id="item-Spear Mace">
+              <span>2. Spear Mace <span id="tag-Spear Mace"></span></span>
+              <strong id="vote-Spear Mace">0 Votes</strong>
+            </div>
+            <div class="vote-item" id="item-Sword (Beast)">
+              <span>3. Sword (Beast) <span id="tag-Sword (Beast)"></span></span>
+              <strong id="vote-Sword (Beast)">0 Votes</strong>
+            </div>
+            <div class="vote-item" id="item-UHC">
+              <span>4. UHC <span id="tag-UHC"></span></span>
+              <strong id="vote-UHC">0 Votes</strong>
+            </div>
+            <div class="vote-item" id="item-Diamond SMP">
+              <span>5. Diamond SMP <span id="tag-Diamond SMP"></span></span>
+              <strong id="vote-Diamond SMP">0 Votes</strong>
+            </div>
           </div>
         </div>
       </div>
@@ -312,6 +358,32 @@
   <script>
     let registeredPlayers = JSON.parse(localStorage.getItem("ascendant_tournament_players")) || [];
 
+    // Calculate local timezone equivalent for Tomorrow 5:00 PM Jordan (UTC+3)
+    function calculateLocalTime() {
+      const now = new Date();
+      const tomorrow = new Date(now);
+      tomorrow.setDate(now.getDate() + 1);
+      
+      // Construct Jordan Target Time (UTC+3)
+      const year = tomorrow.getFullYear();
+      const month = String(tomorrow.getMonth() + 1).padStart(2, '0');
+      const day = String(tomorrow.getDate()).padStart(2, '0');
+      const jordanIsoString = `${year}-${month}-${day}T17:00:00+03:00`;
+      
+      const eventDate = new Date(jordanIsoString);
+      
+      const options = { 
+        weekday: 'short', 
+        month: 'short', 
+        day: 'numeric', 
+        hour: 'numeric', 
+        minute: '2-digit', 
+        timeZoneName: 'short' 
+      };
+      
+      document.getElementById('localTimeDisplay').innerText = eventDate.toLocaleString(undefined, options);
+    }
+
     function updateBracketUI() {
       const total = registeredPlayers.length;
       document.getElementById("bracketCount").innerText = total;
@@ -347,11 +419,29 @@
         }
       }
 
-      // Update Live Vote Display
+      // Find Highest Vote Count
+      let maxVotes = 0;
       for (const mode in voteCounts) {
+        if (voteCounts[mode] > maxVotes) {
+          maxVotes = voteCounts[mode];
+        }
+      }
+
+      // Update Live Vote Display & Winner Highlights
+      for (const mode in voteCounts) {
+        const count = voteCounts[mode];
         const voteEl = document.getElementById(`vote-${mode}`);
-        if (voteEl) {
-          voteEl.innerText = `${voteCounts[mode]} Vote${voteCounts[mode] === 1 ? '' : 's'}`;
+        const itemEl = document.getElementById(`item-${mode}`);
+        const tagEl = document.getElementById(`tag-${mode}`);
+
+        if (voteEl) voteEl.innerText = `${count} Vote${count === 1 ? '' : 's'}`;
+
+        if (maxVotes > 0 && count === maxVotes) {
+          itemEl.classList.add("winner");
+          tagEl.innerHTML = `<span class="winner-tag">🏆 MOST VOTED</span>`;
+        } else {
+          itemEl.classList.remove("winner");
+          tagEl.innerHTML = '';
         }
       }
     }
@@ -384,6 +474,7 @@
       document.getElementById('tournamentForm').reset();
     }
 
+    calculateLocalTime();
     updateBracketUI();
   </script>
 </body>
