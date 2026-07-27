@@ -23,12 +23,7 @@
 
     html { scroll-behavior: smooth; }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
 
     body {
       background-color: var(--bg-dark);
@@ -74,13 +69,7 @@
 
     .header-logo-img:hover { transform: scale(1.05); }
 
-    .logo {
-      font-size: 3rem;
-      font-weight: 900;
-      letter-spacing: 3px;
-      text-shadow: 0 0 20px var(--gold-glow);
-    }
-
+    .logo { font-size: 3rem; font-weight: 900; letter-spacing: 3px; text-shadow: 0 0 20px var(--gold-glow); }
     .logo span { color: var(--gold); }
     .tagline { color: var(--text-sub); font-size: 1.1rem; margin-top: 8px; }
 
@@ -515,7 +504,7 @@
       <a href="tournaments.html" class="card">
         <div class="card-content">
           <h3>TOURNAMENTS 🏆</h3>
-          <p>Cracked & Premium Bracket Signups</p>
+          <p id="tourneyCardSub">8-Player Bracket Registration</p>
         </div>
       </a>
 
@@ -822,6 +811,18 @@
       requestAnimationFrame(animateParticles);
     }
     initParticles(); animateParticles();
+
+    function updateTournamentCard() {
+      const registeredPlayers = JSON.parse(localStorage.getItem("ascendant_tournament_players")) || [];
+      const sub = document.getElementById("tourneyCardSub");
+      if (registeredPlayers.length >= 8) {
+        sub.innerText = "8/8 Slots Full (Closed)";
+        sub.style.color = "var(--red)";
+      } else {
+        sub.innerText = `${registeredPlayers.length}/8 Slots Registered`;
+      }
+    }
+    updateTournamentCard();
 
     function copyIP() {
       const ip = document.getElementById("serverIP").innerText;
