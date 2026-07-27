@@ -174,13 +174,14 @@
     </header>
 
     <section class="section-card">
-      <h2>1v1 CRYSTAL PVP CHAMPIONSHIP <span class="badge" id="statusBadge">SLOTS: 0/8</span></h2>
+      <h2>1v1 PVP CHAMPIONSHIP <span class="badge" id="statusBadge">SLOTS: 0/8</span></h2>
       <div class="event-grid">
         <div class="event-box">
           <div class="event-title">⚔️ Tournament Specs</div>
+          <div class="event-detail"><strong>Gamemodes:</strong> Mace Spear, Mace Sword (Beast), SMP, UHC</div>
           <div class="event-detail"><strong>Format:</strong> 8-Player Single Elimination</div>
           <div class="event-detail"><strong>Access:</strong> Java (Premium & Cracked)</div>
-          <div class="event-detail"><strong>Prize:</strong> VIP Rank & Special Discord Role</div>
+          <div class="event-detail"><strong>Prize:</strong> Elite Rank & Special Items (When Server Starts)</div>
         </div>
       </div>
     </section>
@@ -196,6 +197,16 @@
         <div class="form-group">
           <label for="discordTag">DISCORD USERNAME</label>
           <input type="text" id="discordTag" class="form-input" placeholder="e.g. username#0000" required>
+        </div>
+
+        <div class="form-group">
+          <label for="gamemodeSelect">SELECT GAMEMODE</label>
+          <select id="gamemodeSelect" class="form-select" required>
+            <option value="Mace Spear">Mace Spear</option>
+            <option value="Mace Sword (Beast)">Mace Sword (Beast)</option>
+            <option value="SMP">SMP</option>
+            <option value="UHC">UHC</option>
+          </select>
         </div>
 
         <div class="form-group">
@@ -269,7 +280,6 @@
   </div>
 
   <script>
-    // Load existing registered players from local browser storage
     let registeredPlayers = JSON.parse(localStorage.getItem("ascendant_tournament_players")) || [];
 
     function updateBracketUI() {
@@ -277,17 +287,16 @@
       document.getElementById("bracketCount").innerText = total;
       document.getElementById("statusBadge").innerText = total >= 8 ? "REGISTRATION CLOSED (FULL)" : `SLOTS: ${total}/8`;
       
-      if(total >= 8) {
+      if (total >= 8) {
         document.getElementById("statusBadge").classList.add("closed");
         document.getElementById("submitBtn").disabled = true;
         document.getElementById("submitBtn").innerText = "TOURNAMENT FULL (8/8)";
       }
 
-      // Populate slots
       for (let i = 0; i < 8; i++) {
         const slotEl = document.getElementById(`slot${i}`);
         if (registeredPlayers[i]) {
-          slotEl.innerText = `${i + 1}. ${registeredPlayers[i].username}`;
+          slotEl.innerText = `${i + 1}. ${registeredPlayers[i].username} [${registeredPlayers[i].mode}]`;
           slotEl.classList.add("joined");
         } else {
           slotEl.innerText = `${i + 1}. Waiting...`;
@@ -305,27 +314,25 @@
       }
 
       const username = document.getElementById('mcUsername').value.trim();
+      const mode = document.getElementById('gamemodeSelect').value;
       const statusMsg = document.getElementById('statusMsg');
 
-      // Check if player is already registered
       if (registeredPlayers.some(p => p.username.toLowerCase() === username.toLowerCase())) {
         statusMsg.style.color = "var(--red)";
         statusMsg.innerText = `❌ "${username}" is already registered in the bracket!`;
         return;
       }
 
-      // Add new player
-      registeredPlayers.push({ username });
+      registeredPlayers.push({ username, mode });
       localStorage.setItem("ascendant_tournament_players", JSON.stringify(registeredPlayers));
 
       updateBracketUI();
 
       statusMsg.style.color = "var(--green)";
-      statusMsg.innerText = `✅ Success! ${username} has been added to Slot #${registeredPlayers.length}!`;
+      statusMsg.innerText = `✅ Success! ${username} (${mode}) has been added to Slot #${registeredPlayers.length}!`;
       document.getElementById('tournamentForm').reset();
     }
 
-    // Initialize UI on page load
     updateBracketUI();
   </script>
 </body>
