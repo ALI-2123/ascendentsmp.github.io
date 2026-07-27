@@ -17,6 +17,7 @@
       --border-color: rgba(255, 255, 255, 0.1);
       --elite-cyan: #00f2fe;
       --green: #2ed573;
+      --red: #ff4757;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
@@ -86,6 +87,12 @@
       font-weight: 700;
     }
 
+    .badge.closed {
+      background: rgba(255, 71, 87, 0.15);
+      color: var(--red);
+      border-color: var(--red);
+    }
+
     .event-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -132,17 +139,26 @@
       border-radius: 6px;
       cursor: pointer;
       font-size: 1rem;
+      transition: all 0.2s;
     }
 
-    .submit-btn:hover { transform: translateY(-2px); }
+    .submit-btn:disabled {
+      background: #444;
+      color: #888;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .submit-btn:not(:disabled):hover { transform: translateY(-2px); }
     .status-msg { margin-top: 10px; text-align: center; font-size: 0.9rem; font-weight: 700; }
 
-    .bracket-container { display: flex; justify-content: space-between; gap: 10px; overflow-x: auto; padding-bottom: 10px; }
-    .bracket-round { display: flex; flex-direction: column; justify-content: space-around; min-width: 140px; gap: 10px; }
-    .bracket-match { background: rgba(0, 0, 0, 0.6); border: 1px solid var(--border-color); border-radius: 6px; padding: 8px; font-size: 0.8rem; }
-    .match-player { display: flex; justify-content: space-between; padding: 4px 0; }
-    .match-player.winner { color: var(--gold); font-weight: 800; }
-    .match-divider { height: 1px; background: var(--border-color); margin: 2px 0; }
+    /* BRACKET STYLES */
+    .bracket-container { display: flex; justify-content: space-between; gap: 15px; overflow-x: auto; padding-bottom: 10px; }
+    .bracket-round { display: flex; flex-direction: column; justify-content: space-around; min-width: 170px; gap: 12px; }
+    .bracket-match { background: rgba(0, 0, 0, 0.6); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; font-size: 0.85rem; }
+    .match-player { display: flex; justify-content: space-between; padding: 4px 0; color: var(--text-sub); }
+    .match-player.joined { color: var(--gold); font-weight: 800; }
+    .match-divider { height: 1px; background: var(--border-color); margin: 4px 0; }
   </style>
 </head>
 <body>
@@ -154,29 +170,23 @@
 
     <header>
       <h1 class="title">TOURNAMENT <span>ARENA</span></h1>
-      <p class="subtitle">Official Bracket Registration for Java & Cracked Players</p>
+      <p class="subtitle">Official 8-Player Bracket Registration</p>
     </header>
 
     <section class="section-card">
-      <h2>UPCOMING EVENTS <span class="badge">REGISTRATION OPEN</span></h2>
+      <h2>1v1 CRYSTAL PVP CHAMPIONSHIP <span class="badge" id="statusBadge">SLOTS: 0/8</span></h2>
       <div class="event-grid">
         <div class="event-box">
-          <div class="event-title">⚔️ 1v1 Crystal PvP Championship</div>
-          <div class="event-detail"><strong>Format:</strong> Single Elimination</div>
+          <div class="event-title">⚔️ Tournament Specs</div>
+          <div class="event-detail"><strong>Format:</strong> 8-Player Single Elimination</div>
           <div class="event-detail"><strong>Access:</strong> Java (Premium & Cracked)</div>
-          <div class="event-detail"><strong>Prize:</strong> VIP Rank / Special Role</div>
-        </div>
-        <div class="event-box">
-          <div class="event-title">🛡️ Vanilla Survival Games</div>
-          <div class="event-detail"><strong>Format:</strong> Free-For-All Battle Royale</div>
-          <div class="event-detail"><strong>Access:</strong> All Ascendant SMP Players</div>
-          <div class="event-detail"><strong>Prize:</strong> In-Game Cosmetics</div>
+          <div class="event-detail"><strong>Prize:</strong> VIP Rank & Special Discord Role</div>
         </div>
       </div>
     </section>
 
     <section class="section-card">
-      <h2>SIGN UP FOR A BRACKET</h2>
+      <h2>SIGN UP FOR THE BRACKET</h2>
       <form id="tournamentForm" onsubmit="handleRegistration(event)">
         <div class="form-group">
           <label for="mcUsername">MINECRAFT USERNAME</label>
@@ -196,46 +206,61 @@
           </select>
         </div>
 
-        <div class="form-group">
-          <label for="tournamentSelect">SELECT TOURNAMENT</label>
-          <select id="tournamentSelect" class="form-select" required>
-            <option value="crystal">1v1 Crystal PvP Championship</option>
-            <option value="survival">Vanilla Survival Games</option>
-          </select>
-        </div>
-
-        <button type="submit" class="submit-btn">SUBMIT REGISTRATION</button>
+        <button type="submit" id="submitBtn" class="submit-btn">SUBMIT & JOIN BRACKET</button>
         <div id="statusMsg" class="status-msg"></div>
       </form>
     </section>
 
     <section class="section-card">
-      <h2>BRACKET PREVIEW (TOP 8)</h2>
+      <h2>LIVE BRACKET (<span id="bracketCount">0</span>/8 PLAYERS)</h2>
       <div class="bracket-container">
+        <!-- Quarter Finals (8 Players) -->
         <div class="bracket-round">
+          <div style="font-size: 0.75rem; color: var(--gold); text-align: center; font-weight: bold; margin-bottom: 5px;">QUARTER FINALS</div>
           <div class="bracket-match">
-            <div class="match-player winner">Player_1 <span>2</span></div>
+            <div class="match-player" id="slot0">1. Waiting...</div>
             <div class="match-divider"></div>
-            <div class="match-player">Player_2 <span>0</span></div>
+            <div class="match-player" id="slot1">2. Waiting...</div>
           </div>
           <div class="bracket-match">
-            <div class="match-player winner">Player_3 <span>2</span></div>
+            <div class="match-player" id="slot2">3. Waiting...</div>
             <div class="match-divider"></div>
-            <div class="match-player">Player_4 <span>1</span></div>
+            <div class="match-player" id="slot3">4. Waiting...</div>
+          </div>
+          <div class="bracket-match">
+            <div class="match-player" id="slot4">5. Waiting...</div>
+            <div class="match-divider"></div>
+            <div class="match-player" id="slot5">6. Waiting...</div>
+          </div>
+          <div class="bracket-match">
+            <div class="match-player" id="slot6">7. Waiting...</div>
+            <div class="match-divider"></div>
+            <div class="match-player" id="slot7">8. Waiting...</div>
           </div>
         </div>
+
+        <!-- Semi Finals -->
         <div class="bracket-round">
+          <div style="font-size: 0.75rem; color: var(--gold); text-align: center; font-weight: bold; margin-bottom: 5px;">SEMI FINALS</div>
           <div class="bracket-match">
-            <div class="match-player">Player_1 <span>TBD</span></div>
+            <div class="match-player">Match 1 Winner</div>
             <div class="match-divider"></div>
-            <div class="match-player">Player_3 <span>TBD</span></div>
+            <div class="match-player">Match 2 Winner</div>
+          </div>
+          <div class="bracket-match">
+            <div class="match-player">Match 3 Winner</div>
+            <div class="match-divider"></div>
+            <div class="match-player">Match 4 Winner</div>
           </div>
         </div>
+
+        <!-- Finals -->
         <div class="bracket-round">
+          <div style="font-size: 0.75rem; color: var(--gold); text-align: center; font-weight: bold; margin-bottom: 5px;">FINALS</div>
           <div class="bracket-match" style="border-color: var(--gold);">
-            <div class="match-player winner">CHAMPION</div>
+            <div class="match-player" style="color: var(--gold); font-weight: bold;">CHAMPION</div>
             <div class="match-divider"></div>
-            <div class="match-player" style="color: var(--text-sub);">TBD</div>
+            <div class="match-player">Runner-Up</div>
           </div>
         </div>
       </div>
@@ -244,14 +269,64 @@
   </div>
 
   <script>
+    // Load existing registered players from local browser storage
+    let registeredPlayers = JSON.parse(localStorage.getItem("ascendant_tournament_players")) || [];
+
+    function updateBracketUI() {
+      const total = registeredPlayers.length;
+      document.getElementById("bracketCount").innerText = total;
+      document.getElementById("statusBadge").innerText = total >= 8 ? "REGISTRATION CLOSED (FULL)" : `SLOTS: ${total}/8`;
+      
+      if(total >= 8) {
+        document.getElementById("statusBadge").classList.add("closed");
+        document.getElementById("submitBtn").disabled = true;
+        document.getElementById("submitBtn").innerText = "TOURNAMENT FULL (8/8)";
+      }
+
+      // Populate slots
+      for (let i = 0; i < 8; i++) {
+        const slotEl = document.getElementById(`slot${i}`);
+        if (registeredPlayers[i]) {
+          slotEl.innerText = `${i + 1}. ${registeredPlayers[i].username}`;
+          slotEl.classList.add("joined");
+        } else {
+          slotEl.innerText = `${i + 1}. Waiting...`;
+          slotEl.classList.remove("joined");
+        }
+      }
+    }
+
     function handleRegistration(e) {
       e.preventDefault();
-      const username = document.getElementById('mcUsername').value;
+      
+      if (registeredPlayers.length >= 8) {
+        alert("Sorry, the tournament is already full!");
+        return;
+      }
+
+      const username = document.getElementById('mcUsername').value.trim();
       const statusMsg = document.getElementById('statusMsg');
+
+      // Check if player is already registered
+      if (registeredPlayers.some(p => p.username.toLowerCase() === username.toLowerCase())) {
+        statusMsg.style.color = "var(--red)";
+        statusMsg.innerText = `❌ "${username}" is already registered in the bracket!`;
+        return;
+      }
+
+      // Add new player
+      registeredPlayers.push({ username });
+      localStorage.setItem("ascendant_tournament_players", JSON.stringify(registeredPlayers));
+
+      updateBracketUI();
+
       statusMsg.style.color = "var(--green)";
-      statusMsg.innerText = `✅ Success! Registration received for ${username}. Check Discord for bracket matches!`;
+      statusMsg.innerText = `✅ Success! ${username} has been added to Slot #${registeredPlayers.length}!`;
       document.getElementById('tournamentForm').reset();
     }
+
+    // Initialize UI on page load
+    updateBracketUI();
   </script>
 </body>
 </html>
