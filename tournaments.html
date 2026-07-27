@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ascendant SMP - Tournaments</title>
+  <style>
+    :root {
+      --bg-color: #0e1117;
+      --card-bg: #181b22;
+      --card-border: #282c37;
+      --accent-gold: #e5b33b;
+      --text-main: #d1d5db;
+      --text-dim: #6b7280;
+      --line-color: #2b303c;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; padding: 20px; }
+
+    header { text-align: center; margin-bottom: 30px; }
+    header h1 { font-size: 2.5rem; color: #fff; margin-bottom: 5px; letter-spacing: 1px; }
+    header p { color: var(--text-dim); font-size: 1rem; }
+
+    /* Bracket Switch Tabs */
+    .tab-container { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; }
+    .tab-btn {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      color: var(--text-main); padding: 12px 24px; border-radius: 8px;
+      font-weight: 600; cursor: pointer; transition: 0.2s;
+    }
+    .tab-btn.active { background: var(--accent-gold); color: #000; border-color: var(--accent-gold); }
+
+    /* Registration Box */
+    .reg-container {
+      max-width: 500px; margin: 0 auto 40px auto; background: var(--card-bg);
+      border: 1px solid var(--card-border); padding: 20px; border-radius: 10px; text-align: center;
+    }
+    .reg-container h3 { margin-bottom: 15px; color: #fff; }
+    .reg-form { display: flex; gap: 10px; justify-content: center; }
+    .reg-form input {
+      background: #0e1117; border: 1px solid var(--card-border); padding: 10px 14px;
+      border-radius: 6px; color: #fff; width: 60%; outline: none;
+    }
+    .reg-form button {
+      background: var(--accent-gold); border: none; padding: 10px 18px;
+      border-radius: 6px; font-weight: bold; cursor: pointer; color: #000;
+    }
+    .msg { margin-top: 10px; font-size: 0.88rem; min-height: 20px; }
+    .msg.error { color: #f87171; }
+    .msg.success { color: #4ade80; }
+
+    /* Tournament Bracket Display */
+    .bracket-wrapper {
+      display: flex; overflow-x: auto; padding: 20px 0; gap: 40px; justify-content: center; min-width: 1000px;
+    }
+    .round-column { display: flex; flex-direction: column; justify-content: space-around; min-width: 180px; }
+    .round-title {
+      text-align: center; font-size: 0.75rem; text-transform: uppercase;
+      letter-spacing: 1.5px; color: var(--text-dim); margin-bottom: 15px; font-weight: bold;
+    }
+
+    /* Match Box */
+    .match-box {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 8px; padding: 6px; margin: 10px 0; display: flex;
+      flex-direction: column; gap: 4px; position: relative;
+    }
+    .player-slot {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 6px 10px; background: rgba(0, 0, 0, 0.2); border-radius: 4px; font-size: 0.85rem;
+    }
+    .player-slot.winner { color: var(--accent-gold); font-weight: bold; }
+    .player-slot.winner::after { content: '✓'; color: var(--accent-gold); font-size: 0.8rem; }
+    .player-avatar { width: 18px; height: 18px; border-radius: 3px; margin-right: 8px; vertical-align: middle; }
+
+    .champion-box {
+      border: 1px solid var(--accent-gold);
+      box-shadow: 0 0 12px rgba(229, 179, 59, 0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Tournament Arena</h1>
+    <p>Select your category and register your IGN to compete</p>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <div class="tab-container">
+    <button class="tab-btn active" onclick="switchBracket('cracked')">Cracked Bracket (unviersalmc.fun)</button>
+    <button class="tab-btn" onclick="switchBracket('premium')">Premium Bracket (eu.catpvp.xyz)</button>
+  </div>
+
+  <!-- Registration Section -->
+  <div class="reg-container">
+    <h3 id="reg-title">Register for Cracked Bracket</h3>
+    <div class="reg-form">
+      <input type="text" id="ign-input" placeholder="Enter Minecraft IGN..." />
+      <button onclick="registerPlayer()">Join</button>
+    </div>
+    <div id="status-msg" class="msg"></div>
+  </div>
+
+  <!-- Bracket Views -->
+  <div id="bracket-cracked" class="bracket-wrapper"></div>
+  <div id="bracket-premium" class="bracket-wrapper" style="display: none;"></div>
+
+  <script>
+    let activeCategory = 'cracked';
+
+    // Mock Databases (In-Memory / LocalStorage synced)
+    let bracketsData = {
+      cracked: Array(8).fill(""),
+      premium: Array(8).fill("")
+    };
+
+    function switchBracket(category) {
+      activeCategory = category;
+      
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      document.getElementById('bracket-cracked').style.display = category === 'cracked' ? 'flex' : 'none';
+      document.getElementById('bracket-premium').style.display = category === 'premium' ? 'flex' : 'none';
+
+      document.getElementById('reg-title').innerText = 
+        `Register for ${category.toUpperCase()} Bracket (${category === 'cracked' ? 'unviersalmc.fun' : 'eu.catpvp.xyz'})`;
+      
+      document.getElementById('status-msg').innerText = '';
+    }
+
+    function registerPlayer() {
+      const input = document.getElementById('ign-input');
+      const ign = input.value.trim();
+      const msgBox = document.getElementById('status-msg');
+
+      if (!ign) {
+        msgBox.className = "msg error";
+        msgBox.innerText = "Please enter a valid Minecraft username.";
+        return;
+      }
+
+      const otherCategory = activeCategory === 'cracked' ? 'premium' : 'cracked';
+
+      // Rule: Check if registered in opposite bracket
+      if (bracketsData[otherCategory].some(name => name.toLowerCase() === ign.toLowerCase())) {
+        msgBox.className = "msg error";
+        msgBox.innerText = `Error: "${ign}" is already registered in the ${otherCategory.toUpperCase()} bracket! Dual entry is forbidden.`;
+        return;
+      }
+
+      // Check if already registered in active bracket
+      if (bracketsData[activeCategory].some(name => name.toLowerCase() === ign.toLowerCase())) {
+        msgBox.className = "msg error";
+        msgBox.innerText = `You are already registered in the ${activeCategory.toUpperCase()} bracket.`;
+        return;
+      }
+
+      // Find free slot
+      const freeIndex = bracketsData[activeCategory].findIndex(slot => slot === "");
+      if (freeIndex === -1) {
+        msgBox.className = "msg error";
+        msgBox.innerText = `The ${activeCategory.toUpperCase()} bracket is currently full (8/8)!`;
+        return;
+      }
+
+      // Assign player to slot
+      bracketsData[activeCategory][freeIndex] = ign;
+      msgBox.className = "msg success";
+      msgBox.innerText = `Successfully registered ${ign} into the ${activeCategory.toUpperCase()} bracket!`;
+      input.value = '';
+
+      renderBrackets();
+    }
+
+    function renderBrackets() {
+      ['cracked', 'premium'].forEach(category => {
+        const container = document.getElementById(`bracket-${category}`);
+        const players = bracketsData[category];
+
+        container.innerHTML = `
+          <!-- Round 1 -->
+          <div class="round-column">
+            <div class="round-title">Round 1</div>
+            ${renderMatch(players[0] || 'TBD', players[1] || 'TBD', players[0])}
+            ${renderMatch(players[2] || 'TBD', players[3] || 'TBD', players[2])}
+            ${renderMatch(players[4] || 'TBD', players[5] || 'TBD', players[4])}
+            ${renderMatch(players[6] || 'TBD', players[7] || 'TBD', players[6])}
+          </div>
+
+          <!-- Semifinals -->
+          <div class="round-column">
+            <div class="round-title">Semifinal</div>
+            ${renderMatch(players[0] || 'TBD', players[2] || 'TBD', players[0])}
+            ${renderMatch(players[4] || 'TBD', players[6] || 'TBD', players[4])}
+          </div>
+
+          <!-- Grand Final -->
+          <div class="round-column">
+            <div class="round-title">Grand Final</div>
+            <div class="match-box champion-box">
+              <div class="player-slot winner">
+                <span><img class="player-avatar" src="https://mc-heads.net/avatar/${players[0] || 'steve'}" />${players[0] || 'TBD'}</span>
+              </div>
+              <div class="player-slot">
+                <span><img class="player-avatar" src="https://mc-heads.net/avatar/${players[4] || 'steve'}" />${players[4] || 'TBD'}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function renderMatch(p1, p2, winner) {
+      return `
+        <div class="match-box">
+          <div class="player-slot ${p1 === winner && p1 !== 'TBD' ? 'winner' : ''}">
+            <span><img class="player-avatar" src="https://mc-heads.net/avatar/${p1}" />${p1}</span>
+          </div>
+          <div class="player-slot ${p2 === winner && p2 !== 'TBD' && p1 !== winner ? 'winner' : ''}">
+            <span><img class="player-avatar" src="https://mc-heads.net/avatar/${p2}" />${p2}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    // Initial render
+    renderBrackets();
+  </script>
+</body>
+</html>
