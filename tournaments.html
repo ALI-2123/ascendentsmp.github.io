@@ -8,16 +8,18 @@
   
   <style>
     :root {
-      --bg-dark: #090a0f;
-      --card-bg: rgba(18, 22, 32, 0.85);
+      --bg-dark: #07090e;
+      --card-bg: rgba(15, 19, 29, 0.85);
+      --card-border: rgba(255, 255, 255, 0.08);
       --gold: #ffaa00;
-      --gold-glow: rgba(255, 170, 0, 0.4);
-      --text-main: #ffffff;
-      --text-sub: #a0a8c0;
-      --border-color: rgba(255, 255, 255, 0.1);
-      --elite-cyan: #00f2fe;
+      --gold-glow: rgba(255, 170, 0, 0.35);
+      --cyan: #00f2fe;
+      --cyan-glow: rgba(0, 242, 254, 0.3);
+      --purple: #9b51e0;
       --green: #2ed573;
       --red: #ff4757;
+      --text-main: #ffffff;
+      --text-sub: #94a3b8;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
@@ -25,15 +27,16 @@
     body {
       background-color: var(--bg-dark);
       background-image: 
-        radial-gradient(circle at 50% 0%, rgba(0, 242, 254, 0.12) 0%, transparent 60%),
-        radial-gradient(circle at 20% 80%, rgba(255, 170, 0, 0.1) 0%, transparent 50%);
+        radial-gradient(circle at 50% 0%, rgba(0, 242, 254, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 60%, rgba(155, 81, 224, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 10% 90%, rgba(255, 170, 0, 0.1) 0%, transparent 50%);
       color: var(--text-main);
       min-height: 100vh;
       padding: 40px 20px;
     }
 
     .container {
-      max-width: 850px;
+      max-width: 950px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
@@ -48,29 +51,67 @@
       text-decoration: none;
       font-weight: 800;
       font-size: 0.95rem;
-      transition: transform 0.2s;
+      transition: transform 0.2s, color 0.2s;
       width: fit-content;
     }
 
-    .back-btn:hover { transform: translateX(-4px); }
+    .back-btn:hover { transform: translateX(-4px); color: #fff; }
 
-    header { text-align: center; margin-bottom: 10px; }
-    .title { font-size: 2.2rem; font-weight: 900; letter-spacing: 2px; }
-    .title span { color: var(--gold); }
-    .subtitle { color: var(--text-sub); font-size: 0.95rem; margin-top: 5px; }
+    header { text-align: center; margin-bottom: 5px; }
+    .title { font-size: 2.5rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; }
+    .title span { color: var(--gold); text-shadow: 0 0 15px var(--gold-glow); }
+    .subtitle { color: var(--text-sub); font-size: 0.95rem; margin-top: 6px; }
 
+    /* COUNTDOWN BANNER */
+    .timer-card {
+      background: linear-gradient(135deg, rgba(255, 170, 0, 0.15) 0%, rgba(0, 242, 254, 0.1) 100%);
+      border: 1px solid var(--gold);
+      box-shadow: 0 0 20px var(--gold-glow);
+      border-radius: 14px;
+      padding: 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .timer-title { font-weight: 800; font-size: 0.9rem; color: var(--gold); letter-spacing: 1.5px; }
+    
+    .countdown-grid {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+    }
+
+    .time-box {
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid var(--card-border);
+      padding: 10px 16px;
+      border-radius: 8px;
+      min-width: 70px;
+    }
+
+    .time-box .num { font-size: 1.8rem; font-weight: 900; color: #fff; }
+    .time-box .label { font-size: 0.65rem; color: var(--text-sub); font-weight: 700; text-transform: uppercase; }
+
+    .local-time-note { font-size: 0.85rem; color: var(--cyan); font-weight: 600; }
+
+    /* CARD SYSTEM */
     .section-card {
       background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(10px);
+      border-radius: 14px;
       padding: 25px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
 
     .section-card h2 {
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       color: var(--gold);
-      margin-bottom: 15px;
-      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--card-border);
       padding-bottom: 10px;
       display: flex;
       justify-content: space-between;
@@ -80,64 +121,86 @@
     .badge {
       font-size: 0.75rem;
       background: rgba(0, 242, 254, 0.15);
-      color: var(--elite-cyan);
-      border: 1px solid var(--elite-cyan);
-      padding: 4px 10px;
+      color: var(--cyan);
+      border: 1px solid var(--cyan);
+      padding: 4px 12px;
       border-radius: 20px;
       font-weight: 700;
     }
 
-    .badge.closed {
-      background: rgba(255, 71, 87, 0.15);
-      color: var(--red);
-      border-color: var(--red);
-    }
+    .badge.closed { background: rgba(255, 71, 87, 0.15); color: var(--red); border-color: var(--red); }
 
-    .event-grid {
+    /* SERVERS DISPLAY */
+    .server-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 15px;
     }
 
-    .event-box {
+    .server-box {
       background: rgba(0, 0, 0, 0.4);
-      border: 1px solid var(--border-color);
+      border: 1px solid var(--card-border);
       border-radius: 10px;
-      padding: 18px;
+      padding: 16px;
       display: flex;
       flex-direction: column;
       gap: 10px;
+      transition: border-color 0.2s;
     }
 
-    .event-box:hover { border-color: var(--gold); }
-    .event-title { font-size: 1.1rem; font-weight: 800; color: #fff; }
-    .event-detail { font-size: 0.85rem; color: var(--text-sub); }
-    .event-detail strong { color: var(--gold); }
+    .server-box.cracked { border-left: 4px solid var(--purple); }
+    .server-box.premium { border-left: 4px solid var(--cyan); }
+    .server-box:hover { border-color: var(--gold); }
 
-    .time-highlight {
-      background: rgba(255, 170, 0, 0.1);
-      border: 1px solid var(--gold);
+    .server-type { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+    .server-ip-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px dashed var(--card-border);
       padding: 8px 12px;
       border-radius: 6px;
-      margin-top: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-family: monospace;
+      font-size: 0.95rem;
+      color: #fff;
+      transition: background 0.2s;
     }
 
-    .votes-container {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 5px;
+    .server-ip-btn:hover { background: rgba(255, 255, 255, 0.12); }
+
+    /* DUAL VOTE SECTIONS */
+    .vote-columns {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
     }
+
+    .vote-col-header {
+      font-size: 1rem;
+      font-weight: 800;
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .vote-col-header.cracked { color: var(--purple); }
+    .vote-col-header.premium { color: var(--cyan); }
+
+    .votes-list { display: flex; flex-direction: column; gap: 8px; }
 
     .vote-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-size: 0.85rem;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.03);
       padding: 8px 12px;
       border-radius: 6px;
-      border-left: 3px solid var(--gold);
+      border-left: 3px solid var(--card-border);
       transition: all 0.3s;
     }
 
@@ -145,8 +208,6 @@
       border-left-color: var(--green);
       background: rgba(46, 213, 115, 0.15);
     }
-
-    .vote-item strong { color: var(--elite-cyan); }
 
     .winner-tag {
       font-size: 0.65rem;
@@ -158,112 +219,134 @@
       margin-left: 6px;
     }
 
+    /* FORM STYLES */
     .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
     .form-group label { font-size: 0.85rem; font-weight: 700; color: var(--text-sub); }
 
     .form-input, .form-select {
       background: rgba(0, 0, 0, 0.5);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
       padding: 12px;
       color: #fff;
       font-size: 0.95rem;
       outline: none;
     }
 
-    .form-input:focus, .form-select:focus { border-color: var(--gold); }
+    .form-input:focus, .form-select:focus { border-color: var(--gold); box-shadow: 0 0 10px var(--gold-glow); }
 
     .submit-btn {
       width: 100%;
-      background: var(--gold);
+      background: linear-gradient(135deg, var(--gold) 0%, #e69500 100%);
       color: #000;
       border: none;
-      padding: 12px;
+      padding: 14px;
       font-weight: 900;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
       font-size: 1rem;
+      letter-spacing: 1px;
       transition: all 0.2s;
     }
 
-    .submit-btn:disabled {
-      background: #444;
-      color: #888;
-      cursor: not-allowed;
-      transform: none;
-    }
+    .submit-btn:disabled { background: #333; color: #777; cursor: not-allowed; }
+    .submit-btn:not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 5px 15px var(--gold-glow); }
 
-    .submit-btn:not(:disabled):hover { transform: translateY(-2px); }
-    .status-msg { margin-top: 10px; text-align: center; font-size: 0.9rem; font-weight: 700; }
+    .status-msg { margin-top: 12px; text-align: center; font-size: 0.9rem; font-weight: 700; }
 
     /* BRACKET STYLES */
     .bracket-container { display: flex; justify-content: space-between; gap: 15px; overflow-x: auto; padding-bottom: 10px; }
-    .bracket-round { display: flex; flex-direction: column; justify-content: space-around; min-width: 170px; gap: 12px; }
-    .bracket-match { background: rgba(0, 0, 0, 0.6); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; font-size: 0.85rem; }
+    .bracket-round { display: flex; flex-direction: column; justify-content: space-around; min-width: 180px; gap: 12px; }
+    .bracket-match { background: rgba(0, 0, 0, 0.6); border: 1px solid var(--card-border); border-radius: 8px; padding: 10px; font-size: 0.85rem; }
     .match-player { display: flex; justify-content: space-between; padding: 4px 0; color: var(--text-sub); }
     .match-player.joined { color: var(--gold); font-weight: 800; }
-    .match-divider { height: 1px; background: var(--border-color); margin: 4px 0; }
+    .match-divider { height: 1px; background: var(--card-border); margin: 4px 0; }
   </style>
 </head>
 <body>
 
   <div class="container">
     
-    <!-- RETURN TO HOME LINK -->
     <a href="index.html" class="back-btn">⬅ BACK TO MAIN PAGE</a>
 
     <header>
       <h1 class="title">TOURNAMENT <span>ARENA</span></h1>
-      <p class="subtitle">Official 8-Player Bracket Registration & Vote</p>
+      <p class="subtitle">Official 8-Player Single Elimination Championship</p>
     </header>
 
+    <!-- COUNTDOWN TIMER BANNER -->
+    <div class="timer-card">
+      <div class="timer-title">⌛ TOURNAMENT STARTS IN</div>
+      <div class="countdown-grid">
+        <div class="time-box"><div class="num" id="cd-hours">00</div><div class="label">Hours</div></div>
+        <div class="time-box"><div class="num" id="cd-mins">00</div><div class="label">Mins</div></div>
+        <div class="time-box"><div class="num" id="cd-secs">00</div><div class="label">Secs</div></div>
+      </div>
+      <div class="local-time-note">🕒 Tomorrow @ 5:00 PM Jordan Time (<span id="localTimeDisplay">Detecting local time...</span>)</div>
+    </div>
+
+    <!-- SPECS & SERVERS -->
     <section class="section-card">
-      <h2>1v1 PVP CHAMPIONSHIP <span class="badge" id="statusBadge">SLOTS: 0/8</span></h2>
-      <div class="event-grid">
-        <div class="event-box">
-          <div class="event-title">⚔️ Tournament Specs</div>
-          <div class="event-detail"><strong>Format:</strong> 8-Player Single Elimination</div>
-          <div class="event-detail"><strong>Gamemode:</strong> Most Voted Mode Wins!</div>
-          <div class="event-detail"><strong>Access:</strong> Java (Premium & Cracked)</div>
-          <div class="event-detail"><strong>Prize:</strong> Elite Rank & Special Items (When Server Starts)</div>
-          
-          <div class="time-highlight">
-            <div class="event-detail"><strong>🕒 Start Time (Jordan):</strong> Tomorrow @ 5:00 PM (EEST)</div>
-            <div class="event-detail" style="margin-top: 4px;"><strong>🌍 Your Local Time:</strong> <span id="localTimeDisplay" style="color: var(--elite-cyan); font-weight: bold;">Calculating...</span></div>
+      <h2>EVENT INFO & SERVERS <span class="badge" id="statusBadge">SLOTS: 0/8</span></h2>
+      
+      <div class="server-grid">
+        <div class="server-box cracked">
+          <div class="server-type" style="color: var(--purple);">Cracked Server IP</div>
+          <div class="server-ip-btn" onclick="copyIP('universalmc.fun')">
+            <span>universalmc.fun</span> 📋
           </div>
+          <div style="font-size: 0.75rem; color: var(--text-sub);">Click to copy server IP</div>
         </div>
 
-        <div class="event-box">
-          <div class="event-title">📊 Live Vote Leaderboard</div>
-          <div class="votes-container" id="voteTally">
-            <div class="vote-item" id="item-Mace">
-              <span>1. Mace <span id="tag-Mace"></span></span>
-              <strong id="vote-Mace">0 Votes</strong>
-            </div>
-            <div class="vote-item" id="item-Spear Mace">
-              <span>2. Spear Mace <span id="tag-Spear Mace"></span></span>
-              <strong id="vote-Spear Mace">0 Votes</strong>
-            </div>
-            <div class="vote-item" id="item-Sword (Beast)">
-              <span>3. Sword (Beast) <span id="tag-Sword (Beast)"></span></span>
-              <strong id="vote-Sword (Beast)">0 Votes</strong>
-            </div>
-            <div class="vote-item" id="item-UHC">
-              <span>4. UHC <span id="tag-UHC"></span></span>
-              <strong id="vote-UHC">0 Votes</strong>
-            </div>
-            <div class="vote-item" id="item-Diamond SMP">
-              <span>5. Diamond SMP <span id="tag-Diamond SMP"></span></span>
-              <strong id="vote-Diamond SMP">0 Votes</strong>
-            </div>
+        <div class="server-box premium">
+          <div class="server-type" style="color: var(--cyan);">Premium Server IP</div>
+          <div class="server-ip-btn" onclick="copyIP('catpvp.xyz')">
+            <span>catpvp.xyz</span> 📋
           </div>
+          <div style="font-size: 0.75rem; color: var(--text-sub);">Click to copy server IP</div>
         </div>
+      </div>
+
+      <div style="margin-top: 15px; font-size: 0.85rem; color: var(--text-sub);">
+        <strong>🏆 Tournament Prize:</strong> Elite Rank & Special In-Game Items (Granted when server launches)
       </div>
     </section>
 
+    <!-- LIVE DUAL VOTING LEADERBOARDS -->
     <section class="section-card">
-      <h2>SIGN UP & VOTE FOR GAMEMODE</h2>
+      <h2>LIVE GAMEMODE VOTE LEADERBOARD</h2>
+      <div class="vote-columns">
+        
+        <!-- CRACKED VOTES -->
+        <div>
+          <div class="vote-col-header cracked">
+            <span>👾 CRACKED VOTES</span>
+            <span id="crackedTotalVotes">0 Votes</span>
+          </div>
+          <div class="votes-list" id="crackedVotesList">
+            <!-- Dynamically Rendered -->
+          </div>
+        </div>
+
+        <!-- PREMIUM VOTES -->
+        <div>
+          <div class="vote-col-header premium">
+            <span>💎 PREMIUM VOTES</span>
+            <span id="premiumTotalVotes">0 Votes</span>
+          </div>
+          <div class="votes-list" id="premiumVotesList">
+            <!-- Dynamically Rendered -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SIGNUP FORM -->
+    <section class="section-card">
+      <h2>REGISTER & CAST YOUR VOTE</h2>
       <form id="tournamentForm" onsubmit="handleRegistration(event)">
+        
         <div class="form-group">
           <label for="mcUsername">MINECRAFT USERNAME</label>
           <input type="text" id="mcUsername" class="form-input" placeholder="e.g. Steve_123" required>
@@ -272,6 +355,14 @@
         <div class="form-group">
           <label for="discordTag">DISCORD USERNAME</label>
           <input type="text" id="discordTag" class="form-input" placeholder="e.g. username#0000" required>
+        </div>
+
+        <div class="form-group">
+          <label for="accountType">ACCOUNT TYPE / SERVER CHOICE</label>
+          <select id="accountType" class="form-select" required>
+            <option value="Cracked">Cracked Client (Server: universalmc.fun)</option>
+            <option value="Premium">Premium Java Account (Server: catpvp.xyz)</option>
+          </select>
         </div>
 
         <div class="form-group">
@@ -285,60 +376,29 @@
           </select>
         </div>
 
-        <div class="form-group">
-          <label for="accountType">ACCOUNT TYPE</label>
-          <select id="accountType" class="form-select" required>
-            <option value="Cracked">Cracked Client</option>
-            <option value="Premium">Premium Java Account</option>
-          </select>
-        </div>
-
         <button type="submit" id="submitBtn" class="submit-btn">SUBMIT VOTE & JOIN BRACKET</button>
         <div id="statusMsg" class="status-msg"></div>
       </form>
     </section>
 
+    <!-- BRACKET DISPLAY -->
     <section class="section-card">
       <h2>LIVE BRACKET (<span id="bracketCount">0</span>/8 PLAYERS)</h2>
       <div class="bracket-container">
-        <!-- Quarter Finals (8 Players) -->
+        <!-- Quarter Finals -->
         <div class="bracket-round">
           <div style="font-size: 0.75rem; color: var(--gold); text-align: center; font-weight: bold; margin-bottom: 5px;">QUARTER FINALS</div>
-          <div class="bracket-match">
-            <div class="match-player" id="slot0">1. Waiting...</div>
-            <div class="match-divider"></div>
-            <div class="match-player" id="slot1">2. Waiting...</div>
-          </div>
-          <div class="bracket-match">
-            <div class="match-player" id="slot2">3. Waiting...</div>
-            <div class="match-divider"></div>
-            <div class="match-player" id="slot3">4. Waiting...</div>
-          </div>
-          <div class="bracket-match">
-            <div class="match-player" id="slot4">5. Waiting...</div>
-            <div class="match-divider"></div>
-            <div class="match-player" id="slot5">6. Waiting...</div>
-          </div>
-          <div class="bracket-match">
-            <div class="match-player" id="slot6">7. Waiting...</div>
-            <div class="match-divider"></div>
-            <div class="match-player" id="slot7">8. Waiting...</div>
-          </div>
+          <div class="bracket-match"><div class="match-player" id="slot0">1. Waiting...</div><div class="match-divider"></div><div class="match-player" id="slot1">2. Waiting...</div></div>
+          <div class="bracket-match"><div class="match-player" id="slot2">3. Waiting...</div><div class="match-divider"></div><div class="match-player" id="slot3">4. Waiting...</div></div>
+          <div class="bracket-match"><div class="match-player" id="slot4">5. Waiting...</div><div class="match-divider"></div><div class="match-player" id="slot5">6. Waiting...</div></div>
+          <div class="bracket-match"><div class="match-player" id="slot6">7. Waiting...</div><div class="match-divider"></div><div class="match-player" id="slot7">8. Waiting...</div></div>
         </div>
 
         <!-- Semi Finals -->
         <div class="bracket-round">
           <div style="font-size: 0.75rem; color: var(--gold); text-align: center; font-weight: bold; margin-bottom: 5px;">SEMI FINALS</div>
-          <div class="bracket-match">
-            <div class="match-player">Match 1 Winner</div>
-            <div class="match-divider"></div>
-            <div class="match-player">Match 2 Winner</div>
-          </div>
-          <div class="bracket-match">
-            <div class="match-player">Match 3 Winner</div>
-            <div class="match-divider"></div>
-            <div class="match-player">Match 4 Winner</div>
-          </div>
+          <div class="bracket-match"><div class="match-player">Match 1 Winner</div><div class="match-divider"></div><div class="match-player">Match 2 Winner</div></div>
+          <div class="bracket-match"><div class="match-player">Match 3 Winner</div><div class="match-divider"></div><div class="match-player">Match 4 Winner</div></div>
         </div>
 
         <!-- Finals -->
@@ -356,32 +416,54 @@
   </div>
 
   <script>
+    const gamemodes = ["Mace", "Spear Mace", "Sword (Beast)", "UHC", "Diamond SMP"];
     let registeredPlayers = JSON.parse(localStorage.getItem("ascendant_tournament_players")) || [];
 
-    // Calculate local timezone equivalent for Tomorrow 5:00 PM Jordan (UTC+3)
-    function calculateLocalTime() {
+    // Copy IP Utility
+    function copyIP(ip) {
+      navigator.clipboard.writeText(ip);
+      alert(`Copied IP: ${ip}`);
+    }
+
+    // Countdown & Timezone Logic
+    let eventTargetDate;
+    function initTimer() {
       const now = new Date();
       const tomorrow = new Date(now);
       tomorrow.setDate(now.getDate() + 1);
-      
-      // Construct Jordan Target Time (UTC+3)
+
       const year = tomorrow.getFullYear();
       const month = String(tomorrow.getMonth() + 1).padStart(2, '0');
       const day = String(tomorrow.getDate()).padStart(2, '0');
-      const jordanIsoString = `${year}-${month}-${day}T17:00:00+03:00`;
       
-      const eventDate = new Date(jordanIsoString);
-      
-      const options = { 
-        weekday: 'short', 
-        month: 'short', 
-        day: 'numeric', 
-        hour: 'numeric', 
-        minute: '2-digit', 
-        timeZoneName: 'short' 
-      };
-      
-      document.getElementById('localTimeDisplay').innerText = eventDate.toLocaleString(undefined, options);
+      // Target: 5:00 PM Jordan Time (UTC+3)
+      eventTargetDate = new Date(`${year}-${month}-${day}T17:00:00+03:00`);
+
+      const options = { weekday: 'short', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' };
+      document.getElementById('localTimeDisplay').innerText = `Your Local: ${eventTargetDate.toLocaleString(undefined, options)}`;
+
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    }
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const diff = eventTargetDate.getTime() - now;
+
+      if (diff <= 0) {
+        document.getElementById('cd-hours').innerText = '00';
+        document.getElementById('cd-mins').innerText = '00';
+        document.getElementById('cd-secs').innerText = '00';
+        return;
+      }
+
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+      document.getElementById('cd-hours').innerText = String(hours).padStart(2, '0');
+      document.getElementById('cd-mins').innerText = String(mins).padStart(2, '0');
+      document.getElementById('cd-secs').innerText = String(secs).padStart(2, '0');
     }
 
     function updateBracketUI() {
@@ -395,23 +477,21 @@
         document.getElementById("submitBtn").innerText = "TOURNAMENT FULL (8/8)";
       }
 
-      // Track Votes
-      const voteCounts = {
-        "Mace": 0,
-        "Spear Mace": 0,
-        "Sword (Beast)": 0,
-        "UHC": 0,
-        "Diamond SMP": 0
+      // Votes breakdown
+      const votes = {
+        Cracked: { "Mace": 0, "Spear Mace": 0, "Sword (Beast)": 0, "UHC": 0, "Diamond SMP": 0 },
+        Premium: { "Mace": 0, "Spear Mace": 0, "Sword (Beast)": 0, "UHC": 0, "Diamond SMP": 0 }
       };
 
       for (let i = 0; i < 8; i++) {
         const slotEl = document.getElementById(`slot${i}`);
         if (registeredPlayers[i]) {
-          slotEl.innerText = `${i + 1}. ${registeredPlayers[i].username} [Vote: ${registeredPlayers[i].mode}]`;
+          const p = registeredPlayers[i];
+          slotEl.innerText = `${i + 1}. ${p.username} [${p.type}]`;
           slotEl.classList.add("joined");
 
-          if (voteCounts[registeredPlayers[i].mode] !== undefined) {
-            voteCounts[registeredPlayers[i].mode]++;
+          if (votes[p.type] && votes[p.type][p.mode] !== undefined) {
+            votes[p.type][p.mode]++;
           }
         } else {
           slotEl.innerText = `${i + 1}. Waiting...`;
@@ -419,62 +499,69 @@
         }
       }
 
-      // Find Highest Vote Count
+      renderVoteCategory('Cracked', votes.Cracked, 'crackedVotesList', 'crackedTotalVotes');
+      renderVoteCategory('Premium', votes.Premium, 'premiumVotesList', 'premiumTotalVotes');
+    }
+
+    function renderVoteCategory(type, voteObj, containerId, totalId) {
+      const container = document.getElementById(containerId);
+      let total = 0;
       let maxVotes = 0;
-      for (const mode in voteCounts) {
-        if (voteCounts[mode] > maxVotes) {
-          maxVotes = voteCounts[mode];
-        }
-      }
 
-      // Update Live Vote Display & Winner Highlights
-      for (const mode in voteCounts) {
-        const count = voteCounts[mode];
-        const voteEl = document.getElementById(`vote-${mode}`);
-        const itemEl = document.getElementById(`item-${mode}`);
-        const tagEl = document.getElementById(`tag-${mode}`);
+      gamemodes.forEach(gm => {
+        const count = voteObj[gm] || 0;
+        total += count;
+        if (count > maxVotes) maxVotes = count;
+      });
 
-        if (voteEl) voteEl.innerText = `${count} Vote${count === 1 ? '' : 's'}`;
+      document.getElementById(totalId).innerText = `${total} Vote${total === 1 ? '' : 's'}`;
 
-        if (maxVotes > 0 && count === maxVotes) {
-          itemEl.classList.add("winner");
-          tagEl.innerHTML = `<span class="winner-tag">🏆 MOST VOTED</span>`;
-        } else {
-          itemEl.classList.remove("winner");
-          tagEl.innerHTML = '';
-        }
-      }
+      let html = '';
+      gamemodes.forEach((gm, idx) => {
+        const count = voteObj[gm] || 0;
+        const isWinner = maxVotes > 0 && count === maxVotes;
+        
+        html += `
+          <div class="vote-item ${isWinner ? 'winner' : ''}">
+            <span>${idx + 1}. ${gm} ${isWinner ? '<span class="winner-tag">🏆 LEADER</span>' : ''}</span>
+            <strong style="color: var(--cyan);">${count} Vote${count === 1 ? '' : 's'}</strong>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
     }
 
     function handleRegistration(e) {
       e.preventDefault();
       
       if (registeredPlayers.length >= 8) {
-        alert("Sorry, the tournament is already full!");
+        alert("Tournament slots are already full!");
         return;
       }
 
       const username = document.getElementById('mcUsername').value.trim();
+      const type = document.getElementById('accountType').value;
       const mode = document.getElementById('gamemodeSelect').value;
       const statusMsg = document.getElementById('statusMsg');
 
       if (registeredPlayers.some(p => p.username.toLowerCase() === username.toLowerCase())) {
         statusMsg.style.color = "var(--red)";
-        statusMsg.innerText = `❌ "${username}" is already registered in the bracket!`;
+        statusMsg.innerText = `❌ "${username}" is already in the tournament bracket!`;
         return;
       }
 
-      registeredPlayers.push({ username, mode });
+      registeredPlayers.push({ username, type, mode });
       localStorage.setItem("ascendant_tournament_players", JSON.stringify(registeredPlayers));
 
       updateBracketUI();
 
       statusMsg.style.color = "var(--green)";
-      statusMsg.innerText = `✅ Success! ${username} voted for "${mode}" and joined Slot #${registeredPlayers.length}!`;
+      statusMsg.innerText = `✅ Registered ${username} (${type})! Voted for ${mode}.`;
       document.getElementById('tournamentForm').reset();
     }
 
-    calculateLocalTime();
+    initTimer();
     updateBracketUI();
   </script>
 </body>
