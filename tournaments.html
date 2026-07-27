@@ -15,7 +15,8 @@
       --gold-glow: rgba(255, 170, 0, 0.35);
       --cyan: #00f2fe;
       --cyan-glow: rgba(0, 242, 254, 0.3);
-      --purple: #9b51e0;
+      --purple: #a855f7;
+      --purple-glow: rgba(168, 85, 247, 0.35);
       --green: #2ed573;
       --red: #ff4757;
       --text-main: #ffffff;
@@ -27,8 +28,8 @@
     body {
       background-color: var(--bg-dark);
       background-image: 
-        radial-gradient(circle at 50% 0%, rgba(0, 242, 254, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 80% 60%, rgba(155, 81, 224, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 50% 0%, rgba(0, 242, 254, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 80% 60%, rgba(168, 85, 247, 0.12) 0%, transparent 45%),
         radial-gradient(circle at 10% 90%, rgba(255, 170, 0, 0.1) 0%, transparent 50%);
       color: var(--text-main);
       min-height: 100vh;
@@ -36,7 +37,7 @@
     }
 
     .container {
-      max-width: 950px;
+      max-width: 1000px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
@@ -64,7 +65,7 @@
 
     /* COUNTDOWN BANNER */
     .timer-card {
-      background: linear-gradient(135deg, rgba(255, 170, 0, 0.15) 0%, rgba(0, 242, 254, 0.1) 100%);
+      background: linear-gradient(135deg, rgba(255, 170, 0, 0.12) 0%, rgba(168, 85, 247, 0.1) 50%, rgba(0, 242, 254, 0.12) 100%);
       border: 1px solid var(--gold);
       box-shadow: 0 0 20px var(--gold-glow);
       border-radius: 14px;
@@ -78,11 +79,7 @@
 
     .timer-title { font-weight: 800; font-size: 0.9rem; color: var(--gold); letter-spacing: 1.5px; }
     
-    .countdown-grid {
-      display: flex;
-      gap: 15px;
-      justify-content: center;
-    }
+    .countdown-grid { display: flex; gap: 15px; justify-content: center; }
 
     .time-box {
       background: rgba(0, 0, 0, 0.6);
@@ -118,18 +115,6 @@
       align-items: center;
     }
 
-    .badge {
-      font-size: 0.75rem;
-      background: rgba(0, 242, 254, 0.15);
-      color: var(--cyan);
-      border: 1px solid var(--cyan);
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-weight: 700;
-    }
-
-    .badge.closed { background: rgba(255, 71, 87, 0.15); color: var(--red); border-color: var(--red); }
-
     /* SERVERS DISPLAY */
     .server-grid {
       display: grid;
@@ -145,14 +130,14 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      transition: border-color 0.2s;
+      transition: transform 0.2s;
     }
 
-    .server-box.cracked { border-left: 4px solid var(--purple); }
-    .server-box.premium { border-left: 4px solid var(--cyan); }
-    .server-box:hover { border-color: var(--gold); }
+    .server-box:hover { transform: translateY(-2px); }
+    .server-box.cracked { border-left: 4px solid var(--purple); box-shadow: 0 0 15px rgba(168, 85, 247, 0.1); }
+    .server-box.premium { border-left: 4px solid var(--cyan); box-shadow: 0 0 15px rgba(0, 242, 254, 0.1); }
 
-    .server-type { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+    .server-type { font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
     .server-ip-btn {
       background: rgba(255, 255, 255, 0.05);
       border: 1px dashed var(--card-border);
@@ -254,10 +239,56 @@
 
     .status-msg { margin-top: 12px; text-align: center; font-size: 0.9rem; font-weight: 700; }
 
-    /* BRACKET STYLES */
-    .bracket-container { display: flex; justify-content: space-between; gap: 15px; overflow-x: auto; padding-bottom: 10px; }
-    .bracket-round { display: flex; flex-direction: column; justify-content: space-around; min-width: 180px; gap: 12px; }
-    .bracket-match { background: rgba(0, 0, 0, 0.6); border: 1px solid var(--card-border); border-radius: 8px; padding: 10px; font-size: 0.85rem; }
+    /* BRACKET WRAPPER & STYLES */
+    .bracket-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1.15rem;
+      font-weight: 800;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--card-border);
+      margin-bottom: 15px;
+    }
+
+    .bracket-header.cracked { color: var(--purple); border-bottom-color: var(--purple); }
+    .bracket-header.premium { color: var(--cyan); border-bottom-color: var(--cyan); }
+
+    .badge-slots {
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-weight: 700;
+    }
+
+    .badge-slots.cracked { background: rgba(168, 85, 247, 0.15); color: var(--purple); border: 1px solid var(--purple); }
+    .badge-slots.premium { background: rgba(0, 242, 254, 0.15); color: var(--cyan); border: 1px solid var(--cyan); }
+    .badge-slots.full { background: rgba(255, 71, 87, 0.15); color: var(--red); border-color: var(--red); }
+
+    .bracket-container {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
+
+    .bracket-round {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      min-width: 180px;
+      gap: 12px;
+    }
+
+    .bracket-match {
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 0.85rem;
+    }
+
     .match-player { display: flex; justify-content: space-between; padding: 4px 0; color: var(--text-sub); }
     .match-player.joined { color: var(--gold); font-weight: 800; }
     .match-divider { height: 1px; background: var(--card-border); margin: 4px 0; }
@@ -271,7 +302,7 @@
 
     <header>
       <h1 class="title">TOURNAMENT <span>ARENA</span></h1>
-      <p class="subtitle">Official 8-Player Single Elimination Championship</p>
+      <p class="subtitle">Official Dual Bracket Championship (Cracked & Premium)</p>
     </header>
 
     <!-- COUNTDOWN TIMER BANNER -->
@@ -287,11 +318,11 @@
 
     <!-- SPECS & SERVERS -->
     <section class="section-card">
-      <h2>EVENT INFO & SERVERS <span class="badge" id="statusBadge">SLOTS: 0/8</span></h2>
+      <h2>EVENT INFO & SERVERS</h2>
       
       <div class="server-grid">
         <div class="server-box cracked">
-          <div class="server-type" style="color: var(--purple);">Cracked Server IP</div>
+          <div class="server-type" style="color: var(--purple);">👾 Cracked Server IP</div>
           <div class="server-ip-btn" onclick="copyIP('universalmc.fun')">
             <span>universalmc.fun</span> 📋
           </div>
@@ -299,7 +330,7 @@
         </div>
 
         <div class="server-box premium">
-          <div class="server-type" style="color: var(--cyan);">Premium Server IP</div>
+          <div class="server-type" style="color: var(--cyan);">💎 Premium Server IP</div>
           <div class="server-ip-btn" onclick="copyIP('catpvp.xyz')">
             <span>catpvp.xyz</span> 📋
           </div>
@@ -323,9 +354,7 @@
             <span>👾 CRACKED VOTES</span>
             <span id="crackedTotalVotes">0 Votes</span>
           </div>
-          <div class="votes-list" id="crackedVotesList">
-            <!-- Dynamically Rendered -->
-          </div>
+          <div class="votes-list" id="crackedVotesList"></div>
         </div>
 
         <!-- PREMIUM VOTES -->
@@ -334,9 +363,7 @@
             <span>💎 PREMIUM VOTES</span>
             <span id="premiumTotalVotes">0 Votes</span>
           </div>
-          <div class="votes-list" id="premiumVotesList">
-            <!-- Dynamically Rendered -->
-          </div>
+          <div class="votes-list" id="premiumVotesList"></div>
         </div>
 
       </div>
@@ -381,31 +408,71 @@
       </form>
     </section>
 
-    <!-- BRACKET DISPLAY -->
+    <!-- 👾 CRACKED BRACKET DISPLAY -->
     <section class="section-card">
-      <h2>LIVE BRACKET (<span id="bracketCount">0</span>/8 PLAYERS)</h2>
+      <div class="bracket-header cracked">
+        <span>👾 CRACKED BRACKET (universalmc.fun)</span>
+        <span class="badge-slots cracked" id="crackedBadge">0/8 SLOTS</span>
+      </div>
+      
       <div class="bracket-container">
         <!-- Quarter Finals -->
         <div class="bracket-round">
-          <div style="font-size: 0.75rem; color: var(--gold); text-align: center; font-weight: bold; margin-bottom: 5px;">QUARTER FINALS</div>
-          <div class="bracket-match"><div class="match-player" id="slot0">1. Waiting...</div><div class="match-divider"></div><div class="match-player" id="slot1">2. Waiting...</div></div>
-          <div class="bracket-match"><div class="match-player" id="slot2">3. Waiting...</div><div class="match-divider"></div><div class="match-player" id="slot3">4. Waiting...</div></div>
-          <div class="bracket-match"><div class="match-player" id="slot4">5. Waiting...</div><div class="match-divider"></div><div class="match-player" id="slot5">6. Waiting...</div></div>
-          <div class="bracket-match"><div class="match-player" id="slot6">7. Waiting...</div><div class="match-divider"></div><div class="match-player" id="slot7">8. Waiting...</div></div>
+          <div style="font-size: 0.75rem; color: var(--purple); text-align: center; font-weight: bold; margin-bottom: 5px;">QUARTER FINALS</div>
+          <div class="bracket-match"><div class="match-player" id="c-slot0">1. Waiting...</div><div class="match-divider"></div><div class="match-player" id="c-slot1">2. Waiting...</div></div>
+          <div class="bracket-match"><div class="match-player" id="c-slot2">3. Waiting...</div><div class="match-divider"></div><div class="match-player" id="c-slot3">4. Waiting...</div></div>
+          <div class="bracket-match"><div class="match-player" id="c-slot4">5. Waiting...</div><div class="match-divider"></div><div class="match-player" id="c-slot5">6. Waiting...</div></div>
+          <div class="bracket-match"><div class="match-player" id="c-slot6">7. Waiting...</div><div class="match-divider"></div><div class="match-player" id="c-slot7">8. Waiting...</div></div>
         </div>
 
         <!-- Semi Finals -->
         <div class="bracket-round">
-          <div style="font-size: 0.75rem; color: var(--gold); text-align: center; font-weight: bold; margin-bottom: 5px;">SEMI FINALS</div>
+          <div style="font-size: 0.75rem; color: var(--purple); text-align: center; font-weight: bold; margin-bottom: 5px;">SEMI FINALS</div>
           <div class="bracket-match"><div class="match-player">Match 1 Winner</div><div class="match-divider"></div><div class="match-player">Match 2 Winner</div></div>
           <div class="bracket-match"><div class="match-player">Match 3 Winner</div><div class="match-divider"></div><div class="match-player">Match 4 Winner</div></div>
         </div>
 
         <!-- Finals -->
         <div class="bracket-round">
-          <div style="font-size: 0.75rem; color: var(--gold); text-align: center; font-weight: bold; margin-bottom: 5px;">FINALS</div>
-          <div class="bracket-match" style="border-color: var(--gold);">
-            <div class="match-player" style="color: var(--gold); font-weight: bold;">CHAMPION</div>
+          <div style="font-size: 0.75rem; color: var(--purple); text-align: center; font-weight: bold; margin-bottom: 5px;">FINALS</div>
+          <div class="bracket-match" style="border-color: var(--purple);">
+            <div class="match-player" style="color: var(--purple); font-weight: bold;">CRACKED CHAMPION</div>
+            <div class="match-divider"></div>
+            <div class="match-player">Runner-Up</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 💎 PREMIUM BRACKET DISPLAY -->
+    <section class="section-card">
+      <div class="bracket-header premium">
+        <span>💎 PREMIUM BRACKET (catpvp.xyz)</span>
+        <span class="badge-slots premium" id="premiumBadge">0/8 SLOTS</span>
+      </div>
+
+      <div class="bracket-container">
+        <!-- Quarter Finals -->
+        <div class="bracket-round">
+          <div style="font-size: 0.75rem; color: var(--cyan); text-align: center; font-weight: bold; margin-bottom: 5px;">QUARTER FINALS</div>
+          <div class="bracket-match"><div class="match-player" id="p-slot0">1. Waiting...</div><div class="match-divider"></div><div class="match-player" id="p-slot1">2. Waiting...</div></div>
+          <div class="bracket-match"><div class="match-player" id="p-slot2">3. Waiting...</div><div class="match-divider"></div><div class="match-player" id="p-slot3">4. Waiting...</div></div>
+          <div class="bracket-match"><div class="match-player" id="p-slot4">5. Waiting...</div><div class="match-divider"></div><div class="match-player" id="p-slot5">6. Waiting...</div></div>
+          <div class="bracket-match"><div class="match-player" id="p-slot6">7. Waiting...</div><div class="match-divider"></div><div class="match-player" id="p-slot7">8. Waiting...</div></div>
+        </div>
+
+        <!-- Semi Finals -->
+        <div class="bracket-round">
+          <div style="font-size: 0.75rem; color: var(--cyan); text-align: center; font-weight: bold; margin-bottom: 5px;">SEMI FINALS</div>
+          <div class="bracket-match"><div class="match-player">Match 1 Winner</div><div class="match-divider"></div><div class="match-player">Match 2 Winner</div></div>
+          <div class="bracket-match"><div class="match-player">Match 3 Winner</div><div class="match-divider"></div><div class="match-player">Match 4 Winner</div></div>
+        </div>
+
+        <!-- Finals -->
+        <div class="bracket-round">
+          <div style="font-size: 0.75rem; color: var(--cyan); text-align: center; font-weight: bold; margin-bottom: 5px;">FINALS</div>
+          <div class="bracket-match" style="border-color: var(--cyan);">
+            <div class="match-player" style="color: var(--cyan); font-weight: bold;">PREMIUM CHAMPION</div>
             <div class="match-divider"></div>
             <div class="match-player">Runner-Up</div>
           </div>
@@ -419,13 +486,11 @@
     const gamemodes = ["Mace", "Spear Mace", "Sword (Beast)", "UHC", "Diamond SMP"];
     let registeredPlayers = JSON.parse(localStorage.getItem("ascendant_tournament_players")) || [];
 
-    // Copy IP Utility
     function copyIP(ip) {
       navigator.clipboard.writeText(ip);
       alert(`Copied IP: ${ip}`);
     }
 
-    // Countdown & Timezone Logic
     let eventTargetDate;
     function initTimer() {
       const now = new Date();
@@ -436,7 +501,6 @@
       const month = String(tomorrow.getMonth() + 1).padStart(2, '0');
       const day = String(tomorrow.getDate()).padStart(2, '0');
       
-      // Target: 5:00 PM Jordan Time (UTC+3)
       eventTargetDate = new Date(`${year}-${month}-${day}T17:00:00+03:00`);
 
       const options = { weekday: 'short', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' };
@@ -467,43 +531,60 @@
     }
 
     function updateBracketUI() {
-      const total = registeredPlayers.length;
-      document.getElementById("bracketCount").innerText = total;
-      document.getElementById("statusBadge").innerText = total >= 8 ? "REGISTRATION CLOSED (FULL)" : `SLOTS: ${total}/8`;
-      
-      if (total >= 8) {
-        document.getElementById("statusBadge").classList.add("closed");
-        document.getElementById("submitBtn").disabled = true;
-        document.getElementById("submitBtn").innerText = "TOURNAMENT FULL (8/8)";
+      const crackedPlayers = registeredPlayers.filter(p => p.type === 'Cracked');
+      const premiumPlayers = registeredPlayers.filter(p => p.type === 'Premium');
+
+      // Update Badges
+      const cBadge = document.getElementById('crackedBadge');
+      const pBadge = document.getElementById('premiumBadge');
+
+      cBadge.innerText = crackedPlayers.length >= 8 ? 'FULL (8/8)' : `${crackedPlayers.length}/8 SLOTS`;
+      if (crackedPlayers.length >= 8) cBadge.classList.add('full');
+
+      pBadge.innerText = premiumPlayers.length >= 8 ? 'FULL (8/8)' : `${premiumPlayers.length}/8 SLOTS`;
+      if (premiumPlayers.length >= 8) pBadge.classList.add('full');
+
+      // Populate Cracked Bracket
+      for (let i = 0; i < 8; i++) {
+        const el = document.getElementById(`c-slot${i}`);
+        if (crackedPlayers[i]) {
+          el.innerText = `${i + 1}. ${crackedPlayers[i].username}`;
+          el.classList.add('joined');
+        } else {
+          el.innerText = `${i + 1}. Waiting...`;
+          el.classList.remove('joined');
+        }
       }
 
-      // Votes breakdown
+      // Populate Premium Bracket
+      for (let i = 0; i < 8; i++) {
+        const el = document.getElementById(`p-slot${i}`);
+        if (premiumPlayers[i]) {
+          el.innerText = `${i + 1}. ${premiumPlayers[i].username}`;
+          el.classList.add('joined');
+        } else {
+          el.innerText = `${i + 1}. Waiting...`;
+          el.classList.remove('joined');
+        }
+      }
+
+      // Votes Tally
       const votes = {
         Cracked: { "Mace": 0, "Spear Mace": 0, "Sword (Beast)": 0, "UHC": 0, "Diamond SMP": 0 },
         Premium: { "Mace": 0, "Spear Mace": 0, "Sword (Beast)": 0, "UHC": 0, "Diamond SMP": 0 }
       };
 
-      for (let i = 0; i < 8; i++) {
-        const slotEl = document.getElementById(`slot${i}`);
-        if (registeredPlayers[i]) {
-          const p = registeredPlayers[i];
-          slotEl.innerText = `${i + 1}. ${p.username} [${p.type}]`;
-          slotEl.classList.add("joined");
-
-          if (votes[p.type] && votes[p.type][p.mode] !== undefined) {
-            votes[p.type][p.mode]++;
-          }
-        } else {
-          slotEl.innerText = `${i + 1}. Waiting...`;
-          slotEl.classList.remove("joined");
+      registeredPlayers.forEach(p => {
+        if (votes[p.type] && votes[p.type][p.mode] !== undefined) {
+          votes[p.type][p.mode]++;
         }
-      }
+      });
 
-      renderVoteCategory('Cracked', votes.Cracked, 'crackedVotesList', 'crackedTotalVotes');
-      renderVoteCategory('Premium', votes.Premium, 'premiumVotesList', 'premiumTotalVotes');
+      renderVoteCategory(votes.Cracked, 'crackedVotesList', 'crackedTotalVotes', 'var(--purple)');
+      renderVoteCategory(votes.Premium, 'premiumVotesList', 'premiumTotalVotes', 'var(--cyan)');
     }
 
-    function renderVoteCategory(type, voteObj, containerId, totalId) {
+    function renderVoteCategory(voteObj, containerId, totalId, highlightColor) {
       const container = document.getElementById(containerId);
       let total = 0;
       let maxVotes = 0;
@@ -524,7 +605,7 @@
         html += `
           <div class="vote-item ${isWinner ? 'winner' : ''}">
             <span>${idx + 1}. ${gm} ${isWinner ? '<span class="winner-tag">🏆 LEADER</span>' : ''}</span>
-            <strong style="color: var(--cyan);">${count} Vote${count === 1 ? '' : 's'}</strong>
+            <strong style="color: ${highlightColor};">${count} Vote${count === 1 ? '' : 's'}</strong>
           </div>
         `;
       });
@@ -534,20 +615,22 @@
 
     function handleRegistration(e) {
       e.preventDefault();
-      
-      if (registeredPlayers.length >= 8) {
-        alert("Tournament slots are already full!");
-        return;
-      }
 
       const username = document.getElementById('mcUsername').value.trim();
       const type = document.getElementById('accountType').value;
       const mode = document.getElementById('gamemodeSelect').value;
       const statusMsg = document.getElementById('statusMsg');
 
+      const existingTypePlayers = registeredPlayers.filter(p => p.type === type);
+      if (existingTypePlayers.length >= 8) {
+        statusMsg.style.color = "var(--red)";
+        statusMsg.innerText = `❌ The ${type} tournament bracket is already full (8/8)!`;
+        return;
+      }
+
       if (registeredPlayers.some(p => p.username.toLowerCase() === username.toLowerCase())) {
         statusMsg.style.color = "var(--red)";
-        statusMsg.innerText = `❌ "${username}" is already in the tournament bracket!`;
+        statusMsg.innerText = `❌ "${username}" is already registered!`;
         return;
       }
 
@@ -557,7 +640,7 @@
       updateBracketUI();
 
       statusMsg.style.color = "var(--green)";
-      statusMsg.innerText = `✅ Registered ${username} (${type})! Voted for ${mode}.`;
+      statusMsg.innerText = `✅ Registered ${username} into ${type} Bracket! Voted for ${mode}.`;
       document.getElementById('tournamentForm').reset();
     }
 
