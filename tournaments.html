@@ -298,7 +298,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    // REPLACE THIS WITH YOUR FREE FIREBASE CONFIG FROM FIREBASE CONSOLE
+    // REPLACE WITH YOUR ACTUAL FIREBASE CONFIG
     const firebaseConfig = {
       apiKey: "YOUR_API_KEY",
       authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
@@ -321,7 +321,7 @@
         window.playersRef = playersRef;
         window.push = push;
 
-        // Real-Time Database Sync Listener
+        // Real-Time Listener
         onValue(playersRef, (snapshot) => {
           const data = snapshot.val();
           window.registeredPlayers = data ? Object.values(data) : [];
@@ -331,191 +331,33 @@
         });
       }
     } catch (err) {
-      console.warn("Firebase initialization failed or using fallback mode.", err);
+      console.warn("Firebase initialization issue:", err);
     }
-  <script>
-    const gamemodes = ["Mace", "Spear Mace", "Sword (Beast)", "UHC", "Diamond SMP"];
-    
-    // Load existing players from local storage on load so refresh doesn't wipe them
-    const savedPlayers = localStorage.getItem('ascendant_tournament_players');
-    window.registeredPlayers = savedPlayers ? JSON.parse(savedPlayers) : [];
-
-    function copyIP(ip) {
-      navigator.clipboard.writeText(ip);
-      alert(`Copied IP: ${ip}`);
-    }
-
-    let eventTargetDate;
-    function initTimer() {
-      const now = new Date();
-      const tomorrow = new Date(now);
-      tomorrow.setDate(now.getDate() + 1);
-
-      const year = tomorrow.getFullYear();
-      const month = String(tomorrow.getMonth() + 1).padStart(2, '0');
-      const day = String(tomorrow.getDate()).padStart(2, '0');
-      
-      eventTargetDate = new Date(`${year}-${month}-${day}T17:00:00+03:00`);
-
-      const options = { weekday: 'short', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' };
-      document.getElementById('localTimeDisplay').innerText = `Your Local: ${eventTargetDate.toLocaleString(undefined, options)}`;
-
-      updateCountdown();
-      setInterval(updateCountdown, 1000);
-    }
-
-    function updateCountdown() {
-      const now = new Date().getTime();
-      const diff = eventTargetDate.getTime() - now;
-
-      if (diff <= 0) {
-        document.getElementById('cd-hours').innerText = '00';
-        document.getElementById('cd-mins').innerText = '00';
-        document.getElementById('cd-secs').innerText = '00';
-        return;
-      }
-
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const secs = Math.floor((diff % (1000 * 60)) / 1000);
-
-      document.getElementById('cd-hours').innerText = String(hours).padStart(2, '0');
-      document.getElementById('cd-mins').innerText = String(mins).padStart(2, '0');
-      document.getElementById('cd-secs').innerText = String(secs).padStart(2, '0');
-    }
-
-    window.updateBracketUI = function() {
-      const crackedPlayers = window.registeredPlayers.filter(p => p.type === 'Cracked');
-      const premiumPlayers = window.registeredPlayers.filter(p => p.type === 'Premium');
-
-      const cBadge = document.getElementById('crackedBadge');
-      const pBadge = document.getElementById('premiumBadge');
-
-      cBadge.innerText = crackedPlayers.length >= 8 ? 'FULL (8/8)' : `${crackedPlayers.length}/8 SLOTS`;
-      if (crackedPlayers.length >= 8) cBadge.classList.add('full'); else cBadge.classList.remove('full');
-
-      pBadge.innerText = premiumPlayers.length >= 8 ? 'FULL (8/8)' : `${premiumPlayers.length}/8 SLOTS`;
-      if (premiumPlayers.length >= 8) pBadge.classList.add('full'); else pBadge.classList.remove('full');
-
-      // Update Cracked Brackets
-      for (let i = 0; i < 8; i++) {
-        const el = document.getElementById(`c-slot${i}`);
-        if (el) {
-          if (crackedPlayers[i]) {
-            el.innerText = `${i + 1}. ${crackedPlayers[i].username}`;
-            el.classList.add('joined');
-          } else {
-            el.innerText = `${i + 1}. Waiting...`;
-            el.classList.remove('joined');
-          }
-        }
-      }
-
-      // Update Premium Brackets
-      for (let i = 0; i < 8; i++) {
-        const el = document.getElementById(`p-slot${i}`);
-        if (el) {
-          if (premiumPlayers[i]) {
-            el.innerText = `${i + 1}. ${premiumPlayers[i].username}`;
-            el.classList.add('joined');
-          } else {
-            el.innerText = `${i + 1}. Waiting...`;
-            el.classList.remove('joined');
-          }
-        }
-      }
-
-      // Calculate Votes
-      const votes = {
-        Cracked: { "Mace": 0, "Spear Mace": 0, "Sword (Beast)": 0, "UHC": 0, "Diamond SMP": 0 },
-        Premium: { "Mace": 0, "Spear Mace": 0, "Sword (Beast)": 0, "UHC": 0, "Diamond SMP": 0 }
-      };
-
-      window.registeredPlayers.forEach(p => {
-        if (votes[p.type] && votes[p.type][p.mode] !== undefined) {
-          votes[p.type][p.mode]++;
-        }
-      });
-
-      renderVoteCategory(votes.Cracked, 'crackedVotesList', 'crackedTotalVotes', 'var(--purple)');
-      renderVoteCategory(votes.Premium, 'premiumVotesList', 'premiumTotalVotes', 'var(--cyan)');
-    };
-
-    function renderVoteCategory(voteObj, containerId, totalId, highlightColor) {
-      const container = document.getElementById(containerId);
-      if (!container) return;
-
-      let total = 0;
-      let maxVotes = 0;
-
-      gamemodes.forEach(gm => {
-        const count = voteObj[gm] || 0;
-        total += count;
-        if (count > maxVotes) maxVotes = count;
-      });
-
-      document.getElementById(totalId).innerText = `${total} Vote${total === 1 ? '' : 's'}`;
-
-      let html = '';
-      gamemodes.forEach((gm, idx) => {
-        const count = voteObj[gm] || 0;
-        const isWinner = maxVotes > 0 && count === maxVotes;
-        
-        html += `
-          <div class="vote-item ${isWinner ? 'winner' : ''}">
-            <span>${idx + 1}. ${gm} ${isWinner ? '<span class="winner-tag">🏆 LEADER</span>' : ''}</span>
-            <strong style="color: ${highlightColor};">${count} Vote${count === 1 ? '' : 's'}</strong>
-          </div>
-        `;
-      });
-
-      container.innerHTML = html;
-    }
-
-    function handleRegistration(e) {
-      e.preventDefault();
-
-      const username = document.getElementById('mcUsername').value.trim();
-      const discord = document.getElementById('discordTag').value.trim();
-      const type = document.getElementById('accountType').value;
-      const mode = document.getElementById('gamemodeSelect').value;
-      const statusMsg = document.getElementById('statusMsg');
-
-      const existingTypePlayers = window.registeredPlayers.filter(p => p.type === type);
-      if (existingTypePlayers.length >= 8) {
-        statusMsg.style.color = "var(--red)";
-        statusMsg.innerText = `❌ The ${type} tournament bracket is already full (8/8)!`;
-        return;
-      }
-
-      if (window.registeredPlayers.some(p => p.username.toLowerCase() === username.toLowerCase())) {
-        statusMsg.style.color = "var(--red)";
-        statusMsg.innerText = `❌ "${username}" is already registered!`;
-        return;
-      }
-
-      const playerObj = { username, discord, type, mode, timestamp: Date.now() };
-
-      // Push to Firebase Realtime Database if configured
-      if (window.playersRef && window.push && typeof window.firebaseConfig !== 'undefined' && window.firebaseConfig.apiKey !== "YOUR_API_KEY") {
-        window.push(window.playersRef, playerObj);
-      } else {
-        // Local persistence fallback
-        window.registeredPlayers.push(playerObj);
-        localStorage.setItem('ascendant_tournament_players', JSON.stringify(window.registeredPlayers));
-        window.updateBracketUI();
-      }
-
-      statusMsg.style.color = "var(--green)";
-      statusMsg.innerText = `✅ Registered ${username} into ${type} Bracket! Voted for ${mode}.`;
-      document.getElementById('tournamentForm').reset();
-    }
-
-    // Initialize Timer and Force Initial UI Render
-    initTimer();
-    window.updateBracketUI();
   </script>
-    <!-- SPECS & SERVERS -->
+</head>
+<body>
+
+  <div class="container">
+    
+    <a href="index.html" class="back-btn">⬅ BACK TO MAIN PAGE</a>
+
+    <header>
+      <h1 class="title">TOURNAMENT <span>ARENA</span></h1>
+      <p class="subtitle">Official Dual Bracket Championship (Cracked & Premium)</p>
+    </header>
+
+    <!-- COUNTDOWN BANNER -->
+    <div class="timer-card">
+      <div class="timer-title">⌛ TOURNAMENT STARTS IN</div>
+      <div class="countdown-grid">
+        <div class="time-box"><div class="num" id="cd-hours">00</div><div class="label">Hours</div></div>
+        <div class="time-box"><div class="num" id="cd-mins">00</div><div class="label">Mins</div></div>
+        <div class="time-box"><div class="num" id="cd-secs">00</div><div class="label">Secs</div></div>
+      </div>
+      <div class="local-time-note">🕒 Tomorrow @ 5:00 PM Jordan Time (<span id="localTimeDisplay">Detecting local time...</span>)</div>
+    </div>
+
+    <!-- SERVERS DISPLAY -->
     <section class="section-card">
       <h2>EVENT INFO & SERVERS</h2>
       
@@ -677,7 +519,10 @@
 
   <script>
     const gamemodes = ["Mace", "Spear Mace", "Sword (Beast)", "UHC", "Diamond SMP"];
-    window.registeredPlayers = window.registeredPlayers || [];
+    
+    // Load local storage fallback initially
+    const savedPlayers = localStorage.getItem('ascendant_tournament_players');
+    window.registeredPlayers = savedPlayers ? JSON.parse(savedPlayers) : [];
 
     function copyIP(ip) {
       navigator.clipboard.writeText(ip);
@@ -697,7 +542,11 @@
       eventTargetDate = new Date(`${year}-${month}-${day}T17:00:00+03:00`);
 
       const options = { weekday: 'short', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' };
-      document.getElementById('localTimeDisplay').innerText = `Your Local: ${eventTargetDate.toLocaleString(undefined, options)}`;
+      
+      const localDisplay = document.getElementById('localTimeDisplay');
+      if (localDisplay) {
+        localDisplay.innerText = `Your Local: ${eventTargetDate.toLocaleString(undefined, options)}`;
+      }
 
       updateCountdown();
       setInterval(updateCountdown, 1000);
@@ -707,10 +556,16 @@
       const now = new Date().getTime();
       const diff = eventTargetDate.getTime() - now;
 
+      const cdH = document.getElementById('cd-hours');
+      const cdM = document.getElementById('cd-mins');
+      const cdS = document.getElementById('cd-secs');
+
+      if (!cdH || !cdM || !cdS) return;
+
       if (diff <= 0) {
-        document.getElementById('cd-hours').innerText = '00';
-        document.getElementById('cd-mins').innerText = '00';
-        document.getElementById('cd-secs').innerText = '00';
+        cdH.innerText = '00';
+        cdM.innerText = '00';
+        cdS.innerText = '00';
         return;
       }
 
@@ -718,9 +573,9 @@
       const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       const secs = Math.floor((diff % (1000 * 60)) / 1000);
 
-      document.getElementById('cd-hours').innerText = String(hours).padStart(2, '0');
-      document.getElementById('cd-mins').innerText = String(mins).padStart(2, '0');
-      document.getElementById('cd-secs').innerText = String(secs).padStart(2, '0');
+      cdH.innerText = String(hours).padStart(2, '0');
+      cdM.innerText = String(mins).padStart(2, '0');
+      cdS.innerText = String(secs).padStart(2, '0');
     }
 
     window.updateBracketUI = function() {
@@ -730,11 +585,15 @@
       const cBadge = document.getElementById('crackedBadge');
       const pBadge = document.getElementById('premiumBadge');
 
-      cBadge.innerText = crackedPlayers.length >= 8 ? 'FULL (8/8)' : `${crackedPlayers.length}/8 SLOTS`;
-      if (crackedPlayers.length >= 8) cBadge.classList.add('full'); else cBadge.classList.remove('full');
+      if (cBadge) {
+        cBadge.innerText = crackedPlayers.length >= 8 ? 'FULL (8/8)' : `${crackedPlayers.length}/8 SLOTS`;
+        if (crackedPlayers.length >= 8) cBadge.classList.add('full'); else cBadge.classList.remove('full');
+      }
 
-      pBadge.innerText = premiumPlayers.length >= 8 ? 'FULL (8/8)' : `${premiumPlayers.length}/8 SLOTS`;
-      if (premiumPlayers.length >= 8) pBadge.classList.add('full'); else pBadge.classList.remove('full');
+      if (pBadge) {
+        pBadge.innerText = premiumPlayers.length >= 8 ? 'FULL (8/8)' : `${premiumPlayers.length}/8 SLOTS`;
+        if (premiumPlayers.length >= 8) pBadge.classList.add('full'); else pBadge.classList.remove('full');
+      }
 
       // Update Cracked Brackets
       for (let i = 0; i < 8; i++) {
@@ -782,6 +641,7 @@
 
     function renderVoteCategory(voteObj, containerId, totalId, highlightColor) {
       const container = document.getElementById(containerId);
+      const totalEl = document.getElementById(totalId);
       if (!container) return;
 
       let total = 0;
@@ -793,7 +653,9 @@
         if (count > maxVotes) maxVotes = count;
       });
 
-      document.getElementById(totalId).innerText = `${total} Vote${total === 1 ? '' : 's'}`;
+      if (totalEl) {
+        totalEl.innerText = `${total} Vote${total === 1 ? '' : 's'}`;
+      }
 
       let html = '';
       gamemodes.forEach((gm, idx) => {
@@ -839,8 +701,9 @@
       if (window.playersRef && window.push && typeof window.firebaseConfig !== 'undefined' && window.firebaseConfig.apiKey !== "YOUR_API_KEY") {
         window.push(window.playersRef, playerObj);
       } else {
-        // Fallback so testing works immediately before keys are added
+        // Fallback local persistence
         window.registeredPlayers.push(playerObj);
+        localStorage.setItem('ascendant_tournament_players', JSON.stringify(window.registeredPlayers));
         window.updateBracketUI();
       }
 
@@ -849,7 +712,7 @@
       document.getElementById('tournamentForm').reset();
     }
 
-    // Initialize Timer and Force Initial UI Render
+    // Initialize Timer & Draw UI
     initTimer();
     window.updateBracketUI();
   </script>
