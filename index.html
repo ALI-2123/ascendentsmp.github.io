@@ -396,14 +396,9 @@
       overflow-y: auto;
     }
 
-    .form-modal-content {
-      max-width: 450px;
-    }
-
-    .admin-modal-content {
-      max-width: 800px;
-      text-align: left;
-    }
+    .form-modal-content { max-width: 450px; }
+    .admin-modal-content { max-width: 800px; text-align: left; }
+    .support-modal-content { max-width: 550px; text-align: left; }
 
     .close-btn { position: absolute; top: 15px; right: 20px; font-size: 2rem; color: var(--text-sub); cursor: pointer; }
     .close-btn:hover { color: var(--gold); }
@@ -413,25 +408,9 @@
     .modal-sub { color: var(--text-sub); margin-bottom: 20px; font-size: 0.95rem; }
 
     /* FORM STYLES FOR AUTH & ADMIN */
-    .auth-form {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin-top: 20px;
-      text-align: left;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .form-group label {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--text-sub);
-    }
+    .auth-form { display: flex; flex-direction: column; gap: 15px; margin-top: 15px; text-align: left; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label { font-size: 0.85rem; font-weight: 700; color: var(--text-sub); }
 
     .form-input {
       background: rgba(0, 0, 0, 0.5);
@@ -443,9 +422,7 @@
       outline: none;
     }
 
-    .form-input:focus {
-      border-color: var(--gold);
-    }
+    .form-input:focus { border-color: var(--gold); }
 
     .form-submit-btn {
       background: var(--gold);
@@ -459,36 +436,23 @@
       font-size: 1rem;
     }
 
-    .form-toggle-link {
-      font-size: 0.85rem;
+    .form-hint {
+      font-size: 0.78rem;
       color: var(--text-sub);
-      margin-top: 15px;
-      cursor: pointer;
+      background: rgba(255, 170, 0, 0.08);
+      border: 1px solid rgba(255, 170, 0, 0.3);
+      padding: 8px;
+      border-radius: 6px;
+      margin-top: 5px;
     }
 
-    .form-toggle-link span {
-      color: var(--gold);
-      text-decoration: underline;
-    }
+    .form-toggle-link { font-size: 0.85rem; color: var(--text-sub); margin-top: 15px; cursor: pointer; text-align: center; }
+    .form-toggle-link span { color: var(--gold); text-decoration: underline; }
 
     /* ADMIN PANEL STYLES */
-    .admin-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-
-    .admin-table th, .admin-table td {
-      border: 1px solid var(--border-color);
-      padding: 10px;
-      text-align: left;
-      font-size: 0.9rem;
-    }
-
-    .admin-table th {
-      background: rgba(0, 0, 0, 0.5);
-      color: var(--gold);
-    }
+    .admin-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    .admin-table th, .admin-table td { border: 1px solid var(--border-color); padding: 10px; text-align: left; font-size: 0.9rem; }
+    .admin-table th { background: rgba(0, 0, 0, 0.5); color: var(--gold); }
 
     .admin-action-btn {
       background: var(--red);
@@ -540,11 +504,7 @@
 
     .pay-instruction { font-size: 0.8rem; color: var(--text-sub); }
 
-    .ranks-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
-    }
+    .ranks-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
 
     .rank-card {
       background: rgba(0, 0, 0, 0.4);
@@ -584,7 +544,6 @@
     .period { font-size: 0.85rem; color: var(--text-sub); font-weight: normal; }
 
     .billing-options { display: flex; gap: 6px; justify-content: center; margin-bottom: 15px; flex-wrap: wrap; }
-
     .plan-chip { font-size: 0.72rem; background: rgba(255, 255, 255, 0.05); padding: 4px 8px; border-radius: 6px; color: var(--text-sub); }
     .plan-chip.highlight { border: 1px solid var(--gold); color: var(--gold); }
     .plan-chip.elite-highlight { border: 1px solid var(--elite-cyan); color: var(--elite-cyan); }
@@ -612,6 +571,18 @@
     .vip-btn { background: var(--gold); color: #000; }
     .premium-btn { background: #ab47bc; color: #fff; }
     .elite-btn { background: var(--elite-cyan); color: #000; }
+
+    /* SUPPORT BOX STYLES */
+    .support-card-box {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 15px;
+    }
+
+    .support-card-box h4 { color: var(--gold); font-size: 1.1rem; margin-bottom: 6px; }
+    .support-card-box p { color: var(--text-sub); font-size: 0.9rem; margin-bottom: 12px; }
 
     footer { text-align: center; color: var(--text-sub); font-size: 0.85rem; padding: 20px 0; }
   </style>
@@ -654,7 +625,15 @@
         </div>
       </a>
 
-      <!-- DIRECT LINK TO TOURNAMENTS PAGE -->
+      <!-- SUPPORT CARD -->
+      <div onclick="openSupportModal()" class="card" style="cursor: pointer;">
+        <div class="card-content">
+          <h3>SUPPORT & TICKETS 🎧</h3>
+          <p>Get staff help, report issues & rank support</p>
+        </div>
+      </div>
+
+      <!-- TOURNAMENTS CARD -->
       <a href="tournaments.html" class="card">
         <div class="card-content">
           <h3>TOURNAMENTS 🏆</h3>
@@ -838,11 +817,14 @@
       <form id="authForm" class="auth-form" onsubmit="handleAuthSubmit(event)">
         <div class="form-group">
           <label for="authUsername">Minecraft Ign / Username</label>
-          <input type="text" id="authUsername" class="form-input" required placeholder="YourUsername">
+          <input type="text" id="authUsername" class="form-input" required placeholder="ali / fares / Admin">
         </div>
         <div class="form-group">
           <label for="authPassword">Password</label>
           <input type="password" id="authPassword" class="form-input" required placeholder="••••••••">
+        </div>
+        <div class="form-hint">
+          🔑 Admin Accounts: <strong>ali</strong> & <strong>fares</strong> (Password: <code>123</code>)
         </div>
         <button type="submit" class="form-submit-btn" id="authSubmitBtn">LOGIN</button>
       </form>
@@ -872,6 +854,26 @@
           <!-- Rendered via JS -->
         </tbody>
       </table>
+    </div>
+  </div>
+
+  <!-- SUPPORT MODAL -->
+  <div id="supportModal" class="modal-overlay">
+    <div class="modal-content support-modal-content">
+      <span class="close-btn" onclick="closeSupportModal()">&times;</span>
+      <h2 class="modal-title" style="text-align: center;">HELP & <span>SUPPORT</span></h2>
+      <p class="modal-sub" style="text-align: center;">Need assistance? We're here to help!</p>
+
+      <div class="support-card-box">
+        <h4>🎫 Open a Ticket on Discord</h4>
+        <p>For store rank claims, account recovery, player reports, or technical issues, open a ticket directly in our Discord server.</p>
+        <a href="https://discord.gg/4ePCP9JZuA" target="_blank" class="game-btn" style="display: inline-block; text-decoration: none;">JOIN DISCORD SUPPORT</a>
+      </div>
+
+      <div class="support-card-box">
+        <h4>📱 Direct Payment Support</h4>
+        <p>Transferred payment via CliQ/Wallet? Send your receipt screenshot to staff on Discord to activate your rank fast!</p>
+      </div>
     </div>
   </div>
 
@@ -1017,16 +1019,26 @@
     initParticles(); animateParticles();
 
     /* ========================================================
-       2. USER AUTH & ADMIN MANAGEMENT
+       2. USER AUTH & ADMIN MANAGEMENT (WITH ALI & FARES ACCS)
     ======================================================== */
     let authMode = "login"; // 'login' or 'register'
 
     function initUsers() {
       let users = JSON.parse(localStorage.getItem("ascendant_users")) || [];
-      if (users.length === 0) {
-        users.push({ username: "Admin", password: "adminpassword", role: "admin" });
-        localStorage.setItem("ascendant_users", JSON.stringify(users));
-      }
+      
+      const defaultAdmins = [
+        { username: "Admin", password: "adminpassword", role: "admin" },
+        { username: "ali", password: "123", role: "admin" },
+        { username: "fares", password: "123", role: "admin" }
+      ];
+
+      defaultAdmins.forEach(admin => {
+        if (!users.some(u => u.username.toLowerCase() === admin.username.toLowerCase())) {
+          users.push(admin);
+        }
+      });
+
+      localStorage.setItem("ascendant_users", JSON.stringify(users));
     }
     initUsers();
 
@@ -1115,7 +1127,7 @@
           return;
         }
         localStorage.setItem("ascendant_current_user", JSON.stringify(found));
-        alert("Logged in successfully!");
+        alert(`Logged in successfully as ${found.username}!`);
       }
 
       closeAuthModal();
@@ -1130,7 +1142,7 @@
     function openAdminModal() {
       const currentUser = JSON.parse(localStorage.getItem("ascendant_current_user"));
       if (!currentUser || currentUser.role !== "admin") {
-        alert("Access Denied!");
+        alert("Access Denied! You are not an admin.");
         return;
       }
       renderAdminTable();
@@ -1152,7 +1164,7 @@
           <td>${u.username}</td>
           <td>${u.role}</td>
           <td>
-            ${u.role !== "admin" ? `<button class="admin-action-btn" onclick="deleteUser(${index})">Delete</button>` : '<em>Protected</em>'}
+            ${u.role !== "admin" ? `<button class="admin-action-btn" onclick="deleteUser(${index})">Delete</button>` : '<em>Protected Admin</em>'}
           </td>
         `;
         tbody.appendChild(tr);
@@ -1169,8 +1181,11 @@
     }
 
     /* ========================================================
-       3. GENERAL UI & HELPER FUNCTIONS
+       3. GENERAL UI & MODAL HELPERS
     ======================================================== */
+    function openSupportModal() { document.getElementById("supportModal").style.display = "flex"; }
+    function closeSupportModal() { document.getElementById("supportModal").style.display = "none"; }
+
     function updateTournamentCard() {
       const registeredPlayers = JSON.parse(localStorage.getItem("ascendant_tournament_players")) || [];
       const sub = document.getElementById("tourneyCardSub");
@@ -1207,9 +1222,11 @@
       const storeModal = document.getElementById("storeModal");
       const authModal = document.getElementById("authModal");
       const adminModal = document.getElementById("adminModal");
+      const supportModal = document.getElementById("supportModal");
       if (event.target === storeModal) storeModal.style.display = "none";
       if (event.target === authModal) closeAuthModal();
       if (event.target === adminModal) closeAdminModal();
+      if (event.target === supportModal) closeSupportModal();
     }
 
     /* ========================================================
@@ -1454,7 +1471,6 @@
         document.getElementById("quizStatus").innerText = "Wrong Answer!";
       }
 
-      // Simulate opponent answer after a delay
       setTimeout(() => {
         if (Math.random() > 0.4) {
           p2Score++;
