@@ -3,245 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ascendant SMP - Support Tickets</title>
+    <title>Support & Help</title>
     <style>
-        :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --accent-color: #38bdf8;
-            --accent-hover: #0284c7;
-            --text-main: #f8fafc;
-            --text-sub: #94a3b8;
-            --border-color: #334155;
-        }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
             margin: 0;
             padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
-
-        .container {
-            width: 100%;
-            max-width: 800px;
-            margin-top: 20px;
-        }
-
         nav {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
+            margin-bottom: 30px;
         }
-
-        nav button, nav a {
-            background-color: var(--card-bg);
-            color: var(--text-main);
-            border: 1px solid var(--border-color);
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
+        nav a {
+            color: #0088ff;
             text-decoration: none;
-            transition: all 0.2s ease;
+            font-weight: bold;
         }
-
-        nav button:hover, nav button.active, nav a:hover {
-            background-color: var(--accent-color);
-            color: #000;
-            border-color: var(--accent-color);
+        nav a:hover {
+            text-decoration: underline;
         }
-
-        .panel {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            display: none;
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: #1e1e1e;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
-
-        .panel.active { display: block; }
-
         h2 {
             margin-top: 0;
-            color: var(--accent-color);
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 10px;
         }
-
-        .form-group { margin-bottom: 18px; }
-
+        .form-group {
+            margin-bottom: 15px;
+        }
         label {
             display: block;
-            margin-bottom: 6px;
-            font-size: 0.9em;
-            color: var(--text-sub);
+            margin-bottom: 5px;
+            color: #ccc;
         }
-
         input, textarea {
             width: 100%;
-            padding: 12px;
-            background-color: var(--bg-color);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            color: var(--text-main);
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #333;
+            background: #2a2a2a;
+            color: #fff;
             box-sizing: border-box;
-            font-size: 0.95em;
         }
-
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: var(--accent-color);
+        textarea {
+            resize: vertical;
+            height: 120px;
         }
-
-        button.btn-submit {
-            background-color: var(--accent-color);
-            color: #000;
-            font-weight: bold;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            cursor: pointer;
+        button {
             width: 100%;
-            font-size: 1em;
-            margin-top: 10px;
+            padding: 12px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
         }
-
-        button.btn-submit:hover { background-color: var(--accent-hover); }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .success-msg {
+            color: #28a745;
+            margin-top: 15px;
+            display: none;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
-    <h1>Support Tickets Center</h1>
-
+    <!-- NAVIGATION BAR -->
     <nav>
-        <a href="index.html">← Return Home / Login</a>
-        <button id="nav-appeal" class="active" onclick="switchTab('appeal')">Submit Ban Appeal</button>
-        <button id="nav-report" onclick="switchTab('report')">Report a Player</button>
+        <a href="index.html">← Back to Home</a>
     </nav>
 
+    <!-- SUPPORT FORM CONTAINER -->
     <div class="container">
+        <h2>Submit a Support Ticket</h2>
+        <form id="support-form">
+            <div class="form-group">
+                <label for="user-name">Your Name / Username</label>
+                <input type="text" id="user-name" placeholder="Enter your username" required>
+            </div>
 
-        <!-- BAN APPEAL PANEL -->
-        <div id="panel-appeal" class="panel active">
-            <h2>Ban Appeal Ticket</h2>
-            <form id="form-appeal" onsubmit="submitAppeal(event)">
-                <div class="form-group">
-                    <label>Your Minecraft IGN *</label>
-                    <input type="text" id="appeal-ign" required placeholder="e.g. Stev3">
-                </div>
-                <div class="form-group">
-                    <label>Your Discord Username *</label>
-                    <input type="text" id="appeal-discord" required placeholder="e.g. user#0000">
-                </div>
-                <div class="form-group">
-                    <label>Ban Reason *</label>
-                    <input type="text" id="appeal-reason" required placeholder="Reason for ban">
-                </div>
-                <div class="form-group">
-                    <label>Ban Duration *</label>
-                    <input type="text" id="appeal-duration" required placeholder="e.g. 7 Days, Permanent">
-                </div>
-                <div class="form-group">
-                    <label>Why should you be unbanned? *</label>
-                    <textarea id="appeal-explanation" rows="4" required placeholder="Explain your situation..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Mods Folder Screenshot Link *</label>
-                    <input type="url" id="appeal-mods" required placeholder="https://imgur.com/...">
-                </div>
-                <div class="form-group">
-                    <label>Minecraft (.minecraft) Folder Screenshot Link *</label>
-                    <input type="url" id="appeal-mcfile" required placeholder="https://imgur.com/...">
-                </div>
-                <button type="submit" class="btn-submit">Submit Appeal Ticket</button>
-            </form>
-        </div>
+            <div class="form-group">
+                <label for="user-message">Describe your issue</label>
+                <textarea id="user-message" placeholder="What do you need help with?" required></textarea>
+            </div>
 
-        <!-- REPORT PLAYER PANEL -->
-        <div id="panel-report" class="panel">
-            <h2>Report Player Ticket</h2>
-            <form id="form-report" onsubmit="submitReport(event)">
-                <div class="form-group">
-                    <label>Your Minecraft IGN *</label>
-                    <input type="text" id="reporter-ign" required placeholder="Your in-game name">
-                </div>
-                <div class="form-group">
-                    <label>Your Discord Handle *</label>
-                    <input type="text" id="reporter-discord" required placeholder="Your Discord tag">
-                </div>
-                <div class="form-group">
-                    <label>Reported Player IGN *</label>
-                    <input type="text" id="target-ign" required placeholder="Cheater's IGN">
-                </div>
-                <div class="form-group">
-                    <label>Video Evidence Link *</label>
-                    <input type="url" id="report-video" required placeholder="https://youtube.com/...">
-                </div>
-                <button type="submit" class="btn-submit">Submit Player Report</button>
-            </form>
-        </div>
+            <button type="submit">Send Ticket</button>
+        </form>
 
+        <p id="success-msg" class="success-msg">Ticket submitted successfully! An admin will review it soon.</p>
     </div>
 
-    <script>
-        function switchTab(tab) {
-            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-
-            document.getElementById(`panel-${tab}`).classList.add('active');
-            document.getElementById(`nav-${tab}`).classList.add('active');
-        }
-
-        function submitAppeal(e) {
-            e.preventDefault();
-            const appealData = {
-                id: Date.now(),
-                ign: document.getElementById('appeal-ign').value,
-                discord: document.getElementById('appeal-discord').value,
-                reason: document.getElementById('appeal-reason').value,
-                duration: document.getElementById('appeal-duration').value,
-                explanation: document.getElementById('appeal-explanation').value,
-                mods: document.getElementById('appeal-mods').value,
-                mcfile: document.getElementById('appeal-mcfile').value,
-                status: 'pending'
-            };
-
-            const list = JSON.parse(localStorage.getItem('asc_appeals') || '[]');
-            list.push(appealData);
-            localStorage.setItem('asc_appeals', JSON.stringify(list));
-
-            alert('Your Ban Appeal ticket has been submitted!');
-            document.getElementById('form-appeal').reset();
-        }
-
-        function submitReport(e) {
-            e.preventDefault();
-            const reportData = {
-                id: Date.now(),
-                reporterIgn: document.getElementById('reporter-ign').value,
-                reporterDiscord: document.getElementById('reporter-discord').value,
-                targetIgn: document.getElementById('target-ign').value,
-                video: document.getElementById('report-video').value,
-                status: 'pending'
-            };
-
-            const list = JSON.parse(localStorage.getItem('asc_reports') || '[]');
-            list.push(reportData);
-            localStorage.setItem('asc_reports', JSON.stringify(list));
-
-            alert('Player report ticket submitted!');
-            document.getElementById('form-report').reset();
-        }
-    </script>
+    <!-- LINK TO YOUR SEPARATE SUPPORT SCRIPT -->
+    <script src="support.js"></script>
 </body>
 </html>
-<!-- Link back to Main Page -->
-<a href="index.html" class="nav-link">← Back to Home</a>
