@@ -3,107 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Support & Help</title>
+    <title>Support & Tickets</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #ffffff;
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #0f1115; 
+            color: #fff; 
+            padding: 30px 10px; 
             margin: 0;
-            padding: 20px;
         }
-        nav {
-            margin-bottom: 30px;
+        .container { 
+            max-width: 600px; 
+            margin: 0 auto; 
+            background: #181a20; 
+            padding: 30px; 
+            border-radius: 12px; 
+            border: 1px solid #2a2e39; 
         }
-        nav a {
-            color: #0088ff;
-            text-decoration: none;
-            font-weight: bold;
+        .tab-buttons { 
+            display: flex; 
+            gap: 10px; 
+            margin-bottom: 25px; 
         }
-        nav a:hover {
-            text-decoration: underline;
+        .tab-btn { 
+            flex: 1; 
+            padding: 12px; 
+            background: #222630; 
+            border: none; 
+            color: #aaa; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-weight: bold; 
         }
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
-            background: #1e1e1e;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        .tab-btn.active { 
+            background: #ffaa00; 
+            color: #000; 
         }
-        h2 {
-            margin-top: 0;
+        .form-section { 
+            display: none; 
         }
-        .form-group {
-            margin-bottom: 15px;
+        .form-section.active { 
+            display: block; 
         }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #ccc;
+        .form-group { 
+            margin-bottom: 15px; 
         }
-        input, textarea {
-            width: 100%;
-            padding: 10px;
-            border-radius: 4px;
-            border: 1px solid #333;
-            background: #2a2a2a;
-            color: #fff;
-            box-sizing: border-box;
+        label { 
+            display: block; 
+            margin-bottom: 6px; 
+            color: #ccc; 
+            font-size: 0.9rem; 
         }
-        textarea {
-            resize: vertical;
-            height: 120px;
+        input, textarea { 
+            width: 100%; 
+            padding: 10px; 
+            border-radius: 6px; 
+            border: 1px solid #333; 
+            background: #0f1115; 
+            color: #fff; 
+            box-sizing: border-box; 
         }
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #007bff;
-            border: none;
-            border-radius: 4px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
+        textarea { 
+            height: 90px; 
+            resize: vertical; 
         }
-        button:hover {
-            background-color: #0056b3;
+        button[type="submit"] { 
+            width: 100%; 
+            padding: 12px; 
+            background: #ffaa00; 
+            border: none; 
+            border-radius: 6px; 
+            color: #000; 
+            font-weight: bold; 
+            cursor: pointer; 
+            margin-top: 10px; 
         }
-        .success-msg {
-            color: #28a745;
-            margin-top: 15px;
-            display: none;
-            text-align: center;
+        button[type="submit"]:hover { 
+            background: #e09500; 
+        }
+        .status-msg { 
+            margin-top: 15px; 
+            padding: 12px; 
+            border-radius: 6px; 
+            display: none; 
+            text-align: center; 
+            line-height: 1.4;
+        }
+        .nav-back { 
+            display: inline-block; 
+            margin-bottom: 20px; 
+            color: #ffaa00; 
+            text-decoration: none; 
+            font-weight: bold; 
         }
     </style>
 </head>
 <body>
 
-    <!-- NAVIGATION BAR -->
-    <nav>
-        <a href="index.html">← Back to Home</a>
-    </nav>
-
-    <!-- SUPPORT FORM CONTAINER -->
     <div class="container">
-        <h2>Submit a Support Ticket</h2>
-        <form id="support-form">
-            <div class="form-group">
-                <label for="user-name">Your Name / Username</label>
-                <input type="text" id="user-name" placeholder="Enter your username" required>
-            </div>
+        <a href="index.html" class="nav-back">← Back to Main Page</a>
+        
+        <div class="tab-buttons">
+            <button class="tab-btn active" onclick="switchTab('appeal')">Ban Appeal</button>
+            <button class="tab-btn" onclick="switchTab('report')">Player Report</button>
+        </div>
 
+        <!-- BAN APPEAL FORM -->
+        <form id="appeal-form" class="form-section active">
+            <h2>Ban Appeal</h2>
             <div class="form-group">
-                <label for="user-message">Describe your issue</label>
-                <textarea id="user-message" placeholder="What do you need help with?" required></textarea>
+                <label>In-Game Name (IGN)</label>
+                <input type="text" id="appeal-ign" required>
             </div>
-
-            <button type="submit">Send Ticket</button>
+            <div class="form-group">
+                <label>Discord Username</label>
+                <input type="text" id="appeal-discord" required>
+            </div>
+            <div class="form-group">
+                <label>Ban Reason</label>
+                <input type="text" id="appeal-reason" required>
+            </div>
+            <div class="form-group">
+                <label>Why should you be unbanned?</label>
+                <textarea id="appeal-explanation" required></textarea>
+            </div>
+            <div class="form-group">
+                <label>Minecraft Mods Folder Screenshot</label>
+                <input type="file" id="appeal-mods-img" accept="image/*" required>
+            </div>
+            <div class="form-group">
+                <label>Minecraft Game Directory / Files Screenshot</label>
+                <input type="file" id="appeal-files-img" accept="image/*" required>
+            </div>
+            <button type="submit">Submit Ban Appeal</button>
         </form>
 
-        <p id="success-msg" class="success-msg">Ticket submitted successfully! An admin will review it soon.</p>
+        <!-- PLAYER REPORT FORM -->
+        <form id="report-form" class="form-section">
+            <h2>Report a Player</h2>
+            <div class="form-group">
+                <label>Your IGN</label>
+                <input type="text" id="report-your-ign" required>
+            </div>
+            <div class="form-group">
+                <label>Reported Player's IGN</label>
+                <input type="text" id="report-target-ign" required>
+            </div>
+            <div class="form-group">
+                <label>Video Evidence URL (YouTube / Medal / Streamable)</label>
+                <input type="url" id="report-video-url" placeholder="https://..." required>
+            </div>
+            <div class="form-group">
+                <label>Additional Context / Details</label>
+                <textarea id="report-details" required></textarea>
+            </div>
+            <button type="submit">Submit Player Report</button>
+        </form>
+
+        <div id="status-box" class="status-msg"></div>
     </div>
 
-    <!-- LINK TO YOUR SEPARATE SUPPORT SCRIPT -->
     <script src="support.js"></script>
 </body>
 </html>
