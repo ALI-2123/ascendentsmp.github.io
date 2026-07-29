@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASCENDANT SMP</title>
+    <title>Minecraft Server Portal</title>
     <style>
+        /* BASE & RESET */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -13,147 +14,119 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0d0d0f;
+            background-color: #0c0d10;
             color: #ffffff;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            padding: 20px;
         }
 
-        /* TOP USER BAR */
-        .top-bar {
-            width: 100%;
-            max-width: 900px;
-            background-color: #14161c;
-            border-radius: 8px;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 30px;
-            border: 1px solid #1f232d;
-        }
-
-        .guest-text {
-            color: #a0a5b1;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .btn-auth {
-            background-color: #ffaa00;
-            color: #000000;
-            border: none;
-            padding: 6px 16px;
-            border-radius: 5px;
-            font-weight: 800;
-            font-size: 0.85rem;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
-
-        .btn-auth:hover {
-            background-color: #e09500;
-        }
-
-        /* BRANDING SECTION */
-        .branding-container {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .server-logo {
-            width: 110px;
-            height: 110px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            box-shadow: 0 0 25px rgba(255, 170, 0, 0.2);
-        }
-
-        .server-title {
-            font-size: 2.4rem;
-            font-weight: 900;
-            color: #ffffff;
-            letter-spacing: 1px;
-            margin-bottom: 6px;
-        }
-
-        .server-title span {
-            color: #ffaa00;
-        }
-
-        .server-subtitle {
-            color: #a0a5b1;
-            font-size: 0.95rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        /* IP BAR */
-        .ip-card {
-            width: 100%;
-            max-width: 900px;
-            background-color: #14161c;
-            border: 1px solid #ffaa00;
-            border-radius: 10px;
-            padding: 16px 24px;
+        /* NAVIGATION BAR */
+        header {
+            background-color: #141619;
+            border-bottom: 1px solid #282c37;
+            padding: 15px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
-            box-shadow: 0 0 15px rgba(255, 170, 0, 0.15);
         }
 
-        .ip-info {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .ip-label {
-            font-size: 0.75rem;
-            color: #a0a5b1;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .ip-text {
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
             color: #ffaa00;
-            font-size: 1.25rem;
-            font-weight: 800;
-            font-family: monospace;
-        }
-
-        .btn-copy {
-            background-color: #ffaa00;
-            color: #000;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 6px;
-            font-weight: 800;
-            cursor: pointer;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .btn-copy:hover {
-            background-color: #e09500;
+        nav {
+            display: flex;
+            gap: 20px;
         }
 
-        /* GRID LAYOUT */
-        .grid-container {
-            width: 100%;
-            max-width: 900px;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
+        nav a {
+            color: #a0a5b1;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        nav a:hover, nav a.active {
+            color: #ffaa00;
+        }
+
+        /* HERO SECTION */
+        .hero {
+            text-align: center;
+            padding: 60px 20px 40px;
+            background: radial-gradient(circle at center, #1b1e26 0%, #0c0d10 70%);
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 900;
+            margin-bottom: 12px;
+            color: #ffffff;
+        }
+
+        .hero h1 span {
+            color: #ffaa00;
+        }
+
+        .hero p {
+            color: #a0a5b1;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 25px;
+        }
+
+        /* SERVER IP BOX */
+        .server-ip-box {
+            display: inline-flex;
+            align-items: center;
+            background: #141619;
+            border: 1px solid #ffaa00;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 1.1rem;
+            color: #ffaa00;
             gap: 15px;
         }
 
+        .copy-btn {
+            background: #ffaa00;
+            color: #000;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: sans-serif;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: #e09500;
+        }
+
+        /* CARDS CONTAINER GRID */
+        .main-container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            justify-content: center;
+        }
+
+        /* GENERAL CARD STYLING */
         .card-link {
             text-decoration: none;
             color: inherit;
@@ -161,135 +134,125 @@
         }
 
         .card {
-            background-color: #14161c;
-            border: 1px solid #1f232d;
-            border-radius: 10px;
-            padding: 20px;
-            height: 120px;
+            background-color: #141619;
+            border: 1px solid #282c37;
+            border-radius: 14px;
+            padding: 24px;
+            height: 100%;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            transition: transform 0.2s ease, border-color 0.2s ease;
+            justify-content: center;
         }
 
         .card:hover {
-            transform: translateY(-3px);
+            transform: translateY(-4px);
             border-color: #ffaa00;
+            box-shadow: 0 0 20px rgba(255, 170, 0, 0.25);
         }
 
-        .card.active-border {
-            border: 1px solid #ffaa00;
-        }
-
-        .card-title {
-            color: #ffaa00;
-            font-size: 1rem;
+        .card h2 {
+            color: #ffffff;
+            margin: 0 0 12px 0;
+            font-size: 1.25rem;
             font-weight: 800;
             display: flex;
             align-items: center;
-            gap: 6px;
-            text-transform: uppercase;
+            gap: 8px;
         }
 
-        .card-desc {
-            color: #7a8294;
-            font-size: 0.8rem;
-            line-height: 1.3;
+        .card p {
+            color: #a0a5b1;
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.4;
         }
 
-        /* Responsive Grid for Smaller Screens */
-        @media (max-width: 768px) {
-            .grid-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        /* SUPPORT TICKET SPECIFIC CARD STYLING */
+        .card.support-card {
+            border: 2px solid #ffaa00;
+        }
+
+        .card.support-card h2 {
+            color: #ffaa00;
+        }
+
+        /* FOOTER */
+        footer {
+            background-color: #141619;
+            border-top: 1px solid #282c37;
+            text-align: center;
+            padding: 20px;
+            color: #6c727f;
+            font-size: 0.85rem;
+            margin-top: auto;
         }
     </style>
 </head>
 <body>
 
-    <!-- TOP USER HEADER -->
-    <div class="top-bar">
-        <span class="guest-text">Guest Player</span>
-        <button class="btn-auth">LOGIN</button>
-        <button class="btn-auth">REGISTER</button>
-    </div>
+    <!-- HEADER NAVIGATION -->
+    <header>
+        <div class="logo">MY SERVER</div>
+        <nav>
+            <a href="index.html" class="active">Home</a>
+            <a href="support.html">Support & Tickets</a>
+            <a href="admin.html">Admin Panel</a>
+        </nav>
+    </header>
 
-    <!-- MAIN BRANDING -->
-    <div class="branding-container">
-        <!-- Logo Image URL / Fallback -->
-        <img class="server-logo" src="https://via.placeholder.com/110/14161c/ffaa00?text=ASCENDANT" alt="Ascendant SMP Logo">
-        <h1 class="server-title">ASCENDANT <span>SMP</span></h1>
-        <div class="server-subtitle">
-            <span>🗡️</span> The Ultimate Vanilla+ Survival Experience <span>🗡️</span>
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <h1>WELCOME TO <span>OUR NETWORK</span></h1>
+        <p>Join our growing community today. Experience custom gameplay, competitive metas, and dedicated staff support.</p>
+        
+        <div class="server-ip-box">
+            <span>play.yourserver.com</span>
+            <button class="copy-btn" onclick="copyIP()">Copy IP</button>
         </div>
-    </div>
+    </section>
 
-    <!-- SERVER IP BOX -->
-    <div class="ip-card">
-        <div class="ip-info">
-            <span class="ip-label">SERVER IP</span>
-            <span class="ip-text">Coming Soon...</span>
+    <!-- MAIN CARDS SECTION -->
+    <main class="main-container">
+        <div class="grid">
+            
+            <!-- CARD 1: STORE / DONATIONS -->
+            <a href="#" class="card-link">
+                <div class="card">
+                    <h2>SERVER STORE 🛒</h2>
+                    <p>Support the server and get access to exclusive ranks, cosmetics, and perks.</p>
+                </div>
+            </a>
+
+            <!-- CARD 2: SUPPORT & TICKETS (THE CARD FROM YOUR SCREENSHOT) -->
+            <a href="support.html" class="card-link">
+                <div class="card support-card">
+                    <h2>SUPPORT & TICKETS 🎧</h2>
+                    <p>Submit support tickets & get direct staff help</p>
+                </div>
+            </a>
+
+            <!-- CARD 3: RULES / COMMUNITY -->
+            <a href="#" class="card-link">
+                <div class="card">
+                    <h2>COMMUNITY & RULES 📜</h2>
+                    <p>Read through our official server rules and guidelines to avoid penalties.</p>
+                </div>
+            </a>
+
         </div>
-        <button class="btn-copy" onclick="copyIP()">COPY</button>
-    </div>
+    </main>
 
-    <!-- DASHBOARD CARD GRID -->
-    <div class="grid-container">
-
-        <!-- DISCORD -->
-        <a href="#" class="card-link">
-            <div class="card">
-                <div class="card-title">DISCORD</div>
-                <div class="card-desc">Join for launch updates & community chat</div>
-            </div>
-        </a>
-
-        <!-- SUPPORT & TICKETS (LINKS TO support.html) -->
-        <a href="support.html" class="card-link">
-            <div class="card active-border">
-                <div class="card-title">SUPPORT & TICKETS 🎧</div>
-                <div class="card-desc">Get staff help, report issues & rank support</div>
-            </div>
-        </a>
-
-        <!-- TOURNAMENTS -->
-        <a href="#" class="card-link">
-            <div class="card">
-                <div class="card-title">TOURNAMENTS 🏆</div>
-                <div class="card-desc">0/8 Slots Registered</div>
-            </div>
-        </a>
-
-        <!-- SERVER STORE -->
-        <a href="#" class="card-link">
-            <div class="card">
-                <div class="card-title">SERVER STORE</div>
-                <div class="card-desc">VIP, Premium & Elite Ranks · Monthly Perks</div>
-            </div>
-        </a>
-
-        <!-- MINI GAMES ARCADE -->
-        <a href="#" class="card-link">
-            <div class="card">
-                <div class="card-title">MINI GAMES ARCADE</div>
-                <div class="card-desc">3 Arcade Games: AI TTT, 3x3 Memory & 1v1 Queue Quiz</div>
-            </div>
-        </a>
-
-        <!-- INFO & RULES -->
-        <a href="#" class="card-link">
-            <div class="card">
-                <div class="card-title">INFO & RULES</div>
-                <div class="card-desc">Server Features & Guidelines</div>
-            </div>
-        </a>
-
-    </div>
+    <!-- FOOTER -->
+    <footer>
+        &copy; 2026 Minecraft Server Network. All rights reserved. Not affiliated with Mojang Studios.
+    </footer>
 
     <script>
         function copyIP() {
-            navigator.clipboard.writeText("play.ascendantsmp.com");
-            alert("IP Copied to clipboard!");
+            navigator.clipboard.writeText("play.yourserver.com");
+            alert("Server IP copied to clipboard!");
         }
     </script>
 </body>
