@@ -398,7 +398,7 @@
 
     .form-modal-content { max-width: 450px; }
     .admin-modal-content { max-width: 800px; text-align: left; }
-    .support-modal-content { max-width: 550px; text-align: left; }
+    .support-modal-content { max-width: 600px; text-align: left; }
 
     .close-btn { position: absolute; top: 15px; right: 20px; font-size: 2rem; color: var(--text-sub); cursor: pointer; }
     .close-btn:hover { color: var(--gold); }
@@ -407,12 +407,12 @@
     .modal-title span { color: var(--gold); }
     .modal-sub { color: var(--text-sub); margin-bottom: 20px; font-size: 0.95rem; }
 
-    /* FORM STYLES FOR AUTH & ADMIN */
+    /* FORM STYLES FOR AUTH & TICKETS */
     .auth-form { display: flex; flex-direction: column; gap: 15px; margin-top: 15px; text-align: left; }
     .form-group { display: flex; flex-direction: column; gap: 6px; }
     .form-group label { font-size: 0.85rem; font-weight: 700; color: var(--text-sub); }
 
-    .form-input {
+    .form-input, .form-select, .form-textarea {
       background: rgba(0, 0, 0, 0.5);
       border: 1px solid var(--border-color);
       padding: 10px 14px;
@@ -422,7 +422,9 @@
       outline: none;
     }
 
-    .form-input:focus { border-color: var(--gold); }
+    .form-select option { background: #121620; color: #fff; }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--gold); }
 
     .form-submit-btn {
       background: var(--gold);
@@ -572,18 +574,6 @@
     .premium-btn { background: #ab47bc; color: #fff; }
     .elite-btn { background: var(--elite-cyan); color: #000; }
 
-    /* SUPPORT BOX STYLES */
-    .support-card-box {
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 18px;
-      margin-bottom: 15px;
-    }
-
-    .support-card-box h4 { color: var(--gold); font-size: 1.1rem; margin-bottom: 6px; }
-    .support-card-box p { color: var(--text-sub); font-size: 0.9rem; margin-bottom: 12px; }
-
     footer { text-align: center; color: var(--text-sub); font-size: 0.85rem; padding: 20px 0; }
   </style>
 </head>
@@ -625,11 +615,11 @@
         </div>
       </a>
 
-      <!-- SUPPORT CARD -->
+      <!-- DIRECT SUPPORT & TICKET CARD -->
       <div onclick="openSupportModal()" class="card" style="cursor: pointer;">
         <div class="card-content">
           <h3>SUPPORT & TICKETS 🎧</h3>
-          <p>Get staff help, report issues & rank support</p>
+          <p>Submit support tickets & get direct staff help</p>
         </div>
       </div>
 
@@ -857,23 +847,37 @@
     </div>
   </div>
 
-  <!-- SUPPORT MODAL -->
+  <!-- SUPPORT & TICKET MODAL -->
   <div id="supportModal" class="modal-overlay">
     <div class="modal-content support-modal-content">
       <span class="close-btn" onclick="closeSupportModal()">&times;</span>
-      <h2 class="modal-title" style="text-align: center;">HELP & <span>SUPPORT</span></h2>
-      <p class="modal-sub" style="text-align: center;">Need assistance? We're here to help!</p>
+      <h2 class="modal-title" style="text-align: center;">SUPPORT & <span>TICKETS</span> 🎧</h2>
+      <p class="modal-sub" style="text-align: center;">Submit a direct ticket to staff below</p>
 
-      <div class="support-card-box">
-        <h4>🎫 Open a Ticket on Discord</h4>
-        <p>For store rank claims, account recovery, player reports, or technical issues, open a ticket directly in our Discord server.</p>
-        <a href="https://discord.gg/4ePCP9JZuA" target="_blank" class="game-btn" style="display: inline-block; text-decoration: none;">JOIN DISCORD SUPPORT</a>
-      </div>
+      <form id="supportTicketForm" class="auth-form" onsubmit="handleSupportSubmit(event)">
+        <div class="form-group">
+          <label for="ticketIGN">Minecraft Username (IGN)</label>
+          <input type="text" id="ticketIGN" class="form-input" required placeholder="e.g. Stev3">
+        </div>
 
-      <div class="support-card-box">
-        <h4>📱 Direct Payment Support</h4>
-        <p>Transferred payment via CliQ/Wallet? Send your receipt screenshot to staff on Discord to activate your rank fast!</p>
-      </div>
+        <div class="form-group">
+          <label for="ticketType">Request Category</label>
+          <select id="ticketType" class="form-select" required>
+            <option value="Rank Claim / Payment">Store Rank Claim / Payment Proof</option>
+            <option value="Account Recovery">Account / Password Recovery</option>
+            <option value="Bug / Technical Issue">Bug Report / Technical Support</option>
+            <option value="Player Report">Player Report</option>
+            <option value="General Question">General Support</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="ticketMsg">Details / Transaction Reference</label>
+          <textarea id="ticketMsg" class="form-textarea" rows="4" required placeholder="Describe your issue or include CliQ transfer details..."></textarea>
+        </div>
+
+        <button type="submit" class="form-submit-btn">SUBMIT TICKET</button>
+      </form>
     </div>
   </div>
 
@@ -890,7 +894,7 @@
           <span id="phoneNum">00962790451588</span>
           <button class="copy-phone-btn" id="copyPhoneBtn">COPY NUMBER</button>
         </div>
-        <p class="pay-instruction">Send payment to the number above, then submit your transfer screenshot in a Discord ticket to claim your rank!</p>
+        <p class="pay-instruction">Send payment to the number above, then submit your transfer screenshot or reference in a support ticket!</p>
       </div>
 
       <div class="ranks-grid">
@@ -910,7 +914,7 @@
             <li>📦 Extra Player Vault Slot</li>
             <li>💬 Exclusive VIP Discord Role</li>
           </ul>
-          <a href="https://discord.gg/4ePCP9JZuA" target="_blank" class="buy-btn vip-btn">CLAIM IN DISCORD</a>
+          <button onclick="openSupportModal()" class="buy-btn vip-btn" style="border:none; cursor:pointer; width:100%;">CLAIM VIA TICKET</button>
         </div>
 
         <div class="rank-card premium-theme">
@@ -930,7 +934,7 @@
             <li>🛡️ Reserved Discord Channel Access</li>
             <li>🎉 Monthly Supporter Event Entry</li>
           </ul>
-          <a href="https://discord.gg/4ePCP9JZuA" target="_blank" class="buy-btn premium-btn">CLAIM IN DISCORD</a>
+          <button onclick="openSupportModal()" class="buy-btn premium-btn" style="border:none; cursor:pointer; width:100%;">CLAIM VIA TICKET</button>
         </div>
 
         <div class="rank-card elite-theme">
@@ -950,7 +954,7 @@
             <li>💫 Special Cosmetics & Particle Trails</li>
             <li>👑 Elite Discord Role & Private Lounge</li>
           </ul>
-          <a href="https://discord.gg/4ePCP9JZuA" target="_blank" class="buy-btn elite-btn">CLAIM IN DISCORD</a>
+          <button onclick="openSupportModal()" class="buy-btn elite-btn" style="border:none; cursor:pointer; width:100%;">CLAIM VIA TICKET</button>
         </div>
       </div>
     </div>
@@ -1021,7 +1025,7 @@
     /* ========================================================
        2. USER AUTH & ADMIN MANAGEMENT (WITH ALI & FARES ACCS)
     ======================================================== */
-    let authMode = "login"; // 'login' or 'register'
+    let authMode = "login";
 
     function initUsers() {
       let users = JSON.parse(localStorage.getItem("ascendant_users")) || [];
@@ -1181,10 +1185,27 @@
     }
 
     /* ========================================================
-       3. GENERAL UI & MODAL HELPERS
+       3. SUPPORT TICKET SYSTEM & MODAL HELPERS
     ======================================================== */
-    function openSupportModal() { document.getElementById("supportModal").style.display = "flex"; }
-    function closeSupportModal() { document.getElementById("supportModal").style.display = "none"; }
+    function openSupportModal() {
+      if (document.getElementById("storeModal").style.display === "flex") {
+        closeStoreModal();
+      }
+      document.getElementById("supportModal").style.display = "flex";
+    }
+
+    function closeSupportModal() {
+      document.getElementById("supportModal").style.display = "none";
+      document.getElementById("supportTicketForm").reset();
+    }
+
+    function handleSupportSubmit(e) {
+      e.preventDefault();
+      const ign = document.getElementById("ticketIGN").value;
+      const category = document.getElementById("ticketType").value;
+      alert(`Thank you ${ign}! Your support ticket for "${category}" has been submitted successfully.`);
+      closeSupportModal();
+    }
 
     function updateTournamentCard() {
       const registeredPlayers = JSON.parse(localStorage.getItem("ascendant_tournament_players")) || [];
