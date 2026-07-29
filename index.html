@@ -3,152 +3,294 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Server Portal</title>
+    <title>ASCENDANT SMP</title>
     <style>
-        * { 
-            box-sizing: border-box; 
-            margin: 0; 
-            padding: 0; 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: #0c0d10; 
-            color: #ffffff; 
-            min-height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0d0d0f;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
         }
-        header { 
-            background-color: #141619; 
-            border-bottom: 1px solid #282c37; 
-            padding: 15px 40px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
+
+        /* TOP USER BAR */
+        .top-bar {
+            width: 100%;
+            max-width: 900px;
+            background-color: #14161c;
+            border-radius: 8px;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            border: 1px solid #1f232d;
         }
-        .logo { 
-            font-size: 1.4rem; 
-            font-weight: 800; 
-            color: #ffaa00; 
-            text-transform: uppercase; 
-            letter-spacing: 1px; 
+
+        .guest-text {
+            color: #a0a5b1;
+            font-weight: 600;
+            font-size: 0.9rem;
         }
-        nav { 
-            display: flex; 
-            gap: 20px; 
+
+        .btn-auth {
+            background-color: #ffaa00;
+            color: #000000;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 5px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-transform: uppercase;
         }
-        nav a { 
-            color: #a0a5b1; 
-            text-decoration: none; 
-            font-weight: 600; 
-            font-size: 0.95rem; 
+
+        .btn-auth:hover {
+            background-color: #e09500;
         }
-        nav a:hover, nav a.active { 
-            color: #ffaa00; 
+
+        /* BRANDING SECTION */
+        .branding-container {
+            text-align: center;
+            margin-bottom: 25px;
         }
-        .hero { 
-            text-align: center; 
-            padding: 50px 20px 30px; 
-            background: radial-gradient(circle at center, #1b1e26 0%, #0c0d10 70%); 
+
+        .server-logo {
+            width: 110px;
+            height: 110px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 0 25px rgba(255, 170, 0, 0.2);
         }
-        .hero h1 { 
-            font-size: 2.5rem; 
-            font-weight: 900; 
-            margin-bottom: 10px; 
+
+        .server-title {
+            font-size: 2.4rem;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
         }
-        .hero h1 span { 
-            color: #ffaa00; 
+
+        .server-title span {
+            color: #ffaa00;
         }
-        .hero p { 
-            color: #a0a5b1; 
-            margin-bottom: 20px; 
+
+        .server-subtitle {
+            color: #a0a5b1;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
-        .main-container { 
-            max-width: 1100px; 
-            margin: 30px auto; 
-            padding: 0 20px; 
-            flex: 1; 
+
+        /* IP BAR */
+        .ip-card {
+            width: 100%;
+            max-width: 900px;
+            background-color: #14161c;
+            border: 1px solid #ffaa00;
+            border-radius: 10px;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            box-shadow: 0 0 15px rgba(255, 170, 0, 0.15);
         }
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-            gap: 25px; 
+
+        .ip-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
-        .card-link { 
-            text-decoration: none; 
-            color: inherit; 
-            display: block; 
+
+        .ip-label {
+            font-size: 0.75rem;
+            color: #a0a5b1;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
-        .card { 
-            background-color: #141619; 
-            border: 1px solid #282c37; 
-            border-radius: 14px; 
-            padding: 24px; 
-            height: 100%; 
-            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4); 
+
+        .ip-text {
+            color: #ffaa00;
+            font-size: 1.25rem;
+            font-weight: 800;
+            font-family: monospace;
         }
-        .card:hover { 
-            transform: translateY(-4px); 
-            border-color: #ffaa00; 
-            box-shadow: 0 0 15px rgba(255, 170, 0, 0.25);
+
+        .btn-copy {
+            background-color: #ffaa00;
+            color: #000;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-weight: 800;
+            cursor: pointer;
+            text-transform: uppercase;
         }
-        .card.support-card { 
-            border: 2px solid #ffaa00; 
+
+        .btn-copy:hover {
+            background-color: #e09500;
         }
-        .card h2 { 
-            color: #ffaa00; 
-            margin-bottom: 10px; 
-            font-size: 1.25rem; 
-            font-weight: 800; 
+
+        /* GRID LAYOUT */
+        .grid-container {
+            width: 100%;
+            max-width: 900px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
         }
-        .card p { 
-            color: #a0a5b1; 
-            font-size: 0.95rem; 
-            line-height: 1.4; 
+
+        .card-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
         }
-        footer { 
-            background-color: #141619; 
-            border-top: 1px solid #282c37; 
-            text-align: center; 
-            padding: 20px; 
-            color: #6c727f; 
-            font-size: 0.85rem; 
-            margin-top: auto; 
+
+        .card {
+            background-color: #14161c;
+            border: 1px solid #1f232d;
+            border-radius: 10px;
+            padding: 20px;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: #ffaa00;
+        }
+
+        .card.active-border {
+            border: 1px solid #ffaa00;
+        }
+
+        .card-title {
+            color: #ffaa00;
+            font-size: 1rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-transform: uppercase;
+        }
+
+        .card-desc {
+            color: #7a8294;
+            font-size: 0.8rem;
+            line-height: 1.3;
+        }
+
+        /* Responsive Grid for Smaller Screens */
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo">NETWORK PORTAL</div>
-        <nav>
-            <a href="index.html" class="active">Home</a>
-            <a href="support.html">Support & Tickets</a>
-            <a href="admin.html">Admin Panel</a>
-        </nav>
-    </header>
+    <!-- TOP USER HEADER -->
+    <div class="top-bar">
+        <span class="guest-text">Guest Player</span>
+        <button class="btn-auth">LOGIN</button>
+        <button class="btn-auth">REGISTER</button>
+    </div>
 
-    <section class="hero">
-        <h1>WELCOME TO THE <span>SERVER PORTAL</span></h1>
-        <p>Need staff assistance or want to report an issue? Visit our support desk below.</p>
-    </section>
-
-    <main class="main-container">
-        <div class="grid">
-            <!-- CLICKABLE SUPPORT CARD -->
-            <a href="support.html" class="card-link">
-                <div class="card support-card">
-                    <h2>SUPPORT & TICKETS 🎧</h2>
-                    <p>Submit support tickets & get direct staff help</p>
-                </div>
-            </a>
+    <!-- MAIN BRANDING -->
+    <div class="branding-container">
+        <!-- Logo Image URL / Fallback -->
+        <img class="server-logo" src="https://via.placeholder.com/110/14161c/ffaa00?text=ASCENDANT" alt="Ascendant SMP Logo">
+        <h1 class="server-title">ASCENDANT <span>SMP</span></h1>
+        <div class="server-subtitle">
+            <span>🗡️</span> The Ultimate Vanilla+ Survival Experience <span>🗡️</span>
         </div>
-    </main>
+    </div>
 
-    <footer>
-        &copy; 2026 Server Network. All rights reserved.
-    </footer>
+    <!-- SERVER IP BOX -->
+    <div class="ip-card">
+        <div class="ip-info">
+            <span class="ip-label">SERVER IP</span>
+            <span class="ip-text">Coming Soon...</span>
+        </div>
+        <button class="btn-copy" onclick="copyIP()">COPY</button>
+    </div>
 
+    <!-- DASHBOARD CARD GRID -->
+    <div class="grid-container">
+
+        <!-- DISCORD -->
+        <a href="#" class="card-link">
+            <div class="card">
+                <div class="card-title">DISCORD</div>
+                <div class="card-desc">Join for launch updates & community chat</div>
+            </div>
+        </a>
+
+        <!-- SUPPORT & TICKETS (LINKS TO support.html) -->
+        <a href="support.html" class="card-link">
+            <div class="card active-border">
+                <div class="card-title">SUPPORT & TICKETS 🎧</div>
+                <div class="card-desc">Get staff help, report issues & rank support</div>
+            </div>
+        </a>
+
+        <!-- TOURNAMENTS -->
+        <a href="#" class="card-link">
+            <div class="card">
+                <div class="card-title">TOURNAMENTS 🏆</div>
+                <div class="card-desc">0/8 Slots Registered</div>
+            </div>
+        </a>
+
+        <!-- SERVER STORE -->
+        <a href="#" class="card-link">
+            <div class="card">
+                <div class="card-title">SERVER STORE</div>
+                <div class="card-desc">VIP, Premium & Elite Ranks · Monthly Perks</div>
+            </div>
+        </a>
+
+        <!-- MINI GAMES ARCADE -->
+        <a href="#" class="card-link">
+            <div class="card">
+                <div class="card-title">MINI GAMES ARCADE</div>
+                <div class="card-desc">3 Arcade Games: AI TTT, 3x3 Memory & 1v1 Queue Quiz</div>
+            </div>
+        </a>
+
+        <!-- INFO & RULES -->
+        <a href="#" class="card-link">
+            <div class="card">
+                <div class="card-title">INFO & RULES</div>
+                <div class="card-desc">Server Features & Guidelines</div>
+            </div>
+        </a>
+
+    </div>
+
+    <script>
+        function copyIP() {
+            navigator.clipboard.writeText("play.ascendantsmp.com");
+            alert("IP Copied to clipboard!");
+        }
+    </script>
 </body>
 </html>
