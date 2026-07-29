@@ -1,44 +1,77 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const supportForm = document.getElementById("support-form");
-    const successMsg = document.getElementById("success-msg");
+function switchTab(type) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.form-section').forEach(form => form.classList.remove('active'));
 
-    supportForm.addEventListener("submit", (e) => {
-        e.preventDefault();
+    if (type === 'appeal') {
+        document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        document.getElementById('appeal-form').classList.add('active');
+    } else {
+        document.querySelectorAll('.tab-btn')[1].classList.add('active');
+        document.getElementById('report-form').classList.add('active');
+    }
+}
 
-        // Get values from input fields
-        const usernameInput = document.getElementById("user-name").value.trim();
-        const messageInput = document.getElementById("user-message").value.trim();
-
-        if (!usernameInput || !messageInput) {
-            alert("Please fill out all fields.");
-            return;
-        }
-
-        // Create new ticket object
-        const newTicket = {
-            id: Date.now(),
-            username: usernameInput,
-            message: messageInput,
-            status: "Pending",
-            date: new Date().toLocaleString()
-        };
-
-        // Fetch existing tickets from LocalStorage or start an empty array
-        const existingTickets = JSON.parse(localStorage.getItem("support_tickets")) || [];
-
-        // Add the new ticket to the list
-        existingTickets.push(newTicket);
-
-        // Save back to LocalStorage
-        localStorage.setItem("support_tickets", JSON.stringify(existingTickets));
-
-        // Show success message and clear form
-        successMsg.style.display = "block";
-        supportForm.reset();
-
-        // Hide success message after 4 seconds
-        setTimeout(() => {
-            successMsg.style.display = "none";
-        }, 4000);
-    });
+// Convert uploaded images to Base64
+const fileToBase64 = file => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
 });
+
+// Submit Appeal Handler
+document.getElementById('appeal-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const modsFile = document.getElementById('appeal-mods-img').files[0];
+    const filesFile = document.getElementById('appeal-files-img').files[0];
+
+    const ticket = {
+        id: 'APP-' + Date.now().toString().slice(-5),
+        type: 'Ban Appeal',
+        ign: document.getElementById('appeal-ign').value,
+        discord: document.getElementById('appeal-discord').value,
+        reason: document.getElementById('appeal-reason').value,
+        explanation: document.getElementById('appeal-explanation').value,
+        modsImg: await fileToBase64(modsFile),
+        filesImg: await fileToBase64(filesFile),
+        status: 'Pending',
+        comments: [],
+        date: new Date().toLocaleDateString()
+    };
+
+    saveTicket(ticket);
+    e.target.reset();
+});
+
+// Submit Report Handler
+document.getElementById('report-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const ticket = {
+        id: 'REP-' + Date.now().toString().slice(-5),
+        type: 'Player Report',
+        reporterIgn: document.getElementById('report-your-ign').value,
+        targetIgn: document.getElementById('report-target-ign').value,
+        videoUrl: document.getElementById('report-video-url').value,
+        details: document.getElementById('report-details').value,
+        status: 'Pending',
+        comments: [],
+        date: new Date().toLocaleDateString()
+    };
+
+    saveTicket(ticket);
+    e.target.reset();
+});
+
+function saveTicket(ticket) {
+    const tickets = JSON.parse(localStorage.getItem('support_tickets')) || [];
+    tickets.unshift(ticket);
+    localStorage.setItem('support_tickets', JSON.stringify(tickets));
+
+    const statusBox = document.getElementById('status-box');
+    statusBox.style.display = 'block';
+    statusBox.style.background = '#1b3e20';
+    statusBox.style.color = '#5cdb6d';
+    statusBox.innerHTML = `Ticket Submitted! ID: <strong>#${ticket.id}</strong>. Please wait for an admin to respond.`;
+}
