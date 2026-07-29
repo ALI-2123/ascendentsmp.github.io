@@ -3,198 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minecraft Server Portal</title>
+    <title>Server Portal</title>
     <style>
-        /* BASE & RESET */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
         }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0c0d10;
-            color: #ffffff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #0c0d10; 
+            color: #ffffff; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
         }
-
-        /* NAVIGATION BAR */
-        header {
-            background-color: #141619;
-            border-bottom: 1px solid #282c37;
-            padding: 15px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        header { 
+            background-color: #141619; 
+            border-bottom: 1px solid #282c37; 
+            padding: 15px 40px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
         }
-
-        .logo {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: #ffaa00;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        .logo { 
+            font-size: 1.4rem; 
+            font-weight: 800; 
+            color: #ffaa00; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
         }
-
-        nav {
-            display: flex;
-            gap: 20px;
+        nav { 
+            display: flex; 
+            gap: 20px; 
         }
-
-        nav a {
-            color: #a0a5b1;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: color 0.2s;
+        nav a { 
+            color: #a0a5b1; 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 0.95rem; 
         }
-
-        nav a:hover, nav a.active {
-            color: #ffaa00;
+        nav a:hover, nav a.active { 
+            color: #ffaa00; 
         }
-
-        /* HERO SECTION */
-        .hero {
-            text-align: center;
-            padding: 60px 20px 40px;
-            background: radial-gradient(circle at center, #1b1e26 0%, #0c0d10 70%);
+        .hero { 
+            text-align: center; 
+            padding: 50px 20px 30px; 
+            background: radial-gradient(circle at center, #1b1e26 0%, #0c0d10 70%); 
         }
-
-        .hero h1 {
-            font-size: 2.8rem;
-            font-weight: 900;
-            margin-bottom: 12px;
-            color: #ffffff;
+        .hero h1 { 
+            font-size: 2.5rem; 
+            font-weight: 900; 
+            margin-bottom: 10px; 
         }
-
-        .hero h1 span {
-            color: #ffaa00;
+        .hero h1 span { 
+            color: #ffaa00; 
         }
-
-        .hero p {
-            color: #a0a5b1;
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin: 0 auto 25px;
+        .hero p { 
+            color: #a0a5b1; 
+            margin-bottom: 20px; 
         }
-
-        /* SERVER IP BOX */
-        .server-ip-box {
-            display: inline-flex;
-            align-items: center;
-            background: #141619;
-            border: 1px solid #ffaa00;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-family: monospace;
-            font-size: 1.1rem;
-            color: #ffaa00;
-            gap: 15px;
+        .main-container { 
+            max-width: 1100px; 
+            margin: 30px auto; 
+            padding: 0 20px; 
+            flex: 1; 
         }
-
-        .copy-btn {
-            background: #ffaa00;
-            color: #000;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-            font-family: sans-serif;
-            transition: background 0.2s;
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 25px; 
         }
-
-        .copy-btn:hover {
-            background: #e09500;
+        .card-link { 
+            text-decoration: none; 
+            color: inherit; 
+            display: block; 
         }
-
-        /* CARDS CONTAINER GRID */
-        .main-container {
-            max-width: 1100px;
-            margin: 40px auto;
-            padding: 0 20px;
-            flex: 1;
+        .card { 
+            background-color: #141619; 
+            border: 1px solid #282c37; 
+            border-radius: 14px; 
+            padding: 24px; 
+            height: 100%; 
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4); 
         }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            justify-content: center;
+        .card:hover { 
+            transform: translateY(-4px); 
+            border-color: #ffaa00; 
+            box-shadow: 0 0 15px rgba(255, 170, 0, 0.25);
         }
-
-        /* GENERAL CARD STYLING */
-        .card-link {
-            text-decoration: none;
-            color: inherit;
-            display: block;
+        .card.support-card { 
+            border: 2px solid #ffaa00; 
         }
-
-        .card {
-            background-color: #141619;
-            border: 1px solid #282c37;
-            border-radius: 14px;
-            padding: 24px;
-            height: 100%;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+        .card h2 { 
+            color: #ffaa00; 
+            margin-bottom: 10px; 
+            font-size: 1.25rem; 
+            font-weight: 800; 
         }
-
-        .card:hover {
-            transform: translateY(-4px);
-            border-color: #ffaa00;
-            box-shadow: 0 0 20px rgba(255, 170, 0, 0.25);
+        .card p { 
+            color: #a0a5b1; 
+            font-size: 0.95rem; 
+            line-height: 1.4; 
         }
-
-        .card h2 {
-            color: #ffffff;
-            margin: 0 0 12px 0;
-            font-size: 1.25rem;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .card p {
-            color: #a0a5b1;
-            margin: 0;
-            font-size: 0.95rem;
-            line-height: 1.4;
-        }
-
-        /* SUPPORT TICKET SPECIFIC CARD STYLING */
-        .card.support-card {
-            border: 2px solid #ffaa00;
-        }
-
-        .card.support-card h2 {
-            color: #ffaa00;
-        }
-
-        /* FOOTER */
-        footer {
-            background-color: #141619;
-            border-top: 1px solid #282c37;
-            text-align: center;
-            padding: 20px;
-            color: #6c727f;
-            font-size: 0.85rem;
-            margin-top: auto;
+        footer { 
+            background-color: #141619; 
+            border-top: 1px solid #282c37; 
+            text-align: center; 
+            padding: 20px; 
+            color: #6c727f; 
+            font-size: 0.85rem; 
+            margin-top: auto; 
         }
     </style>
 </head>
 <body>
 
-    <!-- HEADER NAVIGATION -->
     <header>
-        <div class="logo">MY SERVER</div>
+        <div class="logo">NETWORK PORTAL</div>
         <nav>
             <a href="index.html" class="active">Home</a>
             <a href="support.html">Support & Tickets</a>
@@ -202,58 +129,26 @@
         </nav>
     </header>
 
-    <!-- HERO SECTION -->
     <section class="hero">
-        <h1>WELCOME TO <span>OUR NETWORK</span></h1>
-        <p>Join our growing community today. Experience custom gameplay, competitive metas, and dedicated staff support.</p>
-        
-        <div class="server-ip-box">
-            <span>play.yourserver.com</span>
-            <button class="copy-btn" onclick="copyIP()">Copy IP</button>
-        </div>
+        <h1>WELCOME TO THE <span>SERVER PORTAL</span></h1>
+        <p>Need staff assistance or want to report an issue? Visit our support desk below.</p>
     </section>
 
-    <!-- MAIN CARDS SECTION -->
     <main class="main-container">
         <div class="grid">
-            
-            <!-- CARD 1: STORE / DONATIONS -->
-            <a href="#" class="card-link">
-                <div class="card">
-                    <h2>SERVER STORE 🛒</h2>
-                    <p>Support the server and get access to exclusive ranks, cosmetics, and perks.</p>
-                </div>
-            </a>
-
-            <!-- CARD 2: SUPPORT & TICKETS (THE CARD FROM YOUR SCREENSHOT) -->
+            <!-- CLICKABLE SUPPORT CARD -->
             <a href="support.html" class="card-link">
                 <div class="card support-card">
                     <h2>SUPPORT & TICKETS 🎧</h2>
                     <p>Submit support tickets & get direct staff help</p>
                 </div>
             </a>
-
-            <!-- CARD 3: RULES / COMMUNITY -->
-            <a href="#" class="card-link">
-                <div class="card">
-                    <h2>COMMUNITY & RULES 📜</h2>
-                    <p>Read through our official server rules and guidelines to avoid penalties.</p>
-                </div>
-            </a>
-
         </div>
     </main>
 
-    <!-- FOOTER -->
     <footer>
-        &copy; 2026 Minecraft Server Network. All rights reserved. Not affiliated with Mojang Studios.
+        &copy; 2026 Server Network. All rights reserved.
     </footer>
 
-    <script>
-        function copyIP() {
-            navigator.clipboard.writeText("play.yourserver.com");
-            alert("Server IP copied to clipboard!");
-        }
-    </script>
 </body>
 </html>
