@@ -3,23 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Support & Tickets</title>
+    <title>Support & Community Hub</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f1115; color: #fff; padding: 30px 10px; margin: 0; }
-        .container { max-width: 600px; margin: 0 auto; background: #181a20; padding: 30px; border-radius: 12px; border: 1px solid #2a2e39; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0c0d10; color: #fff; padding: 30px 10px; }
+        .container { max-width: 750px; margin: 0 auto; background: #141619; padding: 30px; border-radius: 12px; border: 1px solid #282c37; }
         .nav-back { display: inline-block; margin-bottom: 20px; color: #ffaa00; text-decoration: none; font-weight: bold; }
-        .tab-buttons { display: flex; gap: 10px; margin-bottom: 25px; }
-        .tab-btn { flex: 1; padding: 12px; background: #222630; border: none; color: #aaa; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .tab-buttons { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
+        .tab-btn { flex: 1; padding: 12px; background: #1f232d; border: none; color: #aaa; border-radius: 6px; cursor: pointer; font-weight: bold; min-width: 120px; }
         .tab-btn.active { background: #ffaa00; color: #000; }
         .form-section { display: none; }
         .form-section.active { display: block; }
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 6px; color: #ccc; font-size: 0.9rem; }
-        input, textarea { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #333; background: #0f1115; color: #fff; box-sizing: border-box; }
+        input, textarea { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #282c37; background: #0c0d10; color: #fff; }
         textarea { height: 90px; resize: vertical; }
         button[type="submit"] { width: 100%; padding: 12px; background: #ffaa00; border: none; border-radius: 6px; color: #000; font-weight: bold; cursor: pointer; margin-top: 10px; }
         button[type="submit"]:hover { background: #e09500; }
         .status-msg { margin-top: 15px; padding: 12px; border-radius: 6px; display: none; text-align: center; }
+        
+        /* CHAT STYLES */
+        .chat-box { height: 300px; background: #0c0d10; border: 1px solid #282c37; border-radius: 6px; padding: 15px; overflow-y: auto; margin-bottom: 15px; }
+        .chat-msg { margin-bottom: 10px; font-size: 0.95rem; }
+        .chat-msg .author { color: #ffaa00; font-weight: bold; }
+        .chat-msg .time { color: #555; font-size: 0.75rem; margin-left: 8px; }
+        .chat-input-group { display: flex; gap: 10px; }
+        .chat-input-group input { flex: 1; }
+        .chat-input-group button { width: 100px; background: #ffaa00; border: none; font-weight: bold; cursor: pointer; border-radius: 6px; }
     </style>
 </head>
 <body>
@@ -30,11 +40,13 @@
         <div class="tab-buttons">
             <button class="tab-btn active" id="btn-appeal" onclick="switchTab('appeal')">Ban Appeal</button>
             <button class="tab-btn" id="btn-report" onclick="switchTab('report')">Player Report</button>
+            <button class="tab-btn" id="btn-chat" onclick="switchTab('chat')">Player Chat 💬</button>
         </div>
 
         <!-- BAN APPEAL FORM -->
         <form id="appeal-form" class="form-section active">
             <h2>Ban Appeal</h2>
+            <p style="color:#888; font-size:0.85rem; margin-bottom:15px;">Submit your appeal and wait for admin response.</p>
             <div class="form-group">
                 <label>In-Game Name (IGN)</label>
                 <input type="text" id="appeal-ign" required>
@@ -48,15 +60,15 @@
                 <input type="text" id="appeal-reason" required>
             </div>
             <div class="form-group">
-                <label>Why should u get unbaned?</label>
+                <label>Why should you get unbanned?</label>
                 <textarea id="appeal-explanation" required></textarea>
             </div>
             <div class="form-group">
-                <label>Pic of MC Mods</label>
+                <label>Screenshot of MC Mods</label>
                 <input type="file" id="appeal-mods-img" accept="image/*" required>
             </div>
             <div class="form-group">
-                <label>Pic of MC Files</label>
+                <label>Screenshot of MC Files</label>
                 <input type="file" id="appeal-files-img" accept="image/*" required>
             </div>
             <button type="submit">Submit Ban Appeal</button>
@@ -65,16 +77,17 @@
         <!-- PLAYER REPORT FORM -->
         <form id="report-form" class="form-section">
             <h2>Player Report</h2>
+            <p style="color:#888; font-size:0.85rem; margin-bottom:15px;">Report rulebreakers to staff.</p>
             <div class="form-group">
-                <label>Your IGN Name</label>
+                <label>Your IGN</label>
                 <input type="text" id="report-your-ign" required>
             </div>
             <div class="form-group">
-                <label>The Reported Player IGN</label>
+                <label>Reported Player IGN</label>
                 <input type="text" id="report-target-ign" required>
             </div>
             <div class="form-group">
-                <label>Video of Player Cheating (URL)</label>
+                <label>Video Evidence (URL)</label>
                 <input type="url" id="report-video-url" placeholder="https://youtube.com/..." required>
             </div>
             <div class="form-group">
@@ -84,22 +97,38 @@
             <button type="submit">Submit Player Report</button>
         </form>
 
+        <!-- FUN PLAYER CHAT -->
+        <div id="chat-section" class="form-section">
+            <h2>Registered Player Chat 💬</h2>
+            <p style="color:#888; font-size:0.85rem; margin-bottom:15px;">Hang out and talk with other players!</p>
+            
+            <div class="chat-box" id="chat-messages"></div>
+
+            <div class="chat-input-group">
+                <input type="text" id="chat-username" placeholder="Your IGN" style="width: 30%;" required>
+                <input type="text" id="chat-msg-input" placeholder="Type a message..." required>
+                <button onclick="sendChatMessage()">Send</button>
+            </div>
+        </div>
+
         <div id="status-box" class="status-msg"></div>
     </div>
 
     <script>
         function switchTab(type) {
-            document.getElementById('appeal-form').classList.remove('active');
-            document.getElementById('report-form').classList.remove('active');
-            document.getElementById('btn-appeal').classList.remove('active');
-            document.getElementById('btn-report').classList.remove('active');
+            document.querySelectorAll('.form-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
 
             if (type === 'appeal') {
                 document.getElementById('appeal-form').classList.add('active');
                 document.getElementById('btn-appeal').classList.add('active');
-            } else {
+            } else if (type === 'report') {
                 document.getElementById('report-form').classList.add('active');
                 document.getElementById('btn-report').classList.add('active');
+            } else if (type === 'chat') {
+                document.getElementById('chat-section').classList.add('active');
+                document.getElementById('btn-chat').classList.add('active');
+                loadChatMessages();
             }
         }
 
@@ -135,7 +164,7 @@
                 saveTicket(ticket);
                 e.target.reset();
             } catch (err) {
-                alert("Image file is too large! Please upload a smaller screenshot.");
+                alert("Image file too large! Please upload a smaller image.");
             }
         });
 
@@ -166,7 +195,52 @@
             statusBox.style.display = 'block';
             statusBox.style.background = '#1b3e20';
             statusBox.style.color = '#5cdb6d';
-            statusBox.innerHTML = `Ticket Submitted! ID: <strong>#${ticket.id}</strong>.<br>Please wait for an admin response.`;
+            statusBox.innerHTML = `Ticket Submitted! ID: <strong>#${ticket.id}</strong>.<br>Please wait for admin response.`;
+        }
+
+        /* CHAT FUNCTIONALITY */
+        function loadChatMessages() {
+            const chatBox = document.getElementById('chat-messages');
+            const messages = JSON.parse(localStorage.getItem('player_chat')) || [];
+            
+            if (messages.length === 0) {
+                chatBox.innerHTML = '<p style="color:#666;">No messages yet. Be the first to chat!</p>';
+                return;
+            }
+
+            chatBox.innerHTML = messages.map(m => `
+                <div class="chat-msg">
+                    <span class="author">${escapeHtml(m.user)}:</span> 
+                    <span>${escapeHtml(m.msg)}</span>
+                    <span class="time">${m.time}</span>
+                </div>
+            `).join('');
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function sendChatMessage() {
+            const user = document.getElementById('chat-username').value.trim();
+            const msg = document.getElementById('chat-msg-input').value.trim();
+
+            if (!user || !msg) {
+                alert("Please enter both your name and a message.");
+                return;
+            }
+
+            const messages = JSON.parse(localStorage.getItem('player_chat')) || [];
+            messages.push({
+                user: user,
+                msg: msg,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            });
+
+            localStorage.setItem('player_chat', JSON.stringify(messages));
+            document.getElementById('chat-msg-input').value = '';
+            loadChatMessages();
+        }
+
+        function escapeHtml(str) {
+            return (str || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m]));
         }
     </script>
 </body>
