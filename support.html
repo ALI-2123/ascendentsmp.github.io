@@ -5,97 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Support & Tickets</title>
     <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: #0f1115; 
-            color: #fff; 
-            padding: 30px 10px; 
-            margin: 0;
-        }
-        .container { 
-            max-width: 600px; 
-            margin: 0 auto; 
-            background: #181a20; 
-            padding: 30px; 
-            border-radius: 12px; 
-            border: 1px solid #2a2e39; 
-        }
-        .tab-buttons { 
-            display: flex; 
-            gap: 10px; 
-            margin-bottom: 25px; 
-        }
-        .tab-btn { 
-            flex: 1; 
-            padding: 12px; 
-            background: #222630; 
-            border: none; 
-            color: #aaa; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            font-weight: bold; 
-        }
-        .tab-btn.active { 
-            background: #ffaa00; 
-            color: #000; 
-        }
-        .form-section { 
-            display: none; 
-        }
-        .form-section.active { 
-            display: block; 
-        }
-        .form-group { 
-            margin-bottom: 15px; 
-        }
-        label { 
-            display: block; 
-            margin-bottom: 6px; 
-            color: #ccc; 
-            font-size: 0.9rem; 
-        }
-        input, textarea { 
-            width: 100%; 
-            padding: 10px; 
-            border-radius: 6px; 
-            border: 1px solid #333; 
-            background: #0f1115; 
-            color: #fff; 
-            box-sizing: border-box; 
-        }
-        textarea { 
-            height: 90px; 
-            resize: vertical; 
-        }
-        button[type="submit"] { 
-            width: 100%; 
-            padding: 12px; 
-            background: #ffaa00; 
-            border: none; 
-            border-radius: 6px; 
-            color: #000; 
-            font-weight: bold; 
-            cursor: pointer; 
-            margin-top: 10px; 
-        }
-        button[type="submit"]:hover { 
-            background: #e09500; 
-        }
-        .status-msg { 
-            margin-top: 15px; 
-            padding: 12px; 
-            border-radius: 6px; 
-            display: none; 
-            text-align: center; 
-            line-height: 1.4;
-        }
-        .nav-back { 
-            display: inline-block; 
-            margin-bottom: 20px; 
-            color: #ffaa00; 
-            text-decoration: none; 
-            font-weight: bold; 
-        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f1115; color: #fff; padding: 30px 10px; margin: 0; }
+        .container { max-width: 600px; margin: 0 auto; background: #181a20; padding: 30px; border-radius: 12px; border: 1px solid #2a2e39; }
+        .nav-back { display: inline-block; margin-bottom: 20px; color: #ffaa00; text-decoration: none; font-weight: bold; }
+        .tab-buttons { display: flex; gap: 10px; margin-bottom: 25px; }
+        .tab-btn { flex: 1; padding: 12px; background: #222630; border: none; color: #aaa; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .tab-btn.active { background: #ffaa00; color: #000; }
+        .form-section { display: none; }
+        .form-section.active { display: block; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 6px; color: #ccc; font-size: 0.9rem; }
+        input, textarea { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #333; background: #0f1115; color: #fff; box-sizing: border-box; }
+        textarea { height: 90px; resize: vertical; }
+        button[type="submit"] { width: 100%; padding: 12px; background: #ffaa00; border: none; border-radius: 6px; color: #000; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        button[type="submit"]:hover { background: #e09500; }
+        .status-msg { margin-top: 15px; padding: 12px; border-radius: 6px; display: none; text-align: center; }
     </style>
 </head>
 <body>
@@ -104,8 +28,8 @@
         <a href="index.html" class="nav-back">← Back to Main Page</a>
         
         <div class="tab-buttons">
-            <button class="tab-btn active" onclick="switchTab('appeal')">Ban Appeal</button>
-            <button class="tab-btn" onclick="switchTab('report')">Player Report</button>
+            <button class="tab-btn active" id="btn-appeal" onclick="switchTab('appeal')">Ban Appeal</button>
+            <button class="tab-btn" id="btn-report" onclick="switchTab('report')">Player Report</button>
         </div>
 
         <!-- BAN APPEAL FORM -->
@@ -124,15 +48,15 @@
                 <input type="text" id="appeal-reason" required>
             </div>
             <div class="form-group">
-                <label>Why should you be unbanned?</label>
+                <label>Why should u get unbaned?</label>
                 <textarea id="appeal-explanation" required></textarea>
             </div>
             <div class="form-group">
-                <label>Minecraft Mods Folder Screenshot</label>
+                <label>Pic of MC Mods</label>
                 <input type="file" id="appeal-mods-img" accept="image/*" required>
             </div>
             <div class="form-group">
-                <label>Minecraft Game Directory / Files Screenshot</label>
+                <label>Pic of MC Files</label>
                 <input type="file" id="appeal-files-img" accept="image/*" required>
             </div>
             <button type="submit">Submit Ban Appeal</button>
@@ -140,21 +64,21 @@
 
         <!-- PLAYER REPORT FORM -->
         <form id="report-form" class="form-section">
-            <h2>Report a Player</h2>
+            <h2>Player Report</h2>
             <div class="form-group">
-                <label>Your IGN</label>
+                <label>Your IGN Name</label>
                 <input type="text" id="report-your-ign" required>
             </div>
             <div class="form-group">
-                <label>Reported Player's IGN</label>
+                <label>The Reported Player IGN</label>
                 <input type="text" id="report-target-ign" required>
             </div>
             <div class="form-group">
-                <label>Video Evidence URL (YouTube / Medal / Streamable)</label>
-                <input type="url" id="report-video-url" placeholder="https://..." required>
+                <label>Video of Player Cheating (URL)</label>
+                <input type="url" id="report-video-url" placeholder="https://youtube.com/..." required>
             </div>
             <div class="form-group">
-                <label>Additional Context / Details</label>
+                <label>Additional Details</label>
                 <textarea id="report-details" required></textarea>
             </div>
             <button type="submit">Submit Player Report</button>
@@ -163,6 +87,87 @@
         <div id="status-box" class="status-msg"></div>
     </div>
 
-    <script src="support.js"></script>
+    <script>
+        function switchTab(type) {
+            document.getElementById('appeal-form').classList.remove('active');
+            document.getElementById('report-form').classList.remove('active');
+            document.getElementById('btn-appeal').classList.remove('active');
+            document.getElementById('btn-report').classList.remove('active');
+
+            if (type === 'appeal') {
+                document.getElementById('appeal-form').classList.add('active');
+                document.getElementById('btn-appeal').classList.add('active');
+            } else {
+                document.getElementById('report-form').classList.add('active');
+                document.getElementById('btn-report').classList.add('active');
+            }
+        }
+
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        document.getElementById('appeal-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                const modsFile = document.getElementById('appeal-mods-img').files[0];
+                const filesFile = document.getElementById('appeal-files-img').files[0];
+
+                const ticket = {
+                    id: 'APP-' + Math.floor(1000 + Math.random() * 9000),
+                    type: 'Ban Appeal',
+                    ign: document.getElementById('appeal-ign').value,
+                    discord: document.getElementById('appeal-discord').value,
+                    reason: document.getElementById('appeal-reason').value,
+                    explanation: document.getElementById('appeal-explanation').value,
+                    modsImg: await fileToBase64(modsFile),
+                    filesImg: await fileToBase64(filesFile),
+                    status: 'Pending',
+                    comments: [],
+                    date: new Date().toLocaleDateString()
+                };
+
+                saveTicket(ticket);
+                e.target.reset();
+            } catch (err) {
+                alert("Image file is too large! Please upload a smaller screenshot.");
+            }
+        });
+
+        document.getElementById('report-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const ticket = {
+                id: 'REP-' + Math.floor(1000 + Math.random() * 9000),
+                type: 'Player Report',
+                reporterIgn: document.getElementById('report-your-ign').value,
+                targetIgn: document.getElementById('report-target-ign').value,
+                videoUrl: document.getElementById('report-video-url').value,
+                details: document.getElementById('report-details').value,
+                status: 'Pending',
+                comments: [],
+                date: new Date().toLocaleDateString()
+            };
+
+            saveTicket(ticket);
+            e.target.reset();
+        });
+
+        function saveTicket(ticket) {
+            const tickets = JSON.parse(localStorage.getItem('support_tickets')) || [];
+            tickets.unshift(ticket);
+            localStorage.setItem('support_tickets', JSON.stringify(tickets));
+
+            const statusBox = document.getElementById('status-box');
+            statusBox.style.display = 'block';
+            statusBox.style.background = '#1b3e20';
+            statusBox.style.color = '#5cdb6d';
+            statusBox.innerHTML = `Ticket Submitted! ID: <strong>#${ticket.id}</strong>.<br>Please wait for an admin response.`;
+        }
+    </script>
 </body>
 </html>
