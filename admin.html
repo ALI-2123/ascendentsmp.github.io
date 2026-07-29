@@ -5,82 +5,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Support Panel</title>
     <style>
-        body { font-family: sans-serif; background: #0c0d10; color: #e1e1e1; margin: 0; padding: 20px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0c0d10; color: #e1e1e1; margin: 0; padding: 20px; }
         .hidden { display: none !important; }
-        .login-box { max-width: 380px; margin: 80px auto; background: #15171c; padding: 30px; border-radius: 8px; border: 1px solid #282c37; text-align: center; }
-        input, select, textarea, button { width: 100%; padding: 10px; margin-top: 10px; border-radius: 4px; border: 1px solid #2e3340; background: #0c0d10; color: #fff; box-sizing: border-box; }
-        input[type="password"] { font-size: 1.2rem; letter-spacing: 3px; text-align: center; }
-        button { background: #ffaa00; color: #000; font-weight: bold; cursor: pointer; border: none; }
-        .ticket-card { background: #15171c; border: 1px solid #282c37; padding: 20px; margin-bottom: 20px; border-radius: 8px; }
-        .badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
+        .login-box { max-width: 400px; margin: 80px auto; background: #141619; padding: 30px; border-radius: 10px; border: 1px solid #282c37; text-align: center; }
+        input, select, textarea, button { width: 100%; padding: 10px; margin-top: 10px; border-radius: 6px; border: 1px solid #282c37; background: #0c0d10; color: #fff; box-sizing: border-box; }
+        button { background: #ffaa00; color: #000; font-weight: bold; cursor: pointer; border: none; margin-top: 15px; }
+        button:hover { background: #e09500; }
+        .ticket-card { background: #141619; border: 1px solid #282c37; padding: 20px; margin-bottom: 20px; border-radius: 10px; }
+        .badge { padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
         .Pending { background: #8a6d0b; color: #fff; }
         .Accepted { background: #1e6b29; color: #fff; }
         .Denied { background: #8a1f1f; color: #fff; }
         .Resolved { background: #225c8a; color: #fff; }
-        .img-preview { max-width: 100%; max-height: 250px; margin-top: 10px; border-radius: 4px; border: 1px solid #444; display: block; }
-        .comments-list { background: #0c0d10; padding: 10px; border-radius: 4px; margin-top: 10px; }
+        .img-preview { max-width: 100%; max-height: 250px; margin-top: 8px; border-radius: 6px; border: 1px solid #333; display: block; }
+        .comments-list { background: #0c0d10; padding: 12px; border-radius: 6px; margin-top: 12px; border: 1px solid #222; }
     </style>
 </head>
 <body>
 
     <!-- SECURE ADMIN LOGIN -->
     <div id="auth-section" class="login-box">
-        <h2>Admin Gateway</h2>
-        <p style="font-size:0.85rem; color:#888; margin-top:5px;">Enter your Admin Approval Code to enter</p>
+        <h2 style="color:#ffaa00;">Admin Gateway</h2>
+        <p style="font-size:0.85rem; color:#888; margin-top:5px;">Login with admin account & approval code</p>
         <form id="login-form">
-            <input type="password" id="admin-pass" autocomplete="new-password" placeholder="••••••" required>
+            <input type="text" id="admin-user" placeholder="Username (ali / fares)" required>
+            <input type="password" id="admin-pass" placeholder="Password" required>
+            <input type="password" id="admin-code" placeholder="Approval Code" required>
             <button type="submit">Log In to Admin Panel</button>
         </form>
-        <p id="login-err" style="color: #ff4d4d; font-size: 0.85rem; display: none; margin-top: 10px;">Incorrect Approval Code!</p>
+        <p id="login-err" style="color: #ff4d4d; font-size: 0.85rem; display: none; margin-top: 12px;"></p>
     </div>
 
     <!-- ADMIN MANAGEMENT PANEL -->
     <div id="panel-section" class="hidden">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
             <h1>Support Management Panel</h1>
-            <button id="logout-btn" style="width: auto; padding: 8px 16px; background: #c92a2a; color: #fff;">Logout</button>
+            <div>
+                <span id="logged-admin-name" style="color:#ffaa00; font-weight:bold; margin-right:15px;"></span>
+                <button id="logout-btn" style="width: auto; padding: 8px 16px; background: #c92a2a; color: #fff; margin:0;">Logout</button>
+            </div>
         </div>
 
         <div id="tickets-container"></div>
     </div>
 
     <script>
-        // Set your secret Approval Code here (SHA-256 hash of "123456")
-        const APPROVAL_CODE_HASH = "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92";
-
-        async function hashString(str) {
-            const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
-            return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-        }
+        // ADMIN ACCOUNTS DATA
+        const ADMIN_ACCOUNTS = {
+            "ali": { pass: "Ali@123", name: "Ali" },
+            "fares": { pass: "Fares@123", name: "Fares" }
+        };
+        const REQUIRED_APPROVAL_CODE = "11#asc";
 
         document.addEventListener("DOMContentLoaded", () => {
-            if (sessionStorage.getItem("admin_authenticated") === "true") {
-                showPanel();
+            const activeUser = sessionStorage.getItem("admin_authenticated_user");
+            if (activeUser) {
+                showPanel(activeUser);
             }
 
-            document.getElementById("login-form").addEventListener("submit", async (e) => {
+            document.getElementById("login-form").addEventListener("submit", (e) => {
                 e.preventDefault();
-                const inputPass = document.getElementById("admin-pass").value;
-                const hashedInput = await hashString(inputPass);
+                const user = document.getElementById("admin-user").value.trim().toLowerCase();
+                const pass = document.getElementById("admin-pass").value.trim();
+                const code = document.getElementById("admin-code").value.trim();
+                const errBox = document.getElementById("login-err");
 
-                if (hashedInput === APPROVAL_CODE_HASH) {
-                    sessionStorage.setItem("admin_authenticated", "true");
-                    document.getElementById("login-err").style.display = "none";
-                    showPanel();
+                if (code !== REQUIRED_APPROVAL_CODE) {
+                    errBox.innerText = "Invalid Approval Code!";
+                    errBox.style.display = "block";
+                    return;
+                }
+
+                if (ADMIN_ACCOUNTS[user] && ADMIN_ACCOUNTS[user].pass === pass) {
+                    sessionStorage.setItem("admin_authenticated_user", ADMIN_ACCOUNTS[user].name);
+                    errBox.style.display = "none";
+                    showPanel(ADMIN_ACCOUNTS[user].name);
                 } else {
-                    document.getElementById("login-err").style.display = "block";
+                    errBox.innerText = "Invalid Admin Username or Password!";
+                    errBox.style.display = "block";
                 }
             });
 
             document.getElementById("logout-btn").addEventListener("click", () => {
-                sessionStorage.removeItem("admin_authenticated");
+                sessionStorage.removeItem("admin_authenticated_user");
                 location.reload();
             });
         });
 
-        function showPanel() {
+        function showPanel(adminName) {
             document.getElementById("auth-section").classList.add("hidden");
             document.getElementById("panel-section").classList.remove("hidden");
+            document.getElementById("logged-admin-name").innerText = "Admin: " + adminName;
             renderTickets();
         }
 
@@ -105,7 +120,7 @@
                     ${t.type === 'Ban Appeal' ? `
                         <p><strong>Discord Username:</strong> ${escapeHtml(t.discord)}</p>
                         <p><strong>Ban Reason:</strong> ${escapeHtml(t.reason)}</p>
-                        <p><strong>Why Unban:</strong> ${escapeHtml(t.explanation)}</p>
+                        <p><strong>Explanation:</strong> ${escapeHtml(t.explanation)}</p>
                         <div style="margin-top:10px;">
                             <p><strong>Mods Screenshot:</strong></p>
                             <a href="${t.modsImg}" target="_blank"><img src="${t.modsImg}" class="img-preview"/></a>
@@ -114,29 +129,29 @@
                         </div>
                     ` : `
                         <p><strong>Reported Player IGN:</strong> ${escapeHtml(t.targetIgn)}</p>
-                        <p><strong>Video Evidence:</strong> <a href="${escapeHtml(t.videoUrl)}" target="_blank" style="color:#ffaa00;">Watch Evidence Video</a></p>
+                        <p><strong>Video Evidence:</strong> <a href="${escapeHtml(t.videoUrl)}" target="_blank" style="color:#ffaa00;">Watch Video</a></p>
                         <p><strong>Details:</strong> ${escapeHtml(t.details)}</p>
                     `}
 
                     <hr style="border-color:#282c37; margin:15px 0;">
 
                     <div>
-                        <label><strong>Set Status:</strong></label>
-                        <select onchange="updateStatus(${idx}, this.value)">
-                            <option value="Pending" ${t.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                        <label><strong>Change Status:</strong></label>
+                        <select onchange="updateStatus(${idx}, this.value)" style="margin-bottom:10px;">
+                            <option value="Pending" ${t.status === 'Pending' ? 'selected' : ''}>Pending (Waiting for Respond)</option>
                             <option value="Accepted" ${t.status === 'Accepted' ? 'selected' : ''}>Accepted</option>
                             <option value="Denied" ${t.status === 'Denied' ? 'selected' : ''}>Denied</option>
                             <option value="Resolved" ${t.status === 'Resolved' ? 'selected' : ''}>Resolved</option>
                         </select>
 
                         <div class="comments-list">
-                            <strong>Admin Comments:</strong>
-                            ${(t.comments || []).map(c => `<p style="margin:5px 0; color:#4dabf7;">• ${escapeHtml(c)}</p>`).join('') || '<p style="margin:5px 0; color:#666;">No comments yet.</p>'}
+                            <strong>Admin Comments & Responses:</strong>
+                            ${(t.comments || []).map(c => `<p style="margin:5px 0; color:#4dabf7;">• <strong>${escapeHtml(c.author)}:</strong> ${escapeHtml(c.text)}</p>`).join('') || '<p style="margin:5px 0; color:#666;">No comments added yet.</p>'}
                         </div>
 
                         <div style="display:flex; gap:10px; margin-top:10px;">
                             <input type="text" id="comment-input-${idx}" placeholder="Type admin comment...">
-                            <button onclick="addComment(${idx})" style="width:130px;">Add Comment</button>
+                            <button onclick="addComment(${idx})" style="width:140px; margin-top:10px;">Add Comment</button>
                         </div>
                     </div>
                 </div>
@@ -154,10 +169,15 @@
             const input = document.getElementById(`comment-input-${index}`);
             if (!input.value.trim()) return;
 
+            const currentAdmin = sessionStorage.getItem("admin_authenticated_user") || "Admin";
             const tickets = JSON.parse(localStorage.getItem("support_tickets")) || [];
             if (!tickets[index].comments) tickets[index].comments = [];
             
-            tickets[index].comments.push(input.value.trim());
+            tickets[index].comments.push({
+                author: currentAdmin,
+                text: input.value.trim()
+            });
+
             localStorage.setItem("support_tickets", JSON.stringify(tickets));
             renderTickets();
         }
